@@ -211,7 +211,7 @@ export function useRegisterLot() {
   });
 }
 
-/** Append a provenance event to a lot. */
+/** Append a Precious Material Origin History event to a lot. */
 export function useAppendEvent() {
   const { actor } = useActor(createActor);
   const invalidate = useInvalidateRegister();
@@ -227,7 +227,8 @@ export function useAppendEvent() {
 }
 
 /**
- * The status-change history for a lot, in provenance order. Public read.
+ * The status-change history for a lot, in Precious Material Origin History
+ * order. Public read.
  *
  * The lot view already carries `statusHistory`, but this reads the register's
  * own ordered history directly so a long chain can be stepped through without
@@ -246,7 +247,8 @@ export function useStatusHistory(lotId: LotId | null) {
 }
 
 /**
- * Record a status change as a new provenance event in the lot's chain.
+ * Record a status change as a new Precious Material Origin History event in
+ * the lot's chain.
  *
  * The register is append-only: this appends a `status_change` event and moves
  * the lot's current status. Both the lot and the lot list are invalidated so
@@ -336,7 +338,8 @@ export function useFreezeLot() {
 /**
  * Delete a single block from the register. Admin only.
  *
- * The register is append-only for provenance, so deletion is the one
+ * The register is append-only for Precious Material Origin History, so
+ * deletion is the one
  * destructive operation on a block and the backend re-checks the caller's
  * `delete_lot` capability. On success every surface that counts or lists
  * blocks is invalidated — the register explorer, the register summary and the

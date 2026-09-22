@@ -14,7 +14,7 @@
 - Demo data is randomly generated in the browser and never persisted to storage
 - The admin panel is reached from a footer Admin button shown only to signed-in admins
 - Lot kinds offered by the register are Emerald and Gold only for now
-- All reference data (lot kinds, site names, statuses, event kinds, labels, defaults) is addable, editable and removable from the admin panel
+- All reference data (lot kinds, site names, statuses, event kinds, labels, defaults, status explanations, enquiry destination email) is addable, editable and removable from the admin panel
 - Sealed lot records stay immutable and the register stays append-only
 - Dark-first theme built from the 8-colour palette: lime #6dba4f, light green #cddf80, baby blue #bbe2f1, baby pink #fce9de, silk black #374248, night sky #637687, shine navy #004b8b, deep blue-green #00748f
 - Never use cream white as a surface colour
@@ -24,6 +24,15 @@
 - Admin holds all permissions by default; Custom Role starts with no permissions and is adjusted by the admin after assignment
 - Permissions are edited through a simple checkbox UI
 - Block deletion is one block at a time and requires typing a confirmation phrase
+- The header is sticky and carries an 'A-a' stepped text-size control (plus, minus, zero reset) that scales all text site-wide and remembers the choice
+- The header licence reminder line reads 'Licensed miner & dealer'
+- The term 'provenance' is replaced by 'Precious Material Origin History' everywhere in the UI
+- Lot field labels are 'Registered at', 'Mining Site', 'Mining Licence', 'Registered by' and 'Lot number'
+- Event names shown in each lot block align with the current status names
+- The home page has a per-status information section, hidden by default, folded open one status at a time via 'CLICK HERE TO UNDERSTAND THIS STATUS'
+- A 'Contact us to make a purchase' fold-out form sits under the intro text; sign-in is required to submit, with a consent checkbox to share information until withdrawn
+- Submitters can view their own enquiries and withdraw permission per submission; withdrawn enquiries are removed from the admin dashboard
+- The admin panel has an enquiry inbox with an optional destination email; when no address is set no email is sent and the admin responses section notes this
 
 ## Verified Commands
 
@@ -33,9 +42,6 @@
 
 ## Learnings
 
-- The deploy gate rejects any change to a migration file that existed before the build. Historical migration files must stay byte-for-byte identical to their committed baseline; display-term renames belong only in a NEW chain entry that sorts last.
-- A new Enhanced Migration entry's OldActor must equal the NewActor of the file that precedes it in lex order, and its NewActor must match main.mo's stable fields; mops check --fix verifies this.
-- The deploy gate compares historical migration files against the DEPLOYED DRAFT's baseline, not git HEAD; a file can show as modified in git status while matching the deployed baseline byte-for-byte. Verify with `diff <(git show <deployed-baseline>:<path>) <path>` rather than git status.
 - chmod u+w is required before editing a read-only migration file under src/backend/migrations/; the edit tool then applies the change normally.
 - mops.toml lives at the project root (not src/backend); [canisters.backend.migrations] chain = 'src/backend/migrations' with check-limit = 1 permits exactly one pending migration per deploy.
 - The localQa contract requires every accepted requirement feature index to appear in a flow's requirementIndexes or in sourceOnlyRequirementIndexes; a contract-validation error deploys nothing and spends no QA pass, so correct only the contract and call pre_commit_checks again.
@@ -58,3 +64,6 @@
 - The delete control is gated on useMyRole().effectiveCapabilities (getMyCapabilities), not the role, matching the backend authority; demo mode withholds it like other writes.
 - After a successful delete, clear the expanded id directly (filters.lot = null) rather than routing the delete callback through the expand callback, which would point the deep link at the removed block and depend on a later effect to clear it.
 - A newly added callback prop can be made optional with a fallback default (onDeleted = onOpenLot) so tester-owned test files that omit it keep compiling without editing them.
+- The admin panel's reference-kind labels live in use-admin-data.ts REFERENCE_KINDS, not lib/reference.ts REF_KIND_LABEL; the two differ ('Lot kinds' vs 'Item kinds') but only the former renders.
+- Demo registration and event appending are held in DataModeProvider memory only; nothing touches localStorage beyond the mode flag, satisfying the never-persisted rule.
+- The 'provenance' term survives only in generated bindings (backend.ts/backend.d.ts/declarations) and test files, which are not user-facing UI.

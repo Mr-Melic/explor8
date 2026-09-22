@@ -83,97 +83,107 @@ type Result__1 =
 type Result_9 = 
  variant {
    err: ReferenceError;
-   ok: vec AnalysisDocumentView;
- };
-type Result_8 = 
- variant {
-   err: ReferenceError;
    ok: RegisterAnalytics;
  };
-type Result_7 = 
+type Result_8 = 
  variant {
    err: RegisterError;
    ok: LotView;
  };
-type Result_6 = 
+type Result_7 = 
  variant {
    err: PermissionsError;
+   ok;
+ };
+type Result_6 = 
+ variant {
+   err: ReferenceError;
    ok;
  };
 type Result_5 = 
  variant {
-   err: ReferenceError;
-   ok;
- };
-type Result_4 = 
- variant {
    err: PurgeError;
    ok: PurgeOutcome;
  };
-type Result_3 = 
+type Result_4 = 
  variant {
    err: PermissionsError;
    ok: PrincipalOverride;
  };
-type Result_2 = 
+type Result_3 = 
  variant {
    err: RegisterError;
    ok: vec LotView;
  };
-type Result_18 = 
+type Result_20 = 
  variant {
    err: Error;
    ok;
  };
-type Result_17 = 
- variant {
-   err: ReferenceError;
-   ok: AnalysisDocumentView;
- };
-type Result_16 = 
- variant {
-   err: RegisterError;
-   ok: ActorRole;
- };
-type Result_15 = 
- variant {
-   err: RegisterError;
-   ok: Role;
- };
-type Result_14 = 
- variant {
-   err: RegisterError;
-   ok: LotId;
- };
-type Result_13 = 
- variant {
-   err: PermissionsError;
-   ok: PermissionsView;
- };
-type Result_12 = 
- variant {
-   err: PurgeError;
-   ok: opt PurgeRequestView;
- };
-type Result_11 = 
- variant {
-   err: RegisterError;
-   ok: vec ActorRole;
- };
-type Result_10 = 
- variant {
-   err: ReferenceError;
-   ok: vec RefEntryView;
- };
-type Result_1 = 
+type Result_2 = 
  variant {
    err: ReferenceError;
    ok: RefEntryView;
  };
-type Result = 
+type Result_19 = 
+ variant {
+   err: ReferenceError;
+   ok: AnalysisDocumentView;
+ };
+type Result_18 = 
+ variant {
+   err: RegisterError;
+   ok: ActorRole;
+ };
+type Result_17 = 
+ variant {
+   err: RegisterError;
+   ok: Role;
+ };
+type Result_16 = 
+ variant {
+   err: RegisterError;
+   ok: LotId;
+ };
+type Result_15 = 
+ variant {
+   err: PermissionsError;
+   ok: PermissionsView;
+ };
+type Result_14 = 
+ variant {
+   err: PurgeError;
+   ok: opt PurgeRequestView;
+ };
+type Result_13 = 
+ variant {
+   err: RegisterError;
+   ok: vec ActorRole;
+ };
+type Result_12 = 
+ variant {
+   err: ReferenceError;
+   ok: vec RefEntryView;
+ };
+type Result_11 = 
+ variant {
+   err: ReferenceError;
+   ok: vec AnalysisDocumentView;
+ };
+type Result_10 = 
+ variant {
+   err: EnquiryError;
+   ok: vec EnquiryView;
+ };
+type Result_1 = 
  variant {
    err: PermissionsError;
    ok: RolePermissions;
+ };
+type Result = 
+ variant {
+   err: EnquiryError;
+   ok: EnquiryView;
  };
 type RegisterSummary = 
  record {
@@ -215,11 +225,13 @@ type ReferenceError =
 type RefKind = 
  variant {
    caption;
+   enquiry_destination;
    event_kind;
    form_default;
    lot_kind;
    site;
    status;
+   status_explanation;
  };
 type RefEntryView = 
  record {
@@ -311,6 +323,14 @@ type NewEventInput =
    fileIds: vec FileId;
    kind: EventKind;
    payload: text;
+ };
+type NewEnquiryInput = 
+ record {
+   consent: bool;
+   email: text;
+   message: text;
+   name: text;
+   phone: text;
  };
 type NewAnalysisDocumentInput = 
  record {
@@ -435,6 +455,26 @@ type Error =
    UnknownNonce;
    UntrustedSsoSource: record {domain: text;};
  };
+type EnquiryView = 
+ record {
+   consent: bool;
+   email: text;
+   id: text;
+   message: text;
+   name: text;
+   phone: text;
+   submittedAt: Timestamp;
+   submittedBy: principal;
+   withdrawn: bool;
+   withdrawnAt: opt Timestamp;
+ };
+type EnquiryError = 
+ variant {
+   invalidInput: text;
+   notAuthenticated;
+   notAuthorized;
+   unknownEnquiry: text;
+ };
 type CountBucket = 
  record {
    count: nat;
@@ -511,18 +551,18 @@ type ActivityPoint =
 /// `NewActor` matches this actor shape exactly.
 service : {
   _initialize_access_control: () -> ();
-  _internet_identity_sign_in_finish: () -> (Result_18);
+  _internet_identity_sign_in_finish: () -> (Result_20);
   _internet_identity_sign_in_start: () -> (blob);
   /// Store an analysis document. Admin only.
-  addAnalysisDocument: (input: NewAnalysisDocumentInput) -> (Result_17);
+  addAnalysisDocument: (input: NewAnalysisDocumentInput) -> (Result_19);
   /// Add a reference entry. Admin only.
-  addReferenceEntry: (input: NewRefEntryInput) -> (Result_1);
+  addReferenceEntry: (input: NewRefEntryInput) -> (Result_2);
   /// Append a provenance event to a lot. The caller's role must permit the
   /// event kind.
-  appendEvent: (lotId: LotId, input: NewEventInput) -> (Result_7);
+  appendEvent: (lotId: LotId, input: NewEventInput) -> (Result_8);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   /// Assign a role to a principal. Admin only.
-  assignRole: (target: principal, role: Role) -> (Result_16);
+  assignRole: (target: principal, role: Role) -> (Result_18);
   /// Canonical event payload JSON, so the frontend can recompute payloadHash.
   canonicalEventJson: (kind: EventKind, payload: text, fileContentHashes:
    vec HashHex) -> (text) query;
@@ -533,20 +573,20 @@ service : {
   canonicalSnapshotJson: (lotId: LotId) -> (opt text) query;
   /// Record a status change as a new provenance event in the lot's chain. The
   /// caller's role must be permitted to make the transition.
-  changeStatus: (lotId: LotId, input: StatusChangeInput) -> (Result_7);
+  changeStatus: (lotId: LotId, input: StatusChangeInput) -> (Result_8);
   /// The first identity that claims admin becomes admin.
-  claimAdmin: () -> (Result_15);
+  claimAdmin: () -> (Result_17);
   /// Confirm the open purge request. Admin only. Executes automatically once
   /// more than half of the currently-assigned admins have confirmed.
-  confirmPurge: () -> (Result_4);
+  confirmPurge: () -> (Result_5);
   /// Delete exactly one block, removing its events, hash chain and stored file
   /// references. Requires the `#delete_lot` capability, held by admin by
   /// default; a caller without it is refused with `#notAuthorized`. This is the
   /// register's one explicit destructive action.
-  deleteLot: (lotId: LotId) -> (Result_14);
+  deleteLot: (lotId: LotId) -> (Result_16);
   execute: (qJson: text) -> (Result__1) query;
   /// Freeze a lot. Admin only.
-  freezeLot: (lotId: LotId) -> (Result_7);
+  freezeLot: (lotId: LotId) -> (Result_8);
   /// The backend's public API documentation as Markdown.
   getApiDoc: () -> (text) query;
   getCallerUserRole: () -> (UserRole) query;
@@ -557,43 +597,47 @@ service : {
   /// The role of the calling principal.
   getMyRole: () -> (Role) query;
   /// The full Permissions section. Admin only.
-  getPermissions: () -> (Result_13) query;
+  getPermissions: () -> (Result_15) query;
   /// The open purge request and its confirmation progress, if any. Admin only.
-  getPurgeRequest: () -> (Result_12) query;
+  getPurgeRequest: () -> (Result_14) query;
   /// Whether an administrator already exists. Public and non-sensitive: it
   /// lets the frontend hide the claim action once the role has been claimed.
   hasAdmin: () -> (bool) query;
   isCallerAdmin: () -> (bool) query;
   /// List every actor with its principal and role. Admin only.
-  listActors: () -> (Result_11) query;
+  listActors: () -> (Result_13) query;
   /// List every reference entry, including inactive ones. Admin only.
-  listAllReferenceEntries: () -> (Result_10) query;
+  listAllReferenceEntries: () -> (Result_12) query;
   /// List the stored analysis documents, newest first. Admin only.
-  listAnalysisDocuments: () -> (Result_9) query;
+  listAnalysisDocuments: () -> (Result_11) query;
+  /// List every non-withdrawn enquiry, newest first. Admin only.
+  listEnquiries: () -> (Result_10) query;
   /// List every lot in the register. Public read.
   listLots: () -> (vec LotView) query;
+  /// List the caller's own enquiries, newest first. Signed-in callers only.
+  listMyEnquiries: () -> (Result_10) query;
   /// List the active reference entries of one kind. Public read: the register's
   /// forms and displays are driven by this data.
   listReferenceEntries: (kind: RefKind) -> (vec RefEntryView) query;
   /// Every role with its display name, for the admin panel.
   listRoles: () -> (vec RoleInfo) query;
   /// Merge a source lot into a destination lot. Workshop or admin only.
-  mergeLots: (input: MergeInput) -> (Result_7);
+  mergeLots: (input: MergeInput) -> (Result_8);
   /// The register's own live analytics. Admin only.
-  registerAnalytics: () -> (Result_8) query;
+  registerAnalytics: () -> (Result_9) query;
   /// Register a new lot. Signed-in callers with a role that permits the lot
   /// type only.
-  registerLot: (input: NewLotInput) -> (Result_7);
+  registerLot: (input: NewLotInput) -> (Result_8);
   /// Aggregate register data for the home-page graph. Public read.
   registerSummary: () -> (RegisterSummary) query;
   /// Remove an analysis document. Admin only.
-  removeAnalysisDocument: (id: text) -> (Result_5);
+  removeAnalysisDocument: (id: text) -> (Result_6);
   /// Remove a per-principal permission override. Admin only.
-  removePrincipalOverride: (target: principal) -> (Result_6);
+  removePrincipalOverride: (target: principal) -> (Result_7);
   /// Remove a reference entry. Admin only.
-  removeReferenceEntry: (id: text) -> (Result_5);
+  removeReferenceEntry: (id: text) -> (Result_6);
   /// Open a purge request. Admin only. The phrase must be typed verbatim.
-  requestPurge: (phrase: text) -> (Result_4);
+  requestPurge: (phrase: text) -> (Result_5);
   /// The human-readable display name for a role. 'Assayer' reads
   /// 'Quality Tester' and 'Workshop' reads 'Custom Role'.
   roleDisplayName: (role: Role) -> (text) query;
@@ -601,19 +645,23 @@ service : {
   /// Search across lot id, content-hash prefix, seal number and working ref.
   searchLots: (term: text) -> (vec LotSearchHit) query;
   /// Set a per-principal permission override for a role. Admin only.
-  setPrincipalOverride: (input: SetPrincipalOverrideInput) -> (Result_3);
+  setPrincipalOverride: (input: SetPrincipalOverrideInput) -> (Result_4);
   /// SHA-256 of a UTF-8 text as 64 lowercase hex characters.
   sha256Hex: (input: text) -> (HashHex) query;
   /// SHA-256 of raw file bytes as 64 lowercase hex characters.
   sha256HexOfBlob: (input: blob) -> (HashHex) query;
   /// Split a lot into child lots. Workshop or admin only.
-  splitLot: (input: SplitInput) -> (Result_2);
+  splitLot: (input: SplitInput) -> (Result_3);
   /// The status-change history for a lot, in provenance order. Public read.
   statusHistory: (lotId: LotId) -> (vec StatusChange) query;
+  /// Submit a purchase enquiry. Signed-in callers only; consent is required.
+  submitEnquiry: (input: NewEnquiryInput) -> (Result);
   /// Suggest the next lot id for a site and date.
   suggestLotId: (site: Site, date: text) -> (LotId) query;
   /// Edit a reference entry. Admin only.
-  updateReferenceEntry: (input: UpdateRefEntryInput) -> (Result_1);
+  updateReferenceEntry: (input: UpdateRefEntryInput) -> (Result_2);
   /// Edit a role's default permission set. Admin only.
-  updateRolePermissions: (input: UpdateRolePermissionsInput) -> (Result);
+  updateRolePermissions: (input: UpdateRolePermissionsInput) -> (Result_1);
+  /// Withdraw the caller's own enquiry. Signed-in callers only.
+  withdrawEnquiry: (id: text) -> (Result);
 }

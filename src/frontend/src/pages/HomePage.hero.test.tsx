@@ -6,9 +6,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * The home hero paragraph.
  *
- * The accepted request replaced the hero copy verbatim with the supplied
- * provenance text. This is the one place the exact wording is asserted, so a
- * later edit that paraphrases or truncates it fails here rather than shipping.
+ * The accepted request replaced the hero copy verbatim with the supplied text
+ * and renamed the term "provenance" to "Precious Material Origin History"
+ * everywhere in the UI. This is the one place the exact wording is asserted, so
+ * a later edit that paraphrases, truncates or reintroduces the retired term
+ * fails here rather than shipping.
  *
  * The actor is a typed local mock, so this proves the rendered copy, never the
  * canister.
@@ -48,9 +50,9 @@ vi.mock("@caffeineai/object-storage", () => ({
   },
 }));
 
-/** The supplied provenance text, exactly as the hero must render it. */
+/** The supplied hero text, exactly as the hero must render it. */
 const HERO_TEXT =
-  "From extraction to verification, every precious metal and gemstone mined by Jewel of Africa is weighed, tested, and sealed as a unique block in this registry. Each block bears a cryptographic hash of its recorded data and supporting files, with every subsequent event added to its chain of custody. History unfolds downward, preserving a traceable record of provenance, integrity, and accountability; from the earth to the registry.";
+  "From extraction to verification, every precious metal and gemstone mined by Jewel of Africa is weighed, tested, and sealed as a unique block in this registry. Each block bears a cryptographic hash of its recorded data and supporting files, with every subsequent event added to its chain of custody. History unfolds downward, preserving a traceable record of Precious Material Origin History, integrity, and accountability; from the earth to the registry.";
 
 describe("Home hero paragraph", () => {
   beforeEach(() => {
@@ -58,7 +60,7 @@ describe("Home hero paragraph", () => {
     window.localStorage.clear();
   });
 
-  it("renders the supplied provenance text verbatim", async () => {
+  it("renders the supplied hero text verbatim", async () => {
     renderWithProviders(<HomePage />);
 
     // The paragraph is matched by its full text, so any paraphrase, dropped
@@ -66,5 +68,20 @@ describe("Home hero paragraph", () => {
     const hero = await screen.findByText(HERO_TEXT);
     expect(hero).toBeInTheDocument();
     expect(hero.textContent).toBe(HERO_TEXT);
+  });
+
+  it("replaces the retired term with Precious Material Origin History", async () => {
+    renderWithProviders(<HomePage />);
+
+    await screen.findByText(HERO_TEXT);
+    // The accepted request retires the word "provenance" from the UI entirely.
+    expect(document.body.textContent?.toLowerCase()).not.toContain(
+      "provenance",
+    );
+    expect(
+      screen.getByRole("heading", {
+        name: /Precious Material Origin History register/i,
+      }),
+    ).toBeInTheDocument();
   });
 });

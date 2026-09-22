@@ -359,13 +359,19 @@ it("returns the renamed status and site display terms from the migration chain",
   expect(byKey.get("in_transit")).toBe("In transit");
   expect(byKey.get("retailed")).toBe("Retailed");
 
-  // The site entries are seeded with real place names, not the bare
-  // "Site"/"Sites" the migration normalises, so they pass through unchanged.
+  // The site entries' display names are normalised to the accepted
+  // "Mining Site" term by the latest migration, while their stable keys and
+  // values keep the place codes the register's forms submit.
   const sites = await guest.listReferenceEntries({ site: null });
-  expect(sites.map((entry) => entry.displayName).sort()).toEqual([
-    "Kafubu",
-    "Lusaka",
-    "Mufumbwe",
+  expect(sites.map((entry) => entry.displayName)).toEqual([
+    "Mining Site",
+    "Mining Site",
+    "Mining Site",
+  ]);
+  expect(sites.map((entry) => entry.key).sort()).toEqual([
+    "KFB",
+    "LUS",
+    "MFB",
   ]);
 });
 
@@ -822,4 +828,160 @@ it("lets an admin perform any status transition", async () => {
     }),
   ).resolves.toHaveProperty("ok");
   expect(await adminActor.statusHistory(lotId)).toHaveLength(2);
+});
+
+it("round-trips a purchase enquiry and removes a withdrawn one from the admin inbox", async () => {
+  const adminActor = actorFor(createIdentity("alice"));
+  const submitter = actorFor(createIdentity("carol"));
+  const guest = pic!.createActor<_SERVICE>(idlFactory, canisterId);
+
+  // Anonymous callers cannot submit, read their own, or read the inbox.
+  await expect(
+    guest.submitEnquiry({
+      consent: true,
+      name: "Guest",
+      email: "guest@example.com",
+      message: "hello",
+      phone: "+1",
+    }),
+  ).resolves.toEqual({ err: { notAuthenticated: null } });
+  await expect(guest.listMyEnquiries()).resolves.toEqual({
+    err: { notAuthenticated: null },
+  });
+  await expect(guest.listEnquiries()).resolves.toEqual({
+    err: { notAuthenticated: null },
+  });
+
+  // A signed-in caller submits with consent and sees it in their own list.
+  const submitted = await submitter.submitEnquiry({
+    consent: true,
+    name: "Carol",
+    email: "carol@example.com",
+    message: "Interested in the emerald lot",
+    phone: "+260 97 0000000",
+  });
+  expect(submitted).toHaveProperty("ok");
+  const enquiry = (submitted as { ok: { id: string; withdrawn: boolean } }).ok;
+  expect(enquiry.withdrawn).toBe(false);
+
+  const mine = await submitter.listMyEnquiries();
+  expect((mine as { ok: { id: string }[] }).ok.map((e) => e.id)).toContain(
+    enquiry.id,
+  );
+
+  // The admin inbox lists the non-withdrawn enquiry.
+  const inbox = await adminActor.listEnquiries();
+  expect((inbox as { ok: { id: string }[] }).ok.map((e) => e.id)).toContain(
+    enquiry.id,
+  );
+
+  // Withdrawing removes it from the admin inbox but keeps it in the
+  // submitter's own list, marked withdrawn.
+  const withdrawn = await submitter.withdrawEnquiry(enquiry.id);
+  expect((withdrawn as { ok: { withdrawn: boolean } }).ok.withdrawn).toBe(true);
+
+  const inboxAfter = await adminActor.listEnquiries();
+  expect(
+    (inboxAfter as { ok: { id: string }[] }).ok.map((e) => e.id),
+  ).not.toContain(enquiry.id);
+
+  const mineAfter = await submitter.listMyEnquiries();
+  const own = (mineAfter as { ok: { id: string; withdrawn: boolean }[] }).ok.find(
+    (e) => e.id === enquiry.id,
+  );
+  expect(own?.withdrawn).toBe(true);
+});
+
+it("rejects an enquiry submitted without consent", async () => {
+  const submitter = actorFor(createIdentity("dave"));
+
+  // Consent is required by the register, not only by the form's disabled
+  // submit button: a caller that bypasses the UI is still refused.
+  const refused = await submitter.submitEnquiry({
+    consent: false,
+    name: "Dave",
+    email: "dave@example.com",
+    message: "No consent given",
+    phone: "",
+  });
+  // The declarations' variant shape is `{ invalidInput: "…" }`, not the
+  // frontend wrapper's `{ __kind__: … }`.
+  expect(refused).toHaveProperty("err");
+  expect((refused as { err: { invalidInput?: string } }).err).toHaveProperty(
+    "invalidInput",
+  );
+
+  // Nothing was recorded: the submitter's own list stays empty.
+  const mine = await submitter.listMyEnquiries();
+  expect((mine as { ok: unknown[] }).ok).toEqual([]);
+});
+
+it("rejects an enquiry missing a required field", async () => {
+  const submitter = actorFor(createIdentity("erin"));
+
+  // A blank name, email or message is refused with `invalidInput` rather than
+  // stored as an empty enquiry.
+  for (const input of [
+    { consent: true, name: "", email: "erin@example.com", message: "hi", phone: "" },
+    { consent: true, name: "Erin", email: "", message: "hi", phone: "" },
+    { consent: true, name: "Erin", email: "erin@example.com", message: "", phone: "" },
+  ]) {
+    const refused = await submitter.submitEnquiry(input);
+    expect(refused).toHaveProperty("err");
+    expect((refused as { err: { invalidInput?: string } }).err).toHaveProperty(
+      "invalidInput",
+    );
+  }
+
+  expect((await submitter.listMyEnquiries() as { ok: unknown[] }).ok).toEqual(
+    [],
+  );
+});
+
+it("does not let one submitter read or withdraw another's enquiry", async () => {
+  const owner = actorFor(createIdentity("frank"));
+  const stranger = actorFor(createIdentity("grace"));
+
+  const submitted = await owner.submitEnquiry({
+    consent: true,
+    name: "Frank",
+    email: "frank@example.com",
+    message: "Frank's private enquiry",
+    phone: "",
+  });
+  const enquiry = (submitted as { ok: { id: string } }).ok;
+
+  // The stranger's own list never carries the owner's enquiry.
+  const strangerList = await stranger.listMyEnquiries();
+  expect((strangerList as { ok: { id: string }[] }).ok).toEqual([]);
+
+  // Withdrawing another principal's enquiry is refused as unknown, and the
+  // owner's enquiry is left standing.
+  const refused = await stranger.withdrawEnquiry(enquiry.id);
+  expect(refused).toHaveProperty("err");
+  expect((refused as { err: { unknownEnquiry?: string } }).err).toHaveProperty(
+    "unknownEnquiry",
+  );
+
+  const ownerList = await owner.listMyEnquiries();
+  const own = (ownerList as { ok: { id: string; withdrawn: boolean }[] }).ok.find(
+    (e) => e.id === enquiry.id,
+  );
+  expect(own?.withdrawn).toBe(false);
+});
+
+it("serves the enquiry destination reference kind the admin inbox reads", async () => {
+  const guest = pic!.createActor<_SERVICE>(idlFactory, canisterId);
+
+  // The admin inbox reads `enquiry_destination` from the public reference
+  // catalogue to decide whether a destination email is set. The kind must be
+  // served by the register, even when no address has been configured yet.
+  const destinations = await guest.listReferenceEntries({
+    enquiry_destination: null,
+  });
+  expect(Array.isArray(destinations)).toBe(true);
+  // At most one destination entry is meaningful; any that exist are active.
+  for (const entry of destinations) {
+    expect(entry.kind).toEqual({ enquiry_destination: null });
+  }
 });

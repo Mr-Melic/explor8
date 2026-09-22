@@ -486,8 +486,17 @@
     font-synthesis-style: none;
   }
 
+  /*
+   * The site-wide text-size control writes a percentage onto this element's
+   * inline `font-size` (see hooks/use-text-size.ts). Every type size in the
+   * design system is expressed in `rem`, so scaling the root scales headings,
+   * labels, table cells and body copy together. 100% is the design default;
+   * the transition is short and only animates the size, never layout.
+   */
   html {
     color-scheme: dark;
+    font-size: 100%;
+    transition: font-size 0.16s cubic-bezier(0.4, 0, 0.2, 1);
   }
   html.light {
     color-scheme: light;
@@ -799,6 +808,9 @@
   }
   .transition-smooth,
   .transition-quick {
+    transition: none;
+  }
+  html {
     transition: none;
   }
 }

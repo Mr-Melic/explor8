@@ -93,7 +93,7 @@ export function roleLabel(role: Role): string {
  */
 export const CAPABILITY_LABELS: Record<Capability, string> = {
   [Capability.create_lot]: "Register a lot",
-  [Capability.append_event]: "Append a provenance event",
+  [Capability.append_event]: "Append a Precious Material Origin History event",
   [Capability.change_status]: "Change a lot's status",
   [Capability.split_lot]: "Split a lot",
   [Capability.merge_lot]: "Merge lots",
@@ -140,7 +140,8 @@ const ALL_STATUSES: LotStatus[] = [
 /**
  * The status transitions a role may make.
  *
- * The register records every status change as a provenance event, and the
+ * The register records every status change as a Precious Material Origin
+ * History event, and the
  * backend's `canTransition` (lib/register.mo) is the authority for which
  * transitions a role may perform. This map mirrors that rule exactly so the
  * status-history UI only offers transitions the caller can actually make:

@@ -1,3 +1,4 @@
+import { useDataMode } from "@/hooks/use-data-mode";
 import { type UploadedFile, useFileUpload } from "@/hooks/use-file-upload";
 import { useReferenceData } from "@/hooks/use-reference-data";
 import { useRegisterLot, useSuggestLotId } from "@/hooks/use-register";
@@ -78,6 +79,8 @@ function initialDraft(
  */
 export function useRegisterLotForm() {
   const { optionsFor, valueFor, isLoading } = useReferenceData();
+  const { mode, registerDemoLot } = useDataMode();
+  const isDemo = mode === "demo";
 
   const kindOptions = optionsFor("lot_kind");
   const siteOptions = optionsFor("site");
@@ -193,6 +196,41 @@ export function useRegisterLotForm() {
     setErrors(found);
     if (Object.keys(found).length > 0) return null;
 
+    // Demo mode is simulated entirely in the browser: the lot is composed from
+    // the draft and held in memory, never uploaded and never written to the
+    // register. The same draft-reset contract applies as a real seal.
+    if (isDemo) {
+      const lotId = registerDemoLot({
+        id: draft.id.trim(),
+        lotType: draft.lotType,
+        site: draft.site,
+        licence: draft.licence.trim(),
+        project: draft.project.trim(),
+        gps: draft.gps.trim(),
+        workingRef: draft.workingRef.trim(),
+        grossG: draft.grossG.trim(),
+        sealNo: draft.sealNo.trim(),
+      });
+      if (!lotId) {
+        setSubmitError(
+          "Demo registration is only available in Demo-data mode.",
+        );
+        return null;
+      }
+      setCreatedId(lotId);
+      setDraft(
+        initialDraft(
+          firstKind || draft.lotType,
+          firstSite || draft.site,
+          licenceDefault,
+          projectDefault,
+        ),
+      );
+      setIdEdited(false);
+      upload.clear();
+      return lotId;
+    }
+
     try {
       const uploaded: UploadedFile[] = await upload.uploadAll();
       const input: NewLotInput = {
@@ -248,6 +286,8 @@ export function useRegisterLotForm() {
     firstSite,
     licenceDefault,
     projectDefault,
+    isDemo,
+    registerDemoLot,
   ]);
 
   const reset = useCallback(() => {

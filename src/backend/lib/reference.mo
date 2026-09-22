@@ -34,6 +34,8 @@ module {
       case (#event_kind) "event_kind";
       case (#caption) "caption";
       case (#form_default) "form_default";
+      case (#status_explanation) "status_explanation";
+      case (#enquiry_destination) "enquiry_destination";
     };
   };
 

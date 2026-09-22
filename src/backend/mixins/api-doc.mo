@@ -100,13 +100,73 @@ mixin () {
     "\n" #
     "- `listReferenceEntries(kind)` is a public read returning the active entries\n" #
     "  of one `RefKind` (`#lot_kind`, `#site`, `#status`, `#event_kind`,\n" #
-    "  `#caption`, `#form_default`), ordered by `sortOrder`.\n" #
+    "  `#caption`, `#form_default`, `#status_explanation`,\n" #
+    "  `#enquiry_destination`), ordered by `sortOrder`.\n" #
     "- `listAllReferenceEntries()` is admin-only and returns every entry,\n" #
     "  including inactive ones, ordered by kind then `sortOrder`.\n" #
     "- `addReferenceEntry(input)`, `updateReferenceEntry(input)` and\n" #
     "  `removeReferenceEntry(id)` are admin-only. Adding an entry whose `kind`\n" #
     "  and `key` already exist returns `#duplicateEntry(key)`; editing or\n" #
     "  removing an unknown id returns `#unknownEntry(id)`.\n" #
+    "\n" #
+    "Two reference kinds carry the newer admin-managed content:\n" #
+    "\n" #
+    "- `#status_explanation` carries one entry per lot status whose `key` is the\n" #
+    "  stable status key (`open`, `in_transit`, `assayed`, `retailed`, `closed`,\n" #
+    "  `frozen`) and whose `value` is the explanation text shown in the home\n" #
+    "  page's per-status information panel. The migration seeds one entry per\n" #
+    "  status; an admin can edit, deactivate or remove them.\n" #
+    "- `#enquiry_destination` carries at most one entry whose `value` is the\n" #
+    "  optional destination email for purchase enquiries. When no such entry\n" #
+    "  exists no enquiry email is sent, and the admin responses section notes\n" #
+    "  this. The destination is ordinary reference data: an admin adds, edits or\n" #
+    "  removes it from the admin panel.\n" #
+    "\n" #
+    "### Purchase enquiries\n" #
+    "\n" #
+    "A signed-in visitor submits a purchase enquiry from the home page's\n" #
+    "\"Contact us to make a purchase\" fold-out form. The form notes that sign-in\n" #
+    "is required and blocks submission when signed out.\n" #
+    "\n" #
+    "- `submitEnquiry(input)` is a write. It requires a signed (non-anonymous)\n" #
+    "  caller and a ticked consent flag. An anonymous caller is rejected with\n" #
+    "  `#notAuthenticated`; a false `consent`, or a blank `name`, `email` or\n" #
+    "  `message`, is rejected with `#invalidInput(message)`. On success it\n" #
+    "  returns the created `EnquiryView` with `submittedAt` stamped from the\n" #
+    "  canister clock and `submittedBy` set to the caller.\n" #
+    "- `listMyEnquiries()` is a public query returning only the caller's own\n" #
+    "  enquiries, newest first. An anonymous caller is rejected with\n" #
+    "  `#notAuthenticated`.\n" #
+    "- `withdrawEnquiry(id)` is a write that marks the caller's own enquiry\n" #
+    "  withdrawn and stamps `withdrawnAt`. An id the caller does not own is\n" #
+    "  rejected with `#unknownEnquiry(id)`; withdrawing an already-withdrawn\n" #
+    "  enquiry is a no-op that returns the existing view.\n" #
+    "- `listEnquiries()` is an admin-only query returning every non-withdrawn\n" #
+    "  enquiry, newest first. A non-admin caller is rejected with\n" #
+    "  `#notAuthorized`; an anonymous caller with `#notAuthenticated`.\n" #
+    "\n" #
+    "Withdrawn enquiries are removed from the admin dashboard: `listEnquiries`\n" #
+    "never returns them, while the submitter still sees them through\n" #
+    "`listMyEnquiries`. Enquiry methods return `Result<_, EnquiryError>` with\n" #
+    "the variants `#notAuthenticated`, `#notAuthorized`, `#unknownEnquiry(id)`\n" #
+    "and `#invalidInput(message)`.\n" #
+    "\n" #
+    "### Display terms\n" #
+    "\n" #
+    "The register's display terms are held as reference data, so the stored\n" #
+    "`key` is the stable identifier while `displayName` is what a user sees.\n" #
+    "The current terms are:\n" #
+    "\n" #
+    "- The word \"provenance\" is replaced by \"Precious Material Origin History\"\n" #
+    "  everywhere it appears in the UI.\n" #
+    "- Lot field labels read \"Registered at\", \"Mining Site\", \"Mining Licence\",\n" #
+    "  \"Registered by\" and \"Lot number\".\n" #
+    "- Site labels read \"Mining Site\" / \"Mining Sites\".\n" #
+    "- Status display terms read \"Recently Mined\" (`open`), \"In transit\"\n" #
+    "  (`in_transit`), \"Testing Quality\" (`assayed`), \"Retailed\" (`retailed`),\n" #
+    "  \"Applied for crafting\" (`closed`) and \"Confiscated by Authorities\"\n" #
+    "  (`frozen`).\n" #
+    "- Event names shown in each lot block align with the current status names.\n" #
     "\n" #
     "### Analysis documents\n" #
     "\n" #
@@ -208,6 +268,7 @@ mixin () {
     "| `referenceEntry` | admin-managed reference entries | public |\n" #
     "| `analysisDocument` | uploaded analysis documents | controllers only |\n" #
     "| `roleAssignment` | role assignments | controllers only |\n" #
+    "| `enquiry` | the purchase-enquiry inbox | controllers read all; a signed-in submitter reads only their own; anonymous denied |\n" #
     "\n" #
     "`schema()` hides entities the caller cannot read, and `execute()` scopes\n" #
     "rows per entity, so a caller never sees rows a level denies them. The\n" #
@@ -217,9 +278,16 @@ mixin () {
     "with `status` and `lotType` rendered as their stable tag text (`open`,\n" #
     "`assayed`, `gold`, `emerald`, …). `referenceEntry` carries `kind` as its\n" #
     "stable tag text (`lot_kind`, `site`, `status`, `event_kind`, `caption`,\n" #
-    "`form_default`). `roleAssignment` carries `principal` (canonical textual\n" #
+    "`form_default`, `status_explanation`, `enquiry_destination`).\n" #
+    "`roleAssignment` carries `principal` (canonical textual\n" #
     "form) and `role` as its stable tag text (`guest`, `field_officer`,\n" #
     "`assayer`, `workshop`, `admin`).\n" #
+    "\n" #
+    "The `enquiry` entity is the purchase-enquiry inbox. Its `submittedBy`\n" #
+    "column is the owner column: a controller (admin) reads every enquiry,\n" #
+    "while a signed-in submitter reads only the rows they submitted, and an\n" #
+    "anonymous caller is denied. `withdrawnAt` is `0` when the enquiry still\n" #
+    "stands and the withdrawal timestamp otherwise.\n" #
     "\n" #
     "OQL is read-only: it never mutates state, and it is not a substitute for\n" #
     "the register's own methods. A query that names an unknown entity or field,\n" #
@@ -328,6 +396,14 @@ mixin () {
     "- `#notAuthorized` — the caller is not an admin.\n" #
     "- `#unknownPrincipal(principal)` — no such principal has an override.\n" #
     "- `#invalidInput(message)` — the request is malformed.\n" #
+    "\n" #
+    "Enquiry methods return `Result<_, EnquiryError>` with these variants:\n" #
+    "\n" #
+    "- `#notAuthenticated` — the caller is the anonymous principal.\n" #
+    "- `#notAuthorized` — the caller is not an admin (for `listEnquiries`).\n" #
+    "- `#unknownEnquiry(id)` — no enquiry with that id belongs to the caller.\n" #
+    "- `#invalidInput(message)` — the request is malformed, for example a\n" #
+    "  missing consent flag or a blank name, email or message.\n" #
     "\n" #
     "## Gotchas\n" #
     "\n" #

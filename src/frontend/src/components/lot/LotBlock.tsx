@@ -3,10 +3,10 @@ import { StatusPill } from "@/components/lot/StatusPill";
 import { TypePill } from "@/components/lot/TypePill";
 import type { LotView } from "@/lib/backend";
 import {
+  eventLabel,
   formatDate,
   formatGrams,
   formatTimestamp,
-  humanizeToken,
   shortenPrincipal,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,8 @@ interface LotBlockProps {
 /**
  * A lot rendered as a sealed block: night-sky face, hairline border, and a
  * lime left edge once opened. The hash line beneath the header is the
- * signature detail — provenance you can read like a ledger entry.
+ * signature detail — Precious Material Origin History you can read like a
+ * ledger entry.
  *
  * The block is single-column at every width; the metadata column that sits to
  * the right on a tablet folds under the header on a phone.
@@ -71,10 +72,10 @@ export function LotBlock({ lot, index }: LotBlockProps) {
 
           <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1">
             <span className="text-sm text-muted-foreground">
-              {lot.project || "Unassigned project"}
+              {lot.project || "Unassigned mining site"}
             </span>
             <span className="text-sm text-muted-foreground">
-              Seal {lot.sealNo || "—"}
+              Lot {lot.sealNo || "—"}
             </span>
             <span className="text-sm text-muted-foreground">
               Ref {lot.workingRef || "—"}
@@ -122,15 +123,15 @@ export function LotBlock({ lot, index }: LotBlockProps) {
                 <span className="hash text-sm">{lot.gps || "—"}</span>
               </span>
             </Field>
-            <Field label="Licence">
+            <Field label="Mining Licence">
               <span className="hash text-sm">{lot.licence || "—"}</span>
             </Field>
-            <Field label="Opened">
+            <Field label="Registered at">
               <span className="hash text-sm">
                 {formatTimestamp(lot.openedAt)}
               </span>
             </Field>
-            <Field label="Opened by">
+            <Field label="Registered by">
               <span className="hash text-sm" title={lot.openedBy.toString()}>
                 {shortenPrincipal(lot.openedBy.toString())}
               </span>
@@ -155,7 +156,7 @@ export function LotBlock({ lot, index }: LotBlockProps) {
 
           <div className="mt-6">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Provenance events
+              Precious Material Origin History events
             </p>
             {eventCount === 0 ? (
               <p className="mt-3 text-base text-muted-foreground">
@@ -173,7 +174,7 @@ export function LotBlock({ lot, index }: LotBlockProps) {
                         #{event.seq.toString()}
                       </span>
                       <span className="text-base font-medium text-foreground">
-                        {humanizeToken(event.kind)}
+                        {eventLabel(event.kind)}
                       </span>
                     </div>
                     <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">

@@ -19,6 +19,8 @@ export const REF_KINDS: RefKind[] = [
   RefKind.event_kind,
   RefKind.caption,
   RefKind.form_default,
+  RefKind.status_explanation,
+  RefKind.enquiry_destination,
 ];
 
 /** Human-readable heading for each reference kind. */
@@ -29,6 +31,8 @@ export const REF_KIND_LABEL: Record<RefKind, string> = {
   [RefKind.event_kind]: "Event kinds",
   [RefKind.caption]: "Captions",
   [RefKind.form_default]: "Form defaults",
+  [RefKind.status_explanation]: "Status explanations",
+  [RefKind.enquiry_destination]: "Enquiry destination",
 };
 
 /** One-line explanation of what each reference kind drives. */
@@ -37,9 +41,14 @@ export const REF_KIND_HINT: Record<RefKind, string> = {
   [RefKind.site]:
     "Extraction and workshop mining sites, and the id prefix each one uses.",
   [RefKind.status]: "The register statuses a lot can carry.",
-  [RefKind.event_kind]: "The provenance events an officer can append.",
+  [RefKind.event_kind]:
+    "The Precious Material Origin History events an officer can append.",
   [RefKind.caption]: "The photo captions the register asks for.",
   [RefKind.form_default]: "Prefilled values for the register-lot form.",
+  [RefKind.status_explanation]:
+    "The explanation shown for each status in the home page's status information section.",
+  [RefKind.enquiry_destination]:
+    "The optional email address that receives purchase enquiries.",
 };
 
 /** A reference entry keyed by its kind, ready for lookup. */
@@ -54,6 +63,8 @@ export function emptyReferenceIndex(): ReferenceIndex {
     [RefKind.event_kind]: [],
     [RefKind.caption]: [],
     [RefKind.form_default]: [],
+    [RefKind.status_explanation]: [],
+    [RefKind.enquiry_destination]: [],
   };
 }
 

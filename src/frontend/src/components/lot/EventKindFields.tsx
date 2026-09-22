@@ -71,7 +71,7 @@ export function EventKindFields({
       ) : null}
 
       {draft.kind === EventKind.sealed ? (
-        <Field label="Seal number" htmlFor="event-seal">
+        <Field label="Lot number" htmlFor="event-seal">
           <input
             id="event-seal"
             value={draft.sealNo}

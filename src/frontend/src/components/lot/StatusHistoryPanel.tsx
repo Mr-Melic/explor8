@@ -17,7 +17,8 @@ interface StatusHistoryPanelProps {
 /**
  * The block's status-change history, oldest first.
  *
- * Every status change is a provenance event, so this reads the register's own
+ * Every status change is a Precious Material Origin History event, so this
+ * reads the register's own
  * ordered history and falls back to the history carried on the lot view while
  * the query resolves. A long chain is stepped through with in-block arrow
  * navigation: the reader moves one entry at a time without leaving the block,
@@ -158,7 +159,7 @@ function StatusChangeRow({
   );
 }
 
-/** Oldest first, by provenance sequence. */
+/** Oldest first, by Precious Material Origin History sequence. */
 function orderHistory(history: StatusChange[] | undefined): StatusChange[] {
   if (!history) return [];
   return [...history].sort((a, b) =>

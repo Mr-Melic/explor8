@@ -2,6 +2,7 @@ import type { backendInterface } from "@/backend";
 import type {
   AnalysisDocumentView,
   Capability,
+  EnquiryView,
   LotView,
   PermissionsView,
   PurgeOutcome,
@@ -77,6 +78,14 @@ export interface MockActorOptions {
   statusHistory?: Record<string, StatusChange[]>;
   /** Every role with its display name, from `listRoles`. */
   roles?: RoleInfo[];
+  /** The caller's own enquiries returned by `listMyEnquiries`. */
+  myEnquiries?: EnquiryView[];
+  /** Every non-withdrawn enquiry returned by `listEnquiries`. */
+  enquiries?: EnquiryView[];
+  /** Result returned by `submitEnquiry`; defaults to an `ok` echoing the input. */
+  submitEnquiryResult?: unknown;
+  /** Result returned by `withdrawEnquiry`; defaults to an `ok` marking withdrawn. */
+  withdrawEnquiryResult?: unknown;
 }
 
 export function createMockActor(options: MockActorOptions = {}): MockActor {
@@ -199,6 +208,14 @@ export function createMockActor(options: MockActorOptions = {}): MockActor {
       ok: documents,
     })),
     listLots: vi.fn(async () => lots),
+    listMyEnquiries: vi.fn(async () => ({
+      __kind__: "ok",
+      ok: options.myEnquiries ?? [],
+    })),
+    listEnquiries: vi.fn(async () => ({
+      __kind__: "ok",
+      ok: options.enquiries ?? [],
+    })),
     listReferenceEntries: vi.fn(
       async (kind: RefKind) => referenceEntries[kind] ?? [],
     ),
@@ -242,6 +259,13 @@ export function createMockActor(options: MockActorOptions = {}): MockActor {
     sha256Hex: vi.fn(async () => "0".repeat(64)),
     sha256HexOfBlob: vi.fn(async () => "0".repeat(64)),
     splitLot: vi.fn(async () => ({ __kind__: "ok", ok: [] })),
+    submitEnquiry: vi.fn(
+      async () =>
+        options.submitEnquiryResult ?? {
+          __kind__: "ok",
+          ok: options.myEnquiries?.[0] ?? null,
+        },
+    ),
     statusHistory: vi.fn(
       async (lotId: string) => options.statusHistory?.[lotId] ?? [],
     ),
@@ -256,6 +280,13 @@ export function createMockActor(options: MockActorOptions = {}): MockActor {
       __kind__: "ok",
       ok: { role: options.role ?? "guest", capabilities: [] },
     })),
+    withdrawEnquiry: vi.fn(
+      async () =>
+        options.withdrawEnquiryResult ?? {
+          __kind__: "ok",
+          ok: options.myEnquiries?.[0] ?? null,
+        },
+    ),
   } as unknown as MockActor;
 
   return actor;

@@ -47,6 +47,31 @@ export interface CountBucket {
     key: string;
     count: bigint;
 }
+export type EnquiryError = {
+    __kind__: "notAuthorized";
+    notAuthorized: null;
+} | {
+    __kind__: "unknownEnquiry";
+    unknownEnquiry: string;
+} | {
+    __kind__: "invalidInput";
+    invalidInput: string;
+} | {
+    __kind__: "notAuthenticated";
+    notAuthenticated: null;
+};
+export interface EnquiryView {
+    id: string;
+    consent: boolean;
+    name: string;
+    submittedAt: Timestamp;
+    submittedBy: Principal;
+    email: string;
+    withdrawnAt?: Timestamp;
+    message: string;
+    phone: string;
+    withdrawn: boolean;
+}
 export type Error_ = {
     __kind__: "FrontendOriginsNotConfigured";
     FrontendOriginsNotConfigured: null;
@@ -154,6 +179,13 @@ export interface NewAnalysisDocumentInput {
     note: string;
     fileId: FileId;
     docKind: string;
+}
+export interface NewEnquiryInput {
+    consent: boolean;
+    name: string;
+    email: string;
+    message: string;
+    phone: string;
 }
 export interface NewEventInput {
     kind: EventKind;
@@ -315,133 +347,147 @@ export interface RegisterSummary {
 }
 export type Result = {
     __kind__: "ok";
+    ok: EnquiryView;
+} | {
+    __kind__: "err";
+    err: EnquiryError;
+};
+export type Result_1 = {
+    __kind__: "ok";
     ok: RolePermissions;
 } | {
     __kind__: "err";
     err: PermissionsError;
 };
-export type Result_1 = {
+export type Result_10 = {
     __kind__: "ok";
-    ok: RefEntryView;
+    ok: Array<EnquiryView>;
+} | {
+    __kind__: "err";
+    err: EnquiryError;
+};
+export type Result_11 = {
+    __kind__: "ok";
+    ok: Array<AnalysisDocumentView>;
 } | {
     __kind__: "err";
     err: ReferenceError;
 };
-export type Result_10 = {
+export type Result_12 = {
     __kind__: "ok";
     ok: Array<RefEntryView>;
 } | {
     __kind__: "err";
     err: ReferenceError;
 };
-export type Result_11 = {
+export type Result_13 = {
     __kind__: "ok";
     ok: Array<ActorRole>;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_12 = {
+export type Result_14 = {
     __kind__: "ok";
     ok: PurgeRequestView | null;
 } | {
     __kind__: "err";
     err: PurgeError;
 };
-export type Result_13 = {
+export type Result_15 = {
     __kind__: "ok";
     ok: PermissionsView;
 } | {
     __kind__: "err";
     err: PermissionsError;
 };
-export type Result_14 = {
+export type Result_16 = {
     __kind__: "ok";
     ok: LotId;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_15 = {
+export type Result_17 = {
     __kind__: "ok";
     ok: Role;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_16 = {
+export type Result_18 = {
     __kind__: "ok";
     ok: ActorRole;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_17 = {
+export type Result_19 = {
     __kind__: "ok";
     ok: AnalysisDocumentView;
 } | {
     __kind__: "err";
     err: ReferenceError;
 };
-export type Result_18 = {
+export type Result_2 = {
+    __kind__: "ok";
+    ok: RefEntryView;
+} | {
+    __kind__: "err";
+    err: ReferenceError;
+};
+export type Result_20 = {
     __kind__: "ok";
     ok: null;
 } | {
     __kind__: "err";
     err: Error_;
 };
-export type Result_2 = {
+export type Result_3 = {
     __kind__: "ok";
     ok: Array<LotView>;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_3 = {
+export type Result_4 = {
     __kind__: "ok";
     ok: PrincipalOverride;
 } | {
     __kind__: "err";
     err: PermissionsError;
 };
-export type Result_4 = {
+export type Result_5 = {
     __kind__: "ok";
     ok: PurgeOutcome;
 } | {
     __kind__: "err";
     err: PurgeError;
 };
-export type Result_5 = {
+export type Result_6 = {
     __kind__: "ok";
     ok: null;
 } | {
     __kind__: "err";
     err: ReferenceError;
 };
-export type Result_6 = {
+export type Result_7 = {
     __kind__: "ok";
     ok: null;
 } | {
     __kind__: "err";
     err: PermissionsError;
 };
-export type Result_7 = {
+export type Result_8 = {
     __kind__: "ok";
     ok: LotView;
 } | {
     __kind__: "err";
     err: RegisterError;
 };
-export type Result_8 = {
-    __kind__: "ok";
-    ok: RegisterAnalytics;
-} | {
-    __kind__: "err";
-    err: ReferenceError;
-};
 export type Result_9 = {
     __kind__: "ok";
-    ok: Array<AnalysisDocumentView>;
+    ok: RegisterAnalytics;
 } | {
     __kind__: "err";
     err: ReferenceError;
@@ -555,8 +601,10 @@ export enum RefKind {
     site = "site",
     form_default = "form_default",
     lot_kind = "lot_kind",
+    status_explanation = "status_explanation",
     caption = "caption",
-    event_kind = "event_kind"
+    event_kind = "event_kind",
+    enquiry_destination = "enquiry_destination"
 }
 export enum Role {
     workshop = "workshop",
@@ -592,21 +640,21 @@ export interface backendInterface {
     /**
      * / Store an analysis document. Admin only.
      */
-    addAnalysisDocument(input: NewAnalysisDocumentInput): Promise<Result_17>;
+    addAnalysisDocument(input: NewAnalysisDocumentInput): Promise<Result_19>;
     /**
      * / Add a reference entry. Admin only.
      */
-    addReferenceEntry(input: NewRefEntryInput): Promise<Result_1>;
+    addReferenceEntry(input: NewRefEntryInput): Promise<Result_2>;
     /**
      * / Append a provenance event to a lot. The caller's role must permit the
      * / event kind.
      */
-    appendEvent(lotId: LotId, input: NewEventInput): Promise<Result_7>;
+    appendEvent(lotId: LotId, input: NewEventInput): Promise<Result_8>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     /**
      * / Assign a role to a principal. Admin only.
      */
-    assignRole(target: Principal, role: Role): Promise<Result_16>;
+    assignRole(target: Principal, role: Role): Promise<Result_18>;
     /**
      * / Canonical event payload JSON, so the frontend can recompute payloadHash.
      */
@@ -622,28 +670,28 @@ export interface backendInterface {
      * / Record a status change as a new provenance event in the lot's chain. The
      * / caller's role must be permitted to make the transition.
      */
-    changeStatus(lotId: LotId, input: StatusChangeInput): Promise<Result_7>;
+    changeStatus(lotId: LotId, input: StatusChangeInput): Promise<Result_8>;
     /**
      * / The first identity that claims admin becomes admin.
      */
-    claimAdmin(): Promise<Result_15>;
+    claimAdmin(): Promise<Result_17>;
     /**
      * / Confirm the open purge request. Admin only. Executes automatically once
      * / more than half of the currently-assigned admins have confirmed.
      */
-    confirmPurge(): Promise<Result_4>;
+    confirmPurge(): Promise<Result_5>;
     /**
      * / Delete exactly one block, removing its events, hash chain and stored file
      * / references. Requires the `#delete_lot` capability, held by admin by
      * / default; a caller without it is refused with `#notAuthorized`. This is the
      * / register's one explicit destructive action.
      */
-    deleteLot(lotId: LotId): Promise<Result_14>;
+    deleteLot(lotId: LotId): Promise<Result_16>;
     execute(qJson: string): Promise<Result__1>;
     /**
      * / Freeze a lot. Admin only.
      */
-    freezeLot(lotId: LotId): Promise<Result_7>;
+    freezeLot(lotId: LotId): Promise<Result_8>;
     /**
      * / The backend's public API documentation as Markdown.
      */
@@ -664,11 +712,11 @@ export interface backendInterface {
     /**
      * / The full Permissions section. Admin only.
      */
-    getPermissions(): Promise<Result_13>;
+    getPermissions(): Promise<Result_15>;
     /**
      * / The open purge request and its confirmation progress, if any. Admin only.
      */
-    getPurgeRequest(): Promise<Result_12>;
+    getPurgeRequest(): Promise<Result_14>;
     /**
      * / Whether an administrator already exists. Public and non-sensitive: it
      * / lets the frontend hide the claim action once the role has been claimed.
@@ -678,19 +726,27 @@ export interface backendInterface {
     /**
      * / List every actor with its principal and role. Admin only.
      */
-    listActors(): Promise<Result_11>;
+    listActors(): Promise<Result_13>;
     /**
      * / List every reference entry, including inactive ones. Admin only.
      */
-    listAllReferenceEntries(): Promise<Result_10>;
+    listAllReferenceEntries(): Promise<Result_12>;
     /**
      * / List the stored analysis documents, newest first. Admin only.
      */
-    listAnalysisDocuments(): Promise<Result_9>;
+    listAnalysisDocuments(): Promise<Result_11>;
+    /**
+     * / List every non-withdrawn enquiry, newest first. Admin only.
+     */
+    listEnquiries(): Promise<Result_10>;
     /**
      * / List every lot in the register. Public read.
      */
     listLots(): Promise<Array<LotView>>;
+    /**
+     * / List the caller's own enquiries, newest first. Signed-in callers only.
+     */
+    listMyEnquiries(): Promise<Result_10>;
     /**
      * / List the active reference entries of one kind. Public read: the register's
      * / forms and displays are driven by this data.
@@ -703,16 +759,16 @@ export interface backendInterface {
     /**
      * / Merge a source lot into a destination lot. Workshop or admin only.
      */
-    mergeLots(input: MergeInput): Promise<Result_7>;
+    mergeLots(input: MergeInput): Promise<Result_8>;
     /**
      * / The register's own live analytics. Admin only.
      */
-    registerAnalytics(): Promise<Result_8>;
+    registerAnalytics(): Promise<Result_9>;
     /**
      * / Register a new lot. Signed-in callers with a role that permits the lot
      * / type only.
      */
-    registerLot(input: NewLotInput): Promise<Result_7>;
+    registerLot(input: NewLotInput): Promise<Result_8>;
     /**
      * / Aggregate register data for the home-page graph. Public read.
      */
@@ -720,19 +776,19 @@ export interface backendInterface {
     /**
      * / Remove an analysis document. Admin only.
      */
-    removeAnalysisDocument(id: string): Promise<Result_5>;
+    removeAnalysisDocument(id: string): Promise<Result_6>;
     /**
      * / Remove a per-principal permission override. Admin only.
      */
-    removePrincipalOverride(target: Principal): Promise<Result_6>;
+    removePrincipalOverride(target: Principal): Promise<Result_7>;
     /**
      * / Remove a reference entry. Admin only.
      */
-    removeReferenceEntry(id: string): Promise<Result_5>;
+    removeReferenceEntry(id: string): Promise<Result_6>;
     /**
      * / Open a purge request. Admin only. The phrase must be typed verbatim.
      */
-    requestPurge(phrase: string): Promise<Result_4>;
+    requestPurge(phrase: string): Promise<Result_5>;
     /**
      * / The human-readable display name for a role. 'Assayer' reads
      * / 'Quality Tester' and 'Workshop' reads 'Custom Role'.
@@ -746,7 +802,7 @@ export interface backendInterface {
     /**
      * / Set a per-principal permission override for a role. Admin only.
      */
-    setPrincipalOverride(input: SetPrincipalOverrideInput): Promise<Result_3>;
+    setPrincipalOverride(input: SetPrincipalOverrideInput): Promise<Result_4>;
     /**
      * / SHA-256 of a UTF-8 text as 64 lowercase hex characters.
      */
@@ -758,11 +814,15 @@ export interface backendInterface {
     /**
      * / Split a lot into child lots. Workshop or admin only.
      */
-    splitLot(input: SplitInput): Promise<Result_2>;
+    splitLot(input: SplitInput): Promise<Result_3>;
     /**
      * / The status-change history for a lot, in provenance order. Public read.
      */
     statusHistory(lotId: LotId): Promise<Array<StatusChange>>;
+    /**
+     * / Submit a purchase enquiry. Signed-in callers only; consent is required.
+     */
+    submitEnquiry(input: NewEnquiryInput): Promise<Result>;
     /**
      * / Suggest the next lot id for a site and date.
      */
@@ -770,9 +830,13 @@ export interface backendInterface {
     /**
      * / Edit a reference entry. Admin only.
      */
-    updateReferenceEntry(input: UpdateRefEntryInput): Promise<Result_1>;
+    updateReferenceEntry(input: UpdateRefEntryInput): Promise<Result_2>;
     /**
      * / Edit a role's default permission set. Admin only.
      */
-    updateRolePermissions(input: UpdateRolePermissionsInput): Promise<Result>;
+    updateRolePermissions(input: UpdateRolePermissionsInput): Promise<Result_1>;
+    /**
+     * / Withdraw the caller's own enquiry. Signed-in callers only.
+     */
+    withdrawEnquiry(id: string): Promise<Result>;
 }

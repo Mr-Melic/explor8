@@ -1,3 +1,4 @@
+import { useDataMode } from "@/hooks/use-data-mode";
 import { type UploadedFile, useFileUpload } from "@/hooks/use-file-upload";
 import {
   useAppendEvent,
@@ -120,6 +121,9 @@ export function useAppendEventForm(lot: LotView) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const { mode, appendDemoEventToLot } = useDataMode();
+  const isDemo = mode === "demo";
+
   const upload = useFileUpload();
   const appendEvent = useAppendEvent();
   const splitLot = useSplitLot();
@@ -213,6 +217,22 @@ export function useAppendEventForm(lot: LotView) {
       if (payload === null) {
         setError("Complete the fields for this event kind.");
         return null;
+      }
+
+      // Demo mode simulates the append in the browser: the event is added to
+      // the in-memory demo lot and nothing is uploaded or written.
+      if (isDemo) {
+        const updated = appendDemoEventToLot(lot.id, {
+          kind: draft.kind,
+          payload,
+        });
+        if (!updated) {
+          setError("Demo appends are only available in Demo-data mode.");
+          return null;
+        }
+        setDraft(initialDraft());
+        setSuccess(`Event appended to ${lot.id}.`);
+        return lot.id;
       }
 
       let uploaded: UploadedFile[] = [];
@@ -315,6 +335,8 @@ export function useAppendEventForm(lot: LotView) {
     childIds,
     childWeights,
     sourceIds,
+    isDemo,
+    appendDemoEventToLot,
   ]);
 
   const reset = useCallback(() => {

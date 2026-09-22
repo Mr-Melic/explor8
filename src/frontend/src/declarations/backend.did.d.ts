@@ -47,6 +47,22 @@ export interface CapabilityRow {
 }
 export interface Cell { 'value' : Value, 'name' : string }
 export interface CountBucket { 'key' : string, 'count' : bigint }
+export type EnquiryError = { 'notAuthorized' : null } |
+  { 'unknownEnquiry' : string } |
+  { 'invalidInput' : string } |
+  { 'notAuthenticated' : null };
+export interface EnquiryView {
+  'id' : string,
+  'consent' : boolean,
+  'name' : string,
+  'submittedAt' : Timestamp,
+  'submittedBy' : Principal,
+  'email' : string,
+  'withdrawnAt' : [] | [Timestamp],
+  'message' : string,
+  'phone' : string,
+  'withdrawn' : boolean,
+}
 export type Error = { 'FrontendOriginsNotConfigured' : null } |
   {
     'MixedSsoSources' : {
@@ -144,6 +160,13 @@ export interface NewAnalysisDocumentInput {
   'fileId' : FileId,
   'docKind' : string,
 }
+export interface NewEnquiryInput {
+  'consent' : boolean,
+  'name' : string,
+  'email' : string,
+  'message' : string,
+  'phone' : string,
+}
 export interface NewEventInput {
   'kind' : EventKind,
   'fileHashes' : Array<FileHash>,
@@ -222,8 +245,10 @@ export type RefKind = { 'status' : null } |
   { 'site' : null } |
   { 'form_default' : null } |
   { 'lot_kind' : null } |
+  { 'status_explanation' : null } |
   { 'caption' : null } |
-  { 'event_kind' : null };
+  { 'event_kind' : null } |
+  { 'enquiry_destination' : null };
 export type ReferenceError = { 'notAuthorized' : null } |
   { 'invalidInput' : string } |
   { 'duplicateEntry' : string } |
@@ -253,43 +278,47 @@ export interface RegisterSummary {
   'byStatus' : Array<CountBucket>,
   'activity' : Array<ActivityPoint>,
 }
-export type Result = { 'ok' : RolePermissions } |
+export type Result = { 'ok' : EnquiryView } |
+  { 'err' : EnquiryError };
+export type Result_1 = { 'ok' : RolePermissions } |
   { 'err' : PermissionsError };
-export type Result_1 = { 'ok' : RefEntryView } |
+export type Result_10 = { 'ok' : Array<EnquiryView> } |
+  { 'err' : EnquiryError };
+export type Result_11 = { 'ok' : Array<AnalysisDocumentView> } |
   { 'err' : ReferenceError };
-export type Result_10 = { 'ok' : Array<RefEntryView> } |
+export type Result_12 = { 'ok' : Array<RefEntryView> } |
   { 'err' : ReferenceError };
-export type Result_11 = { 'ok' : Array<ActorRole> } |
+export type Result_13 = { 'ok' : Array<ActorRole> } |
   { 'err' : RegisterError };
-export type Result_12 = { 'ok' : [] | [PurgeRequestView] } |
+export type Result_14 = { 'ok' : [] | [PurgeRequestView] } |
   { 'err' : PurgeError };
-export type Result_13 = { 'ok' : PermissionsView } |
+export type Result_15 = { 'ok' : PermissionsView } |
   { 'err' : PermissionsError };
-export type Result_14 = { 'ok' : LotId } |
+export type Result_16 = { 'ok' : LotId } |
   { 'err' : RegisterError };
-export type Result_15 = { 'ok' : Role } |
+export type Result_17 = { 'ok' : Role } |
   { 'err' : RegisterError };
-export type Result_16 = { 'ok' : ActorRole } |
+export type Result_18 = { 'ok' : ActorRole } |
   { 'err' : RegisterError };
-export type Result_17 = { 'ok' : AnalysisDocumentView } |
+export type Result_19 = { 'ok' : AnalysisDocumentView } |
   { 'err' : ReferenceError };
-export type Result_18 = { 'ok' : null } |
+export type Result_2 = { 'ok' : RefEntryView } |
+  { 'err' : ReferenceError };
+export type Result_20 = { 'ok' : null } |
   { 'err' : Error };
-export type Result_2 = { 'ok' : Array<LotView> } |
+export type Result_3 = { 'ok' : Array<LotView> } |
   { 'err' : RegisterError };
-export type Result_3 = { 'ok' : PrincipalOverride } |
+export type Result_4 = { 'ok' : PrincipalOverride } |
   { 'err' : PermissionsError };
-export type Result_4 = { 'ok' : PurgeOutcome } |
+export type Result_5 = { 'ok' : PurgeOutcome } |
   { 'err' : PurgeError };
-export type Result_5 = { 'ok' : null } |
-  { 'err' : ReferenceError };
 export type Result_6 = { 'ok' : null } |
-  { 'err' : PermissionsError };
-export type Result_7 = { 'ok' : LotView } |
-  { 'err' : RegisterError };
-export type Result_8 = { 'ok' : RegisterAnalytics } |
   { 'err' : ReferenceError };
-export type Result_9 = { 'ok' : Array<AnalysisDocumentView> } |
+export type Result_7 = { 'ok' : null } |
+  { 'err' : PermissionsError };
+export type Result_8 = { 'ok' : LotView } |
+  { 'err' : RegisterError };
+export type Result_9 = { 'ok' : RegisterAnalytics } |
   { 'err' : ReferenceError };
 export interface Result__1 { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Role = { 'workshop' : null } |
@@ -358,26 +387,26 @@ export type Value = { 'int' : bigint } |
  */
 export interface _SERVICE {
   '_initialize_access_control' : ActorMethod<[], undefined>,
-  '_internet_identity_sign_in_finish' : ActorMethod<[], Result_18>,
+  '_internet_identity_sign_in_finish' : ActorMethod<[], Result_20>,
   '_internet_identity_sign_in_start' : ActorMethod<[], Uint8Array>,
   /**
    * / Store an analysis document. Admin only.
    */
-  'addAnalysisDocument' : ActorMethod<[NewAnalysisDocumentInput], Result_17>,
+  'addAnalysisDocument' : ActorMethod<[NewAnalysisDocumentInput], Result_19>,
   /**
    * / Add a reference entry. Admin only.
    */
-  'addReferenceEntry' : ActorMethod<[NewRefEntryInput], Result_1>,
+  'addReferenceEntry' : ActorMethod<[NewRefEntryInput], Result_2>,
   /**
    * / Append a provenance event to a lot. The caller's role must permit the
    * / event kind.
    */
-  'appendEvent' : ActorMethod<[LotId, NewEventInput], Result_7>,
+  'appendEvent' : ActorMethod<[LotId, NewEventInput], Result_8>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   /**
    * / Assign a role to a principal. Admin only.
    */
-  'assignRole' : ActorMethod<[Principal, Role], Result_16>,
+  'assignRole' : ActorMethod<[Principal, Role], Result_18>,
   /**
    * / Canonical event payload JSON, so the frontend can recompute payloadHash.
    */
@@ -396,28 +425,28 @@ export interface _SERVICE {
    * / Record a status change as a new provenance event in the lot's chain. The
    * / caller's role must be permitted to make the transition.
    */
-  'changeStatus' : ActorMethod<[LotId, StatusChangeInput], Result_7>,
+  'changeStatus' : ActorMethod<[LotId, StatusChangeInput], Result_8>,
   /**
    * / The first identity that claims admin becomes admin.
    */
-  'claimAdmin' : ActorMethod<[], Result_15>,
+  'claimAdmin' : ActorMethod<[], Result_17>,
   /**
    * / Confirm the open purge request. Admin only. Executes automatically once
    * / more than half of the currently-assigned admins have confirmed.
    */
-  'confirmPurge' : ActorMethod<[], Result_4>,
+  'confirmPurge' : ActorMethod<[], Result_5>,
   /**
    * / Delete exactly one block, removing its events, hash chain and stored file
    * / references. Requires the `#delete_lot` capability, held by admin by
    * / default; a caller without it is refused with `#notAuthorized`. This is the
    * / register's one explicit destructive action.
    */
-  'deleteLot' : ActorMethod<[LotId], Result_14>,
+  'deleteLot' : ActorMethod<[LotId], Result_16>,
   'execute' : ActorMethod<[string], Result__1>,
   /**
    * / Freeze a lot. Admin only.
    */
-  'freezeLot' : ActorMethod<[LotId], Result_7>,
+  'freezeLot' : ActorMethod<[LotId], Result_8>,
   /**
    * / The backend's public API documentation as Markdown.
    */
@@ -438,11 +467,11 @@ export interface _SERVICE {
   /**
    * / The full Permissions section. Admin only.
    */
-  'getPermissions' : ActorMethod<[], Result_13>,
+  'getPermissions' : ActorMethod<[], Result_15>,
   /**
    * / The open purge request and its confirmation progress, if any. Admin only.
    */
-  'getPurgeRequest' : ActorMethod<[], Result_12>,
+  'getPurgeRequest' : ActorMethod<[], Result_14>,
   /**
    * / Whether an administrator already exists. Public and non-sensitive: it
    * / lets the frontend hide the claim action once the role has been claimed.
@@ -452,19 +481,27 @@ export interface _SERVICE {
   /**
    * / List every actor with its principal and role. Admin only.
    */
-  'listActors' : ActorMethod<[], Result_11>,
+  'listActors' : ActorMethod<[], Result_13>,
   /**
    * / List every reference entry, including inactive ones. Admin only.
    */
-  'listAllReferenceEntries' : ActorMethod<[], Result_10>,
+  'listAllReferenceEntries' : ActorMethod<[], Result_12>,
   /**
    * / List the stored analysis documents, newest first. Admin only.
    */
-  'listAnalysisDocuments' : ActorMethod<[], Result_9>,
+  'listAnalysisDocuments' : ActorMethod<[], Result_11>,
+  /**
+   * / List every non-withdrawn enquiry, newest first. Admin only.
+   */
+  'listEnquiries' : ActorMethod<[], Result_10>,
   /**
    * / List every lot in the register. Public read.
    */
   'listLots' : ActorMethod<[], Array<LotView>>,
+  /**
+   * / List the caller's own enquiries, newest first. Signed-in callers only.
+   */
+  'listMyEnquiries' : ActorMethod<[], Result_10>,
   /**
    * / List the active reference entries of one kind. Public read: the register's
    * / forms and displays are driven by this data.
@@ -477,16 +514,16 @@ export interface _SERVICE {
   /**
    * / Merge a source lot into a destination lot. Workshop or admin only.
    */
-  'mergeLots' : ActorMethod<[MergeInput], Result_7>,
+  'mergeLots' : ActorMethod<[MergeInput], Result_8>,
   /**
    * / The register's own live analytics. Admin only.
    */
-  'registerAnalytics' : ActorMethod<[], Result_8>,
+  'registerAnalytics' : ActorMethod<[], Result_9>,
   /**
    * / Register a new lot. Signed-in callers with a role that permits the lot
    * / type only.
    */
-  'registerLot' : ActorMethod<[NewLotInput], Result_7>,
+  'registerLot' : ActorMethod<[NewLotInput], Result_8>,
   /**
    * / Aggregate register data for the home-page graph. Public read.
    */
@@ -494,19 +531,19 @@ export interface _SERVICE {
   /**
    * / Remove an analysis document. Admin only.
    */
-  'removeAnalysisDocument' : ActorMethod<[string], Result_5>,
+  'removeAnalysisDocument' : ActorMethod<[string], Result_6>,
   /**
    * / Remove a per-principal permission override. Admin only.
    */
-  'removePrincipalOverride' : ActorMethod<[Principal], Result_6>,
+  'removePrincipalOverride' : ActorMethod<[Principal], Result_7>,
   /**
    * / Remove a reference entry. Admin only.
    */
-  'removeReferenceEntry' : ActorMethod<[string], Result_5>,
+  'removeReferenceEntry' : ActorMethod<[string], Result_6>,
   /**
    * / Open a purge request. Admin only. The phrase must be typed verbatim.
    */
-  'requestPurge' : ActorMethod<[string], Result_4>,
+  'requestPurge' : ActorMethod<[string], Result_5>,
   /**
    * / The human-readable display name for a role. 'Assayer' reads
    * / 'Quality Tester' and 'Workshop' reads 'Custom Role'.
@@ -520,7 +557,7 @@ export interface _SERVICE {
   /**
    * / Set a per-principal permission override for a role. Admin only.
    */
-  'setPrincipalOverride' : ActorMethod<[SetPrincipalOverrideInput], Result_3>,
+  'setPrincipalOverride' : ActorMethod<[SetPrincipalOverrideInput], Result_4>,
   /**
    * / SHA-256 of a UTF-8 text as 64 lowercase hex characters.
    */
@@ -532,11 +569,15 @@ export interface _SERVICE {
   /**
    * / Split a lot into child lots. Workshop or admin only.
    */
-  'splitLot' : ActorMethod<[SplitInput], Result_2>,
+  'splitLot' : ActorMethod<[SplitInput], Result_3>,
   /**
    * / The status-change history for a lot, in provenance order. Public read.
    */
   'statusHistory' : ActorMethod<[LotId], Array<StatusChange>>,
+  /**
+   * / Submit a purchase enquiry. Signed-in callers only; consent is required.
+   */
+  'submitEnquiry' : ActorMethod<[NewEnquiryInput], Result>,
   /**
    * / Suggest the next lot id for a site and date.
    */
@@ -544,11 +585,15 @@ export interface _SERVICE {
   /**
    * / Edit a reference entry. Admin only.
    */
-  'updateReferenceEntry' : ActorMethod<[UpdateRefEntryInput], Result_1>,
+  'updateReferenceEntry' : ActorMethod<[UpdateRefEntryInput], Result_2>,
   /**
    * / Edit a role's default permission set. Admin only.
    */
-  'updateRolePermissions' : ActorMethod<[UpdateRolePermissionsInput], Result>,
+  'updateRolePermissions' : ActorMethod<[UpdateRolePermissionsInput], Result_1>,
+  /**
+   * / Withdraw the caller's own enquiry. Signed-in callers only.
+   */
+  'withdrawEnquiry' : ActorMethod<[string], Result>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

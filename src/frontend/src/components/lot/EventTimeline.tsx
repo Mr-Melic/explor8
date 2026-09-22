@@ -5,7 +5,12 @@ import { StatusPill } from "@/components/lot/StatusPill";
 import { useReferenceData } from "@/hooks/use-reference-data";
 import type { EventView, LotView, StatusChange } from "@/lib/backend";
 import { EventKind, RefKind } from "@/lib/backend";
-import { formatTimestamp, humanizeToken, shortenPrincipal } from "@/lib/format";
+import {
+  eventLabel,
+  formatTimestamp,
+  humanizeToken,
+  shortenPrincipal,
+} from "@/lib/format";
 import { Paperclip, Undo2 } from "lucide-react";
 import { useState } from "react";
 
@@ -18,7 +23,8 @@ interface EventTimelineProps {
 }
 
 /**
- * The provenance timeline for a lot, oldest first, with the append panel at
+ * The Precious Material Origin History timeline for a lot, oldest first, with
+ * the append panel at
  * the foot. History reads downward and never rewrites: a correction event
  * points back at the sequence it supersedes instead of replacing it.
  *
@@ -35,7 +41,8 @@ export function EventTimeline({ lot, canAppend, frozen }: EventTimelineProps) {
   );
 
   // A status-change event carries the resulting status in the lot's status
-  // history, keyed by the same provenance sequence. Resolve it here so the
+  // history, keyed by the same Precious Material Origin History sequence.
+  // Resolve it here so the
   // timeline can show which status the event moved the block to.
   const statusBySeq = new Map<string, StatusChange>();
   for (const change of lot.statusHistory ?? []) {
@@ -114,7 +121,7 @@ function EventRow({
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="hash shrink-0 text-sm">#{event.seq.toString()}</span>
         <span className="text-base font-medium text-foreground">
-          {isStatusChange ? "Status change" : humanizeToken(event.kind)}
+          {isStatusChange ? "Status change" : eventLabel(event.kind)}
         </span>
       </div>
 

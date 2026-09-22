@@ -5072,7 +5072,7 @@ function sqrt5mod8(Fp3, n) {
   return root2;
 }
 function sqrt9mod16(P2) {
-  const Fp_ = Field$3(P2);
+  const Fp_ = Field$4(P2);
   const tn = tonelliShanks(P2);
   const c1 = tn(Fp_, Fp_.neg(Fp_.ONE));
   const c2 = tn(Fp_, c1);
@@ -5103,7 +5103,7 @@ function tonelliShanks(P2) {
     S2++;
   }
   let Z2 = _2n$6;
-  const _Fp = Field$3(P2);
+  const _Fp = Field$4(P2);
   while (FpLegendre(_Fp, Z2) === 1) {
     if (Z2++ > 1e3)
       throw new Error("Cannot find square root: probably non-prime P");
@@ -5236,7 +5236,7 @@ function nLength(n, nBitLength) {
   const nByteLength = Math.ceil(_nBitLength / 8);
   return { nBitLength: _nBitLength, nByteLength };
 }
-function Field$3(ORDER, bitLenOrOpts, isLE = false, opts = {}) {
+function Field$4(ORDER, bitLenOrOpts, isLE = false, opts = {}) {
   if (ORDER <= _0n$6)
     throw new Error("invalid field: expected ORDER > 0, got " + ORDER);
   let _nbitLength = void 0;
@@ -5606,7 +5606,7 @@ function createField(order, field, isLE) {
     validateField(field);
     return field;
   } else {
-    return Field$3(order, { isLE });
+    return Field$4(order, { isLE });
   }
 }
 function _createCurveFields(type, CURVE, curveOpts = {}, FpFnLE) {
@@ -6403,7 +6403,7 @@ function _weierstrass_legacy_opts_to_new(c2) {
   };
   const Fp3 = c2.Fp;
   let allowedLengths = c2.allowedPrivateKeyLengths ? Array.from(new Set(c2.allowedPrivateKeyLengths.map((l2) => Math.ceil(l2 / 2)))) : void 0;
-  const Fn = Field$3(CURVE.n, {
+  const Fn = Field$4(CURVE.n, {
     BITS: c2.nBitLength,
     allowedLengths,
     modFromBytes: c2.wrapPrivateKey
@@ -7460,7 +7460,7 @@ class _Field12 {
   }
 }
 function tower12(opts) {
-  const Fp3 = Field$3(opts.ORDER);
+  const Fp3 = Field$4(opts.ORDER);
   const Fp22 = new _Field2(Fp3, opts);
   const Fp62 = new _Field6(Fp22);
   const Fp122 = new _Field12(Fp62, opts);
@@ -7479,7 +7479,7 @@ const bls12_381_CURVE_G1 = {
   Gx: BigInt("0x17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"),
   Gy: BigInt("0x08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1")
 };
-const bls12_381_Fr = Field$3(bls12_381_CURVE_G1.n, {
+const bls12_381_Fr = Field$4(bls12_381_CURVE_G1.n, {
   modFromBytes: true,
   isLE: true
 });
@@ -9275,7 +9275,7 @@ function _eddsa_legacy_opts_to_new(c2) {
     Gy: c2.Gy
   };
   const Fp3 = c2.Fp;
-  const Fn = Field$3(CURVE.n, c2.nBitLength, true);
+  const Fn = Field$4(CURVE.n, c2.nBitLength, true);
   const curveOpts = { Fp: Fp3, Fn, uvRatio: c2.uvRatio };
   const eddsaOpts = {
     randomBytes: c2.randomBytes,
@@ -9360,7 +9360,7 @@ function uvRatio(u2, v2) {
     x3 = mod(-x3, P2);
   return { isValid: useRoot1 || useRoot2, value: x3 };
 }
-const Fp = /* @__PURE__ */ (() => Field$3(ed25519_CURVE.p, { isLE: true }))();
+const Fp = /* @__PURE__ */ (() => Field$4(ed25519_CURVE.p, { isLE: true }))();
 const ed25519Defaults = /* @__PURE__ */ (() => ({
   ...ed25519_CURVE,
   Fp,
@@ -33331,7 +33331,7 @@ const Error$1 = Variant({
     "expected": Vec(Text)
   })
 });
-const Result_18 = Variant({ "ok": Null, "err": Error$1 });
+const Result_20 = Variant({ "ok": Null, "err": Error$1 });
 const HashHex = Text;
 const FileId = Text;
 const NewAnalysisDocumentInput = Record({
@@ -33360,7 +33360,7 @@ const ReferenceError2 = Variant({
   "notAuthenticated": Null,
   "unknownEntry": Text
 });
-const Result_17 = Variant({
+const Result_19 = Variant({
   "ok": AnalysisDocumentView,
   "err": ReferenceError2
 });
@@ -33369,8 +33369,10 @@ const RefKind$1 = Variant({
   "site": Null,
   "form_default": Null,
   "lot_kind": Null,
+  "status_explanation": Null,
   "caption": Null,
-  "event_kind": Null
+  "event_kind": Null,
+  "enquiry_destination": Null
 });
 const NewRefEntryInput = Record({
   "key": Text,
@@ -33388,7 +33390,7 @@ const RefEntryView = Record({
   "sortOrder": Nat,
   "kind": RefKind$1
 });
-const Result_1 = Variant({
+const Result_2 = Variant({
   "ok": RefEntryView,
   "err": ReferenceError2
 });
@@ -33479,7 +33481,7 @@ const RegisterError = Variant({
   "lotFrozen": LotId,
   "notAuthenticated": Null
 });
-const Result_7 = Variant({ "ok": LotView, "err": RegisterError });
+const Result_8 = Variant({ "ok": LotView, "err": RegisterError });
 const UserRole = Variant({
   "admin": Null,
   "user": Null,
@@ -33496,7 +33498,7 @@ const ActorRole = Record({
   "principal": Principal2,
   "role": Role$1
 });
-const Result_16 = Variant({
+const Result_18 = Variant({
   "ok": ActorRole,
   "err": RegisterError
 });
@@ -33504,7 +33506,7 @@ const StatusChangeInput = Record({
   "to": LotStatus$1,
   "payload": Text
 });
-const Result_15 = Variant({ "ok": Role$1, "err": RegisterError });
+const Result_17 = Variant({ "ok": Role$1, "err": RegisterError });
 const PurgeRequestView = Record({
   "id": Text,
   "confirmedBy": Vec(Principal2),
@@ -33534,11 +33536,11 @@ const PurgeError = Variant({
   "noPendingRequest": Null,
   "invalidPhrase": Null
 });
-const Result_4 = Variant({
+const Result_5 = Variant({
   "ok": PurgeOutcome,
   "err": PurgeError
 });
-const Result_14 = Variant({ "ok": LotId, "err": RegisterError });
+const Result_16 = Variant({ "ok": LotId, "err": RegisterError });
 const Value$1 = Variant({
   "int": Int,
   "nat": Nat,
@@ -33591,25 +33593,47 @@ const PermissionsError = Variant({
   "invalidInput": Text,
   "notAuthenticated": Null
 });
-const Result_13 = Variant({
+const Result_15 = Variant({
   "ok": PermissionsView,
   "err": PermissionsError
 });
-const Result_12 = Variant({
+const Result_14 = Variant({
   "ok": Opt(PurgeRequestView),
   "err": PurgeError
 });
-const Result_11 = Variant({
+const Result_13 = Variant({
   "ok": Vec(ActorRole),
   "err": RegisterError
 });
-const Result_10 = Variant({
+const Result_12 = Variant({
   "ok": Vec(RefEntryView),
   "err": ReferenceError2
 });
-const Result_9 = Variant({
+const Result_11 = Variant({
   "ok": Vec(AnalysisDocumentView),
   "err": ReferenceError2
+});
+const EnquiryView = Record({
+  "id": Text,
+  "consent": Bool,
+  "name": Text,
+  "submittedAt": Timestamp,
+  "submittedBy": Principal2,
+  "email": Text,
+  "withdrawnAt": Opt(Timestamp),
+  "message": Text,
+  "phone": Text,
+  "withdrawn": Bool
+});
+const EnquiryError = Variant({
+  "notAuthorized": Null,
+  "unknownEnquiry": Text,
+  "invalidInput": Text,
+  "notAuthenticated": Null
+});
+const Result_10 = Variant({
+  "ok": Vec(EnquiryView),
+  "err": EnquiryError
 });
 const RoleInfo = Record({ "displayName": Text, "role": Role$1 });
 const MergeInput = Record({
@@ -33635,7 +33659,7 @@ const RegisterAnalytics = Record({
   "lotsOverTime": Vec(AnalyticsPoint),
   "byStatus": Vec(AnalyticsBucket)
 });
-const Result_8 = Variant({
+const Result_9 = Variant({
   "ok": RegisterAnalytics,
   "err": ReferenceError2
 });
@@ -33670,11 +33694,11 @@ const RegisterSummary = Record({
   "byStatus": Vec(CountBucket),
   "activity": Vec(ActivityPoint)
 });
-const Result_5 = Variant({
+const Result_6 = Variant({
   "ok": Null,
   "err": ReferenceError2
 });
-const Result_6 = Variant({
+const Result_7 = Variant({
   "ok": Null,
   "err": PermissionsError
 });
@@ -33691,7 +33715,7 @@ const SetPrincipalOverrideInput = Record({
   "capabilities": Vec(Capability$1),
   "role": Role$1
 });
-const Result_3 = Variant({
+const Result_4 = Variant({
   "ok": PrincipalOverride,
   "err": PermissionsError
 });
@@ -33699,10 +33723,18 @@ const SplitInput = Record({
   "children": Vec(NewLotInput),
   "parentId": LotId
 });
-const Result_2 = Variant({
+const Result_3 = Variant({
   "ok": Vec(LotView),
   "err": RegisterError
 });
+const NewEnquiryInput = Record({
+  "consent": Bool,
+  "name": Text,
+  "email": Text,
+  "message": Text,
+  "phone": Text
+});
+const Result = Variant({ "ok": EnquiryView, "err": EnquiryError });
 const UpdateRefEntryInput = Record({
   "id": Text,
   "active": Bool,
@@ -33714,77 +33746,81 @@ const UpdateRolePermissionsInput = Record({
   "capabilities": Vec(Capability$1),
   "role": Role$1
 });
-const Result = Variant({
+const Result_1 = Variant({
   "ok": RolePermissions,
   "err": PermissionsError
 });
 Service({
   "_initialize_access_control": Func([], [], []),
-  "_internet_identity_sign_in_finish": Func([], [Result_18], []),
+  "_internet_identity_sign_in_finish": Func([], [Result_20], []),
   "_internet_identity_sign_in_start": Func([], [Vec(Nat8)], []),
-  "addAnalysisDocument": Func([NewAnalysisDocumentInput], [Result_17], []),
-  "addReferenceEntry": Func([NewRefEntryInput], [Result_1], []),
-  "appendEvent": Func([LotId, NewEventInput], [Result_7], []),
+  "addAnalysisDocument": Func([NewAnalysisDocumentInput], [Result_19], []),
+  "addReferenceEntry": Func([NewRefEntryInput], [Result_2], []),
+  "appendEvent": Func([LotId, NewEventInput], [Result_8], []),
   "assignCallerUserRole": Func([Principal2, UserRole], [], []),
-  "assignRole": Func([Principal2, Role$1], [Result_16], []),
+  "assignRole": Func([Principal2, Role$1], [Result_18], []),
   "canonicalEventJson": Func(
     [EventKind$1, Text, Vec(HashHex)],
     [Text],
     ["query"]
   ),
   "canonicalSnapshotJson": Func([LotId], [Opt(Text)], ["query"]),
-  "changeStatus": Func([LotId, StatusChangeInput], [Result_7], []),
-  "claimAdmin": Func([], [Result_15], []),
-  "confirmPurge": Func([], [Result_4], []),
-  "deleteLot": Func([LotId], [Result_14], []),
+  "changeStatus": Func([LotId, StatusChangeInput], [Result_8], []),
+  "claimAdmin": Func([], [Result_17], []),
+  "confirmPurge": Func([], [Result_5], []),
+  "deleteLot": Func([LotId], [Result_16], []),
   "execute": Func([Text], [Result__1], ["query"]),
-  "freezeLot": Func([LotId], [Result_7], []),
+  "freezeLot": Func([LotId], [Result_8], []),
   "getApiDoc": Func([], [Text], ["query"]),
   "getCallerUserRole": Func([], [UserRole], ["query"]),
   "getLot": Func([LotId], [Opt(LotView)], ["query"]),
   "getMyCapabilities": Func([], [Vec(Capability$1)], ["query"]),
   "getMyRole": Func([], [Role$1], ["query"]),
-  "getPermissions": Func([], [Result_13], ["query"]),
-  "getPurgeRequest": Func([], [Result_12], ["query"]),
+  "getPermissions": Func([], [Result_15], ["query"]),
+  "getPurgeRequest": Func([], [Result_14], ["query"]),
   "hasAdmin": Func([], [Bool], ["query"]),
   "isCallerAdmin": Func([], [Bool], ["query"]),
-  "listActors": Func([], [Result_11], ["query"]),
-  "listAllReferenceEntries": Func([], [Result_10], ["query"]),
-  "listAnalysisDocuments": Func([], [Result_9], ["query"]),
+  "listActors": Func([], [Result_13], ["query"]),
+  "listAllReferenceEntries": Func([], [Result_12], ["query"]),
+  "listAnalysisDocuments": Func([], [Result_11], ["query"]),
+  "listEnquiries": Func([], [Result_10], ["query"]),
   "listLots": Func([], [Vec(LotView)], ["query"]),
+  "listMyEnquiries": Func([], [Result_10], ["query"]),
   "listReferenceEntries": Func(
     [RefKind$1],
     [Vec(RefEntryView)],
     ["query"]
   ),
   "listRoles": Func([], [Vec(RoleInfo)], ["query"]),
-  "mergeLots": Func([MergeInput], [Result_7], []),
-  "registerAnalytics": Func([], [Result_8], ["query"]),
-  "registerLot": Func([NewLotInput], [Result_7], []),
+  "mergeLots": Func([MergeInput], [Result_8], []),
+  "registerAnalytics": Func([], [Result_9], ["query"]),
+  "registerLot": Func([NewLotInput], [Result_8], []),
   "registerSummary": Func([], [RegisterSummary], ["query"]),
-  "removeAnalysisDocument": Func([Text], [Result_5], []),
-  "removePrincipalOverride": Func([Principal2], [Result_6], []),
-  "removeReferenceEntry": Func([Text], [Result_5], []),
-  "requestPurge": Func([Text], [Result_4], []),
+  "removeAnalysisDocument": Func([Text], [Result_6], []),
+  "removePrincipalOverride": Func([Principal2], [Result_7], []),
+  "removeReferenceEntry": Func([Text], [Result_6], []),
+  "requestPurge": Func([Text], [Result_5], []),
   "roleDisplayName": Func([Role$1], [Text], ["query"]),
   "schema": Func([], [Text], ["query"]),
   "searchLots": Func([Text], [Vec(LotSearchHit)], ["query"]),
   "setPrincipalOverride": Func(
     [SetPrincipalOverrideInput],
-    [Result_3],
+    [Result_4],
     []
   ),
   "sha256Hex": Func([Text], [HashHex], ["query"]),
   "sha256HexOfBlob": Func([Vec(Nat8)], [HashHex], ["query"]),
-  "splitLot": Func([SplitInput], [Result_2], []),
+  "splitLot": Func([SplitInput], [Result_3], []),
   "statusHistory": Func([LotId], [Vec(StatusChange)], ["query"]),
+  "submitEnquiry": Func([NewEnquiryInput], [Result], []),
   "suggestLotId": Func([Site$1, Text], [LotId], ["query"]),
-  "updateReferenceEntry": Func([UpdateRefEntryInput], [Result_1], []),
+  "updateReferenceEntry": Func([UpdateRefEntryInput], [Result_2], []),
   "updateRolePermissions": Func(
     [UpdateRolePermissionsInput],
-    [Result],
+    [Result_1],
     []
-  )
+  ),
+  "withdrawEnquiry": Func([Text], [Result], [])
 });
 const idlFactory = ({ IDL: IDL2 }) => {
   const Error2 = IDL2.Variant({
@@ -33808,7 +33844,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
       "expected": IDL2.Vec(IDL2.Text)
     })
   });
-  const Result_182 = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
+  const Result_202 = IDL2.Variant({ "ok": IDL2.Null, "err": Error2 });
   const HashHex2 = IDL2.Text;
   const FileId2 = IDL2.Text;
   const NewAnalysisDocumentInput2 = IDL2.Record({
@@ -33837,7 +33873,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "notAuthenticated": IDL2.Null,
     "unknownEntry": IDL2.Text
   });
-  const Result_172 = IDL2.Variant({
+  const Result_192 = IDL2.Variant({
     "ok": AnalysisDocumentView2,
     "err": ReferenceError3
   });
@@ -33846,8 +33882,10 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "site": IDL2.Null,
     "form_default": IDL2.Null,
     "lot_kind": IDL2.Null,
+    "status_explanation": IDL2.Null,
     "caption": IDL2.Null,
-    "event_kind": IDL2.Null
+    "event_kind": IDL2.Null,
+    "enquiry_destination": IDL2.Null
   });
   const NewRefEntryInput2 = IDL2.Record({
     "key": IDL2.Text,
@@ -33865,7 +33903,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "sortOrder": IDL2.Nat,
     "kind": RefKind2
   });
-  const Result_19 = IDL2.Variant({ "ok": RefEntryView2, "err": ReferenceError3 });
+  const Result_22 = IDL2.Variant({ "ok": RefEntryView2, "err": ReferenceError3 });
   const LotId2 = IDL2.Text;
   const EventKind2 = IDL2.Variant({
     "cut": IDL2.Null,
@@ -33950,7 +33988,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lotFrozen": LotId2,
     "notAuthenticated": IDL2.Null
   });
-  const Result_72 = IDL2.Variant({ "ok": LotView2, "err": RegisterError2 });
+  const Result_82 = IDL2.Variant({ "ok": LotView2, "err": RegisterError2 });
   const UserRole2 = IDL2.Variant({
     "admin": IDL2.Null,
     "user": IDL2.Null,
@@ -33964,12 +34002,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "guest": IDL2.Null
   });
   const ActorRole2 = IDL2.Record({ "principal": IDL2.Principal, "role": Role2 });
-  const Result_162 = IDL2.Variant({ "ok": ActorRole2, "err": RegisterError2 });
+  const Result_182 = IDL2.Variant({ "ok": ActorRole2, "err": RegisterError2 });
   const StatusChangeInput2 = IDL2.Record({
     "to": LotStatus2,
     "payload": IDL2.Text
   });
-  const Result_152 = IDL2.Variant({ "ok": Role2, "err": RegisterError2 });
+  const Result_172 = IDL2.Variant({ "ok": Role2, "err": RegisterError2 });
   const PurgeRequestView2 = IDL2.Record({
     "id": IDL2.Text,
     "confirmedBy": IDL2.Vec(IDL2.Principal),
@@ -33999,8 +34037,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "noPendingRequest": IDL2.Null,
     "invalidPhrase": IDL2.Null
   });
-  const Result_42 = IDL2.Variant({ "ok": PurgeOutcome2, "err": PurgeError2 });
-  const Result_142 = IDL2.Variant({ "ok": LotId2, "err": RegisterError2 });
+  const Result_52 = IDL2.Variant({ "ok": PurgeOutcome2, "err": PurgeError2 });
+  const Result_162 = IDL2.Variant({ "ok": LotId2, "err": RegisterError2 });
   const Value2 = IDL2.Variant({
     "int": IDL2.Int,
     "nat": IDL2.Nat,
@@ -34053,25 +34091,47 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "invalidInput": IDL2.Text,
     "notAuthenticated": IDL2.Null
   });
-  const Result_132 = IDL2.Variant({
+  const Result_152 = IDL2.Variant({
     "ok": PermissionsView2,
     "err": PermissionsError2
   });
-  const Result_122 = IDL2.Variant({
+  const Result_142 = IDL2.Variant({
     "ok": IDL2.Opt(PurgeRequestView2),
     "err": PurgeError2
   });
-  const Result_112 = IDL2.Variant({
+  const Result_132 = IDL2.Variant({
     "ok": IDL2.Vec(ActorRole2),
     "err": RegisterError2
   });
-  const Result_102 = IDL2.Variant({
+  const Result_122 = IDL2.Variant({
     "ok": IDL2.Vec(RefEntryView2),
     "err": ReferenceError3
   });
-  const Result_92 = IDL2.Variant({
+  const Result_112 = IDL2.Variant({
     "ok": IDL2.Vec(AnalysisDocumentView2),
     "err": ReferenceError3
+  });
+  const EnquiryView2 = IDL2.Record({
+    "id": IDL2.Text,
+    "consent": IDL2.Bool,
+    "name": IDL2.Text,
+    "submittedAt": Timestamp2,
+    "submittedBy": IDL2.Principal,
+    "email": IDL2.Text,
+    "withdrawnAt": IDL2.Opt(Timestamp2),
+    "message": IDL2.Text,
+    "phone": IDL2.Text,
+    "withdrawn": IDL2.Bool
+  });
+  const EnquiryError2 = IDL2.Variant({
+    "notAuthorized": IDL2.Null,
+    "unknownEnquiry": IDL2.Text,
+    "invalidInput": IDL2.Text,
+    "notAuthenticated": IDL2.Null
+  });
+  const Result_102 = IDL2.Variant({
+    "ok": IDL2.Vec(EnquiryView2),
+    "err": EnquiryError2
   });
   const RoleInfo2 = IDL2.Record({ "displayName": IDL2.Text, "role": Role2 });
   const MergeInput2 = IDL2.Record({
@@ -34094,7 +34154,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "lotsOverTime": IDL2.Vec(AnalyticsPoint2),
     "byStatus": IDL2.Vec(AnalyticsBucket2)
   });
-  const Result_82 = IDL2.Variant({
+  const Result_92 = IDL2.Variant({
     "ok": RegisterAnalytics2,
     "err": ReferenceError3
   });
@@ -34126,8 +34186,8 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "byStatus": IDL2.Vec(CountBucket2),
     "activity": IDL2.Vec(ActivityPoint2)
   });
-  const Result_52 = IDL2.Variant({ "ok": IDL2.Null, "err": ReferenceError3 });
-  const Result_62 = IDL2.Variant({ "ok": IDL2.Null, "err": PermissionsError2 });
+  const Result_62 = IDL2.Variant({ "ok": IDL2.Null, "err": ReferenceError3 });
+  const Result_72 = IDL2.Variant({ "ok": IDL2.Null, "err": PermissionsError2 });
   const LotSearchHit2 = IDL2.Record({
     "id": LotId2,
     "status": LotStatus2,
@@ -34141,7 +34201,7 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "capabilities": IDL2.Vec(Capability2),
     "role": Role2
   });
-  const Result_32 = IDL2.Variant({
+  const Result_42 = IDL2.Variant({
     "ok": PrincipalOverride2,
     "err": PermissionsError2
   });
@@ -34149,10 +34209,18 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "children": IDL2.Vec(NewLotInput2),
     "parentId": LotId2
   });
-  const Result_22 = IDL2.Variant({
+  const Result_32 = IDL2.Variant({
     "ok": IDL2.Vec(LotView2),
     "err": RegisterError2
   });
+  const NewEnquiryInput2 = IDL2.Record({
+    "consent": IDL2.Bool,
+    "name": IDL2.Text,
+    "email": IDL2.Text,
+    "message": IDL2.Text,
+    "phone": IDL2.Text
+  });
+  const Result2 = IDL2.Variant({ "ok": EnquiryView2, "err": EnquiryError2 });
   const UpdateRefEntryInput2 = IDL2.Record({
     "id": IDL2.Text,
     "active": IDL2.Bool,
@@ -34164,81 +34232,85 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "capabilities": IDL2.Vec(Capability2),
     "role": Role2
   });
-  const Result2 = IDL2.Variant({
+  const Result_110 = IDL2.Variant({
     "ok": RolePermissions2,
     "err": PermissionsError2
   });
   return IDL2.Service({
     "_initialize_access_control": IDL2.Func([], [], []),
-    "_internet_identity_sign_in_finish": IDL2.Func([], [Result_182], []),
+    "_internet_identity_sign_in_finish": IDL2.Func([], [Result_202], []),
     "_internet_identity_sign_in_start": IDL2.Func([], [IDL2.Vec(IDL2.Nat8)], []),
     "addAnalysisDocument": IDL2.Func(
       [NewAnalysisDocumentInput2],
-      [Result_172],
+      [Result_192],
       []
     ),
-    "addReferenceEntry": IDL2.Func([NewRefEntryInput2], [Result_19], []),
-    "appendEvent": IDL2.Func([LotId2, NewEventInput2], [Result_72], []),
+    "addReferenceEntry": IDL2.Func([NewRefEntryInput2], [Result_22], []),
+    "appendEvent": IDL2.Func([LotId2, NewEventInput2], [Result_82], []),
     "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
-    "assignRole": IDL2.Func([IDL2.Principal, Role2], [Result_162], []),
+    "assignRole": IDL2.Func([IDL2.Principal, Role2], [Result_182], []),
     "canonicalEventJson": IDL2.Func(
       [EventKind2, IDL2.Text, IDL2.Vec(HashHex2)],
       [IDL2.Text],
       ["query"]
     ),
     "canonicalSnapshotJson": IDL2.Func([LotId2], [IDL2.Opt(IDL2.Text)], ["query"]),
-    "changeStatus": IDL2.Func([LotId2, StatusChangeInput2], [Result_72], []),
-    "claimAdmin": IDL2.Func([], [Result_152], []),
-    "confirmPurge": IDL2.Func([], [Result_42], []),
-    "deleteLot": IDL2.Func([LotId2], [Result_142], []),
+    "changeStatus": IDL2.Func([LotId2, StatusChangeInput2], [Result_82], []),
+    "claimAdmin": IDL2.Func([], [Result_172], []),
+    "confirmPurge": IDL2.Func([], [Result_52], []),
+    "deleteLot": IDL2.Func([LotId2], [Result_162], []),
     "execute": IDL2.Func([IDL2.Text], [Result__12], ["query"]),
-    "freezeLot": IDL2.Func([LotId2], [Result_72], []),
+    "freezeLot": IDL2.Func([LotId2], [Result_82], []),
     "getApiDoc": IDL2.Func([], [IDL2.Text], ["query"]),
     "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
     "getLot": IDL2.Func([LotId2], [IDL2.Opt(LotView2)], ["query"]),
     "getMyCapabilities": IDL2.Func([], [IDL2.Vec(Capability2)], ["query"]),
     "getMyRole": IDL2.Func([], [Role2], ["query"]),
-    "getPermissions": IDL2.Func([], [Result_132], ["query"]),
-    "getPurgeRequest": IDL2.Func([], [Result_122], ["query"]),
+    "getPermissions": IDL2.Func([], [Result_152], ["query"]),
+    "getPurgeRequest": IDL2.Func([], [Result_142], ["query"]),
     "hasAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
     "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
-    "listActors": IDL2.Func([], [Result_112], ["query"]),
-    "listAllReferenceEntries": IDL2.Func([], [Result_102], ["query"]),
-    "listAnalysisDocuments": IDL2.Func([], [Result_92], ["query"]),
+    "listActors": IDL2.Func([], [Result_132], ["query"]),
+    "listAllReferenceEntries": IDL2.Func([], [Result_122], ["query"]),
+    "listAnalysisDocuments": IDL2.Func([], [Result_112], ["query"]),
+    "listEnquiries": IDL2.Func([], [Result_102], ["query"]),
     "listLots": IDL2.Func([], [IDL2.Vec(LotView2)], ["query"]),
+    "listMyEnquiries": IDL2.Func([], [Result_102], ["query"]),
     "listReferenceEntries": IDL2.Func(
       [RefKind2],
       [IDL2.Vec(RefEntryView2)],
       ["query"]
     ),
     "listRoles": IDL2.Func([], [IDL2.Vec(RoleInfo2)], ["query"]),
-    "mergeLots": IDL2.Func([MergeInput2], [Result_72], []),
-    "registerAnalytics": IDL2.Func([], [Result_82], ["query"]),
-    "registerLot": IDL2.Func([NewLotInput2], [Result_72], []),
+    "mergeLots": IDL2.Func([MergeInput2], [Result_82], []),
+    "registerAnalytics": IDL2.Func([], [Result_92], ["query"]),
+    "registerLot": IDL2.Func([NewLotInput2], [Result_82], []),
     "registerSummary": IDL2.Func([], [RegisterSummary2], ["query"]),
-    "removeAnalysisDocument": IDL2.Func([IDL2.Text], [Result_52], []),
-    "removePrincipalOverride": IDL2.Func([IDL2.Principal], [Result_62], []),
-    "removeReferenceEntry": IDL2.Func([IDL2.Text], [Result_52], []),
-    "requestPurge": IDL2.Func([IDL2.Text], [Result_42], []),
+    "removeAnalysisDocument": IDL2.Func([IDL2.Text], [Result_62], []),
+    "removePrincipalOverride": IDL2.Func([IDL2.Principal], [Result_72], []),
+    "removeReferenceEntry": IDL2.Func([IDL2.Text], [Result_62], []),
+    "requestPurge": IDL2.Func([IDL2.Text], [Result_52], []),
     "roleDisplayName": IDL2.Func([Role2], [IDL2.Text], ["query"]),
     "schema": IDL2.Func([], [IDL2.Text], ["query"]),
     "searchLots": IDL2.Func([IDL2.Text], [IDL2.Vec(LotSearchHit2)], ["query"]),
     "setPrincipalOverride": IDL2.Func(
       [SetPrincipalOverrideInput2],
-      [Result_32],
+      [Result_42],
       []
     ),
     "sha256Hex": IDL2.Func([IDL2.Text], [HashHex2], ["query"]),
     "sha256HexOfBlob": IDL2.Func([IDL2.Vec(IDL2.Nat8)], [HashHex2], ["query"]),
-    "splitLot": IDL2.Func([SplitInput2], [Result_22], []),
+    "splitLot": IDL2.Func([SplitInput2], [Result_32], []),
     "statusHistory": IDL2.Func([LotId2], [IDL2.Vec(StatusChange2)], ["query"]),
+    "submitEnquiry": IDL2.Func([NewEnquiryInput2], [Result2], []),
     "suggestLotId": IDL2.Func([Site2, IDL2.Text], [LotId2], ["query"]),
-    "updateReferenceEntry": IDL2.Func([UpdateRefEntryInput2], [Result_19], []),
+    "updateReferenceEntry": IDL2.Func([UpdateRefEntryInput2], [Result_22], []),
     "updateRolePermissions": IDL2.Func(
       [UpdateRolePermissionsInput2],
-      [Result2],
+      [Result_110],
       []
-    )
+    ),
+    "withdrawEnquiry": IDL2.Func([IDL2.Text], [Result2], [])
   });
 };
 function record_opt_to_undefined(arg) {
@@ -34294,8 +34366,10 @@ var RefKind = /* @__PURE__ */ ((RefKind2) => {
   RefKind2["site"] = "site";
   RefKind2["form_default"] = "form_default";
   RefKind2["lot_kind"] = "lot_kind";
+  RefKind2["status_explanation"] = "status_explanation";
   RefKind2["caption"] = "caption";
   RefKind2["event_kind"] = "event_kind";
+  RefKind2["enquiry_destination"] = "enquiry_destination";
   return RefKind2;
 })(RefKind || {});
 var Role = /* @__PURE__ */ ((Role2) => {
@@ -34337,14 +34411,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor._internet_identity_sign_in_finish();
-        return from_candid_Result_18_n1(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_20_n1(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor._internet_identity_sign_in_finish();
-      return from_candid_Result_18_n1(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_20_n1(this._uploadFile, this._downloadFile, result);
     }
   }
   async _internet_identity_sign_in_start() {
@@ -34365,42 +34439,42 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.addAnalysisDocument(arg0);
-        return from_candid_Result_17_n5(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_19_n5(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.addAnalysisDocument(arg0);
-      return from_candid_Result_17_n5(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_19_n5(this._uploadFile, this._downloadFile, result);
     }
   }
   async addReferenceEntry(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.addReferenceEntry(to_candid_NewRefEntryInput_n9(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Result_1_n12(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_2_n12(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.addReferenceEntry(to_candid_NewRefEntryInput_n9(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Result_1_n12(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_2_n12(this._uploadFile, this._downloadFile, result);
     }
   }
   async appendEvent(arg0, arg1) {
     if (this.processError) {
       try {
         const result = await this.actor.appendEvent(arg0, to_candid_NewEventInput_n17(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.appendEvent(arg0, to_candid_NewEventInput_n17(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async assignCallerUserRole(arg0, arg1) {
@@ -34421,14 +34495,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.assignRole(arg0, to_candid_Role_n37(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_Result_16_n38(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_18_n38(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.assignRole(arg0, to_candid_Role_n37(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_Result_16_n38(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_18_n38(this._uploadFile, this._downloadFile, result);
     }
   }
   async canonicalEventJson(arg0, arg1, arg2) {
@@ -34463,56 +34537,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.changeStatus(arg0, to_candid_StatusChangeInput_n44(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.changeStatus(arg0, to_candid_StatusChangeInput_n44(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async claimAdmin() {
     if (this.processError) {
       try {
         const result = await this.actor.claimAdmin();
-        return from_candid_Result_15_n47(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_17_n47(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.claimAdmin();
-      return from_candid_Result_15_n47(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_17_n47(this._uploadFile, this._downloadFile, result);
     }
   }
   async confirmPurge() {
     if (this.processError) {
       try {
         const result = await this.actor.confirmPurge();
-        return from_candid_Result_4_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_5_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.confirmPurge();
-      return from_candid_Result_4_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_5_n49(this._uploadFile, this._downloadFile, result);
     }
   }
   async deleteLot(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.deleteLot(arg0);
-        return from_candid_Result_14_n55(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_16_n55(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.deleteLot(arg0);
-      return from_candid_Result_14_n55(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_16_n55(this._uploadFile, this._downloadFile, result);
     }
   }
   async execute(arg0) {
@@ -34533,14 +34607,14 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.freezeLot(arg0);
-        return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.freezeLot(arg0);
-      return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async getApiDoc() {
@@ -34617,28 +34691,28 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getPermissions();
-        return from_candid_Result_13_n69(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_15_n69(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getPermissions();
-      return from_candid_Result_13_n69(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_15_n69(this._uploadFile, this._downloadFile, result);
     }
   }
   async getPurgeRequest() {
     if (this.processError) {
       try {
         const result = await this.actor.getPurgeRequest();
-        return from_candid_Result_12_n85(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_14_n85(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getPurgeRequest();
-      return from_candid_Result_12_n85(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_14_n85(this._uploadFile, this._downloadFile, result);
     }
   }
   async hasAdmin() {
@@ -34673,56 +34747,84 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.listActors();
-        return from_candid_Result_11_n88(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_13_n88(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listActors();
-      return from_candid_Result_11_n88(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_13_n88(this._uploadFile, this._downloadFile, result);
     }
   }
   async listAllReferenceEntries() {
     if (this.processError) {
       try {
         const result = await this.actor.listAllReferenceEntries();
-        return from_candid_Result_10_n91(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_12_n91(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listAllReferenceEntries();
-      return from_candid_Result_10_n91(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_12_n91(this._uploadFile, this._downloadFile, result);
     }
   }
   async listAnalysisDocuments() {
     if (this.processError) {
       try {
         const result = await this.actor.listAnalysisDocuments();
-        return from_candid_Result_9_n94(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_11_n94(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listAnalysisDocuments();
-      return from_candid_Result_9_n94(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_11_n94(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listEnquiries() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listEnquiries();
+        return from_candid_Result_10_n96(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listEnquiries();
+      return from_candid_Result_10_n96(this._uploadFile, this._downloadFile, result);
     }
   }
   async listLots() {
     if (this.processError) {
       try {
         const result = await this.actor.listLots();
-        return from_candid_vec_n96(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n104(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listLots();
-      return from_candid_vec_n96(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n104(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listMyEnquiries() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listMyEnquiries();
+        return from_candid_Result_10_n96(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listMyEnquiries();
+      return from_candid_Result_10_n96(this._uploadFile, this._downloadFile, result);
     }
   }
   async listReferenceEntries(arg0) {
@@ -34743,56 +34845,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.listRoles();
-        return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n105(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.listRoles();
-      return from_candid_vec_n97(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n105(this._uploadFile, this._downloadFile, result);
     }
   }
   async mergeLots(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.mergeLots(arg0);
-        return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.mergeLots(arg0);
-      return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async registerAnalytics() {
     if (this.processError) {
       try {
         const result = await this.actor.registerAnalytics();
-        return from_candid_Result_8_n100(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_9_n108(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.registerAnalytics();
-      return from_candid_Result_8_n100(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_9_n108(this._uploadFile, this._downloadFile, result);
     }
   }
   async registerLot(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.registerLot(to_candid_NewLotInput_n102(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.registerLot(to_candid_NewLotInput_n110(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.registerLot(to_candid_NewLotInput_n102(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Result_7_n20(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.registerLot(to_candid_NewLotInput_n110(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Result_8_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async registerSummary() {
@@ -34813,56 +34915,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.removeAnalysisDocument(arg0);
-        return from_candid_Result_5_n106(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_6_n114(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.removeAnalysisDocument(arg0);
-      return from_candid_Result_5_n106(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_6_n114(this._uploadFile, this._downloadFile, result);
     }
   }
   async removePrincipalOverride(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.removePrincipalOverride(arg0);
-        return from_candid_Result_6_n108(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_7_n116(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.removePrincipalOverride(arg0);
-      return from_candid_Result_6_n108(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_7_n116(this._uploadFile, this._downloadFile, result);
     }
   }
   async removeReferenceEntry(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.removeReferenceEntry(arg0);
-        return from_candid_Result_5_n106(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_6_n114(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.removeReferenceEntry(arg0);
-      return from_candid_Result_5_n106(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_6_n114(this._uploadFile, this._downloadFile, result);
     }
   }
   async requestPurge(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.requestPurge(arg0);
-        return from_candid_Result_4_n49(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_5_n49(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.requestPurge(arg0);
-      return from_candid_Result_4_n49(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_5_n49(this._uploadFile, this._downloadFile, result);
     }
   }
   async roleDisplayName(arg0) {
@@ -34897,28 +34999,28 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.searchLots(arg0);
-        return from_candid_vec_n110(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n118(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.searchLots(arg0);
-      return from_candid_vec_n110(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n118(this._uploadFile, this._downloadFile, result);
     }
   }
   async setPrincipalOverride(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.setPrincipalOverride(to_candid_SetPrincipalOverrideInput_n113(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Result_3_n117(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.setPrincipalOverride(to_candid_SetPrincipalOverrideInput_n121(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Result_4_n125(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.setPrincipalOverride(to_candid_SetPrincipalOverrideInput_n113(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Result_3_n117(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.setPrincipalOverride(to_candid_SetPrincipalOverrideInput_n121(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Result_4_n125(this._uploadFile, this._downloadFile, result);
     }
   }
   async sha256Hex(arg0) {
@@ -34952,15 +35054,15 @@ class Backend {
   async splitLot(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.splitLot(to_candid_SplitInput_n119(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Result_2_n122(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.splitLot(to_candid_SplitInput_n127(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Result_3_n130(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.splitLot(to_candid_SplitInput_n119(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Result_2_n122(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.splitLot(to_candid_SplitInput_n127(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Result_3_n130(this._uploadFile, this._downloadFile, result);
     }
   }
   async statusHistory(arg0) {
@@ -34977,17 +35079,31 @@ class Backend {
       return from_candid_vec_n25(this._uploadFile, this._downloadFile, result);
     }
   }
+  async submitEnquiry(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.submitEnquiry(arg0);
+        return from_candid_Result_n132(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.submitEnquiry(arg0);
+      return from_candid_Result_n132(this._uploadFile, this._downloadFile, result);
+    }
+  }
   async suggestLotId(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.suggestLotId(to_candid_Site_n104(this._uploadFile, this._downloadFile, arg0), arg1);
+        const result = await this.actor.suggestLotId(to_candid_Site_n112(this._uploadFile, this._downloadFile, arg0), arg1);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.suggestLotId(to_candid_Site_n104(this._uploadFile, this._downloadFile, arg0), arg1);
+      const result = await this.actor.suggestLotId(to_candid_Site_n112(this._uploadFile, this._downloadFile, arg0), arg1);
       return result;
     }
   }
@@ -34995,28 +35111,42 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.updateReferenceEntry(arg0);
-        return from_candid_Result_1_n12(this._uploadFile, this._downloadFile, result);
+        return from_candid_Result_2_n12(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.updateReferenceEntry(arg0);
-      return from_candid_Result_1_n12(this._uploadFile, this._downloadFile, result);
+      return from_candid_Result_2_n12(this._uploadFile, this._downloadFile, result);
     }
   }
   async updateRolePermissions(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateRolePermissions(to_candid_UpdateRolePermissionsInput_n124(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_Result_n126(this._uploadFile, this._downloadFile, result);
+        const result = await this.actor.updateRolePermissions(to_candid_UpdateRolePermissionsInput_n134(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_Result_1_n136(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateRolePermissions(to_candid_UpdateRolePermissionsInput_n124(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_Result_n126(this._uploadFile, this._downloadFile, result);
+      const result = await this.actor.updateRolePermissions(to_candid_UpdateRolePermissionsInput_n134(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_Result_1_n136(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async withdrawEnquiry(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.withdrawEnquiry(arg0);
+        return from_candid_Result_n132(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.withdrawEnquiry(arg0);
+      return from_candid_Result_n132(this._uploadFile, this._downloadFile, result);
     }
   }
 }
@@ -35032,6 +35162,12 @@ function from_candid_Capability_n68(_uploadFile, _downloadFile, value) {
 function from_candid_Cell_n61(_uploadFile, _downloadFile, value) {
   return from_candid_record_n62(_uploadFile, _downloadFile, value);
 }
+function from_candid_EnquiryError_n102(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n103(_uploadFile, _downloadFile, value);
+}
+function from_candid_EnquiryView_n99(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n100(_uploadFile, _downloadFile, value);
+}
 function from_candid_Error_n3(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n4(_uploadFile, _downloadFile, value);
 }
@@ -35041,8 +35177,8 @@ function from_candid_EventKind_n32(_uploadFile, _downloadFile, value) {
 function from_candid_EventView_n29(_uploadFile, _downloadFile, value) {
   return from_candid_record_n30(_uploadFile, _downloadFile, value);
 }
-function from_candid_LotSearchHit_n111(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n112(_uploadFile, _downloadFile, value);
+function from_candid_LotSearchHit_n119(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n120(_uploadFile, _downloadFile, value);
 }
 function from_candid_LotStatus_n24(_uploadFile, _downloadFile, value) {
   return "closed" in value ? "closed" : "assayed" in value ? "assayed" : "open" in value ? "open" : "in_transit" in value ? "in_transit" : "retailed" in value ? "retailed" : "frozen" in value ? "frozen" : value;
@@ -35072,7 +35208,7 @@ function from_candid_RefEntryView_n14(_uploadFile, _downloadFile, value) {
   return from_candid_record_n15(_uploadFile, _downloadFile, value);
 }
 function from_candid_RefKind_n16(_uploadFile, _downloadFile, value) {
-  return "status" in value ? "status" : "site" in value ? "site" : "form_default" in value ? "form_default" : "lot_kind" in value ? "lot_kind" : "caption" in value ? "caption" : "event_kind" in value ? "event_kind" : value;
+  return "status" in value ? "status" : "site" in value ? "site" : "form_default" in value ? "form_default" : "lot_kind" in value ? "lot_kind" : "status_explanation" in value ? "status_explanation" : "caption" in value ? "caption" : "event_kind" in value ? "event_kind" : "enquiry_destination" in value ? "enquiry_destination" : value;
 }
 function from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n8(_uploadFile, _downloadFile, value);
@@ -35080,68 +35216,74 @@ function from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value) {
 function from_candid_RegisterError_n34(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n35(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_10_n91(_uploadFile, _downloadFile, value) {
+function from_candid_Result_10_n96(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n97(_uploadFile, _downloadFile, value);
+}
+function from_candid_Result_11_n94(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n95(_uploadFile, _downloadFile, value);
+}
+function from_candid_Result_12_n91(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n92(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_11_n88(_uploadFile, _downloadFile, value) {
+function from_candid_Result_13_n88(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n89(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_12_n85(_uploadFile, _downloadFile, value) {
+function from_candid_Result_14_n85(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n86(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_13_n69(_uploadFile, _downloadFile, value) {
+function from_candid_Result_15_n69(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n70(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_14_n55(_uploadFile, _downloadFile, value) {
+function from_candid_Result_16_n55(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n56(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_15_n47(_uploadFile, _downloadFile, value) {
+function from_candid_Result_17_n47(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n48(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_16_n38(_uploadFile, _downloadFile, value) {
+function from_candid_Result_18_n38(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n39(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_17_n5(_uploadFile, _downloadFile, value) {
+function from_candid_Result_19_n5(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n6(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_18_n1(_uploadFile, _downloadFile, value) {
+function from_candid_Result_1_n136(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n137(_uploadFile, _downloadFile, value);
+}
+function from_candid_Result_20_n1(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_1_n12(_uploadFile, _downloadFile, value) {
+function from_candid_Result_2_n12(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n13(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_2_n122(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n123(_uploadFile, _downloadFile, value);
+function from_candid_Result_3_n130(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n131(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_3_n117(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n118(_uploadFile, _downloadFile, value);
+function from_candid_Result_4_n125(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n126(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_4_n49(_uploadFile, _downloadFile, value) {
+function from_candid_Result_5_n49(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n50(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_5_n106(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n107(_uploadFile, _downloadFile, value);
+function from_candid_Result_6_n114(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n115(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_6_n108(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n109(_uploadFile, _downloadFile, value);
+function from_candid_Result_7_n116(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n117(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_7_n20(_uploadFile, _downloadFile, value) {
+function from_candid_Result_8_n20(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n21(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_8_n100(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n101(_uploadFile, _downloadFile, value);
-}
-function from_candid_Result_9_n94(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n95(_uploadFile, _downloadFile, value);
+function from_candid_Result_9_n108(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n109(_uploadFile, _downloadFile, value);
 }
 function from_candid_Result__1_n57(_uploadFile, _downloadFile, value) {
   return from_candid_record_n58(_uploadFile, _downloadFile, value);
 }
-function from_candid_Result_n126(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n127(_uploadFile, _downloadFile, value);
+function from_candid_Result_n132(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n133(_uploadFile, _downloadFile, value);
 }
-function from_candid_RoleInfo_n98(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n99(_uploadFile, _downloadFile, value);
+function from_candid_RoleInfo_n106(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n107(_uploadFile, _downloadFile, value);
 }
 function from_candid_RolePermissions_n74(_uploadFile, _downloadFile, value) {
   return from_candid_record_n75(_uploadFile, _downloadFile, value);
@@ -35158,6 +35300,9 @@ function from_candid_UserRole_n65(_uploadFile, _downloadFile, value) {
 function from_candid_Value_n63(_uploadFile, _downloadFile, value) {
   return from_candid_variant_n64(_uploadFile, _downloadFile, value);
 }
+function from_candid_opt_n101(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
 function from_candid_opt_n31(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
@@ -35170,7 +35315,27 @@ function from_candid_opt_n66(_uploadFile, _downloadFile, value) {
 function from_candid_opt_n87(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n112(_uploadFile, _downloadFile, value) {
+function from_candid_record_n100(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    consent: value.consent,
+    name: value.name,
+    submittedAt: value.submittedAt,
+    submittedBy: value.submittedBy,
+    email: value.email,
+    withdrawnAt: record_opt_to_undefined(from_candid_opt_n101(_uploadFile, _downloadFile, value.withdrawnAt)),
+    message: value.message,
+    phone: value.phone,
+    withdrawn: value.withdrawn
+  };
+}
+function from_candid_record_n107(_uploadFile, _downloadFile, value) {
+  return {
+    displayName: value.displayName,
+    role: from_candid_Role_n42(_uploadFile, _downloadFile, value.role)
+  };
+}
+function from_candid_record_n120(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     status: from_candid_LotStatus_n24(_uploadFile, _downloadFile, value.status),
@@ -35281,28 +35446,19 @@ function from_candid_record_n82(_uploadFile, _downloadFile, value) {
     role: from_candid_Role_n42(_uploadFile, _downloadFile, value.role)
   };
 }
-function from_candid_record_n99(_uploadFile, _downloadFile, value) {
-  return {
-    displayName: value.displayName,
-    role: from_candid_Role_n42(_uploadFile, _downloadFile, value.role)
-  };
-}
-function from_candid_variant_n101(_uploadFile, _downloadFile, value) {
-  return "ok" in value ? {
-    __kind__: "ok",
-    ok: value.ok
-  } : "err" in value ? {
-    __kind__: "err",
-    err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
-  } : value;
-}
-function from_candid_variant_n107(_uploadFile, _downloadFile, value) {
-  return "ok" in value ? {
-    __kind__: "ok",
-    ok: value.ok
-  } : "err" in value ? {
-    __kind__: "err",
-    err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
+function from_candid_variant_n103(_uploadFile, _downloadFile, value) {
+  return "notAuthorized" in value ? {
+    __kind__: "notAuthorized",
+    notAuthorized: value.notAuthorized
+  } : "unknownEnquiry" in value ? {
+    __kind__: "unknownEnquiry",
+    unknownEnquiry: value.unknownEnquiry
+  } : "invalidInput" in value ? {
+    __kind__: "invalidInput",
+    invalidInput: value.invalidInput
+  } : "notAuthenticated" in value ? {
+    __kind__: "notAuthenticated",
+    notAuthenticated: value.notAuthenticated
   } : value;
 }
 function from_candid_variant_n109(_uploadFile, _downloadFile, value) {
@@ -35311,31 +35467,31 @@ function from_candid_variant_n109(_uploadFile, _downloadFile, value) {
     ok: value.ok
   } : "err" in value ? {
     __kind__: "err",
+    err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n115(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: value.ok
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n117(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: value.ok
+  } : "err" in value ? {
+    __kind__: "err",
     err: from_candid_PermissionsError_n83(_uploadFile, _downloadFile, value.err)
   } : value;
 }
-function from_candid_variant_n118(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n126(_uploadFile, _downloadFile, value) {
   return "ok" in value ? {
     __kind__: "ok",
     ok: from_candid_PrincipalOverride_n81(_uploadFile, _downloadFile, value.ok)
-  } : "err" in value ? {
-    __kind__: "err",
-    err: from_candid_PermissionsError_n83(_uploadFile, _downloadFile, value.err)
-  } : value;
-}
-function from_candid_variant_n123(_uploadFile, _downloadFile, value) {
-  return "ok" in value ? {
-    __kind__: "ok",
-    ok: from_candid_vec_n96(_uploadFile, _downloadFile, value.ok)
-  } : "err" in value ? {
-    __kind__: "err",
-    err: from_candid_RegisterError_n34(_uploadFile, _downloadFile, value.err)
-  } : value;
-}
-function from_candid_variant_n127(_uploadFile, _downloadFile, value) {
-  return "ok" in value ? {
-    __kind__: "ok",
-    ok: from_candid_RolePermissions_n74(_uploadFile, _downloadFile, value.ok)
   } : "err" in value ? {
     __kind__: "err",
     err: from_candid_PermissionsError_n83(_uploadFile, _downloadFile, value.err)
@@ -35348,6 +35504,33 @@ function from_candid_variant_n13(_uploadFile, _downloadFile, value) {
   } : "err" in value ? {
     __kind__: "err",
     err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n131(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_vec_n104(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_RegisterError_n34(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n133(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_EnquiryView_n99(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_EnquiryError_n102(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_variant_n137(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_RolePermissions_n74(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_PermissionsError_n83(_uploadFile, _downloadFile, value.err)
   } : value;
 }
 function from_candid_variant_n2(_uploadFile, _downloadFile, value) {
@@ -35602,8 +35785,23 @@ function from_candid_variant_n95(_uploadFile, _downloadFile, value) {
     err: from_candid_ReferenceError_n7(_uploadFile, _downloadFile, value.err)
   } : value;
 }
-function from_candid_vec_n110(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_LotSearchHit_n111(_uploadFile, _downloadFile, x3));
+function from_candid_variant_n97(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_vec_n98(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: from_candid_EnquiryError_n102(_uploadFile, _downloadFile, value.err)
+  } : value;
+}
+function from_candid_vec_n104(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_LotView_n22(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n105(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_RoleInfo_n106(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n118(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_LotSearchHit_n119(_uploadFile, _downloadFile, x3));
 }
 function from_candid_vec_n25(_uploadFile, _downloadFile, value) {
   return value.map((x3) => from_candid_StatusChange_n26(_uploadFile, _downloadFile, x3));
@@ -35638,13 +35836,10 @@ function from_candid_vec_n90(_uploadFile, _downloadFile, value) {
 function from_candid_vec_n93(_uploadFile, _downloadFile, value) {
   return value.map((x3) => from_candid_RefEntryView_n14(_uploadFile, _downloadFile, x3));
 }
-function from_candid_vec_n96(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_LotView_n22(_uploadFile, _downloadFile, x3));
+function from_candid_vec_n98(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_EnquiryView_n99(_uploadFile, _downloadFile, x3));
 }
-function from_candid_vec_n97(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_RoleInfo_n98(_uploadFile, _downloadFile, x3));
-}
-function to_candid_Capability_n116(_uploadFile, _downloadFile, value) {
+function to_candid_Capability_n124(_uploadFile, _downloadFile, value) {
   return value == "change_status" ? {
     change_status: null
   } : value == "purge_register" ? {
@@ -35715,7 +35910,7 @@ function to_candid_LotStatus_n46(_uploadFile, _downloadFile, value) {
     frozen: null
   } : value;
 }
-function to_candid_LotType_n105(_uploadFile, _downloadFile, value) {
+function to_candid_LotType_n113(_uploadFile, _downloadFile, value) {
   return value == "gold" ? {
     gold: null
   } : value == "emerald" ? {
@@ -35725,8 +35920,8 @@ function to_candid_LotType_n105(_uploadFile, _downloadFile, value) {
 function to_candid_NewEventInput_n17(_uploadFile, _downloadFile, value) {
   return to_candid_record_n18(_uploadFile, _downloadFile, value);
 }
-function to_candid_NewLotInput_n102(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n103(_uploadFile, _downloadFile, value);
+function to_candid_NewLotInput_n110(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n111(_uploadFile, _downloadFile, value);
 }
 function to_candid_NewRefEntryInput_n9(_uploadFile, _downloadFile, value) {
   return to_candid_record_n10(_uploadFile, _downloadFile, value);
@@ -35740,10 +35935,14 @@ function to_candid_RefKind_n11(_uploadFile, _downloadFile, value) {
     form_default: null
   } : value == "lot_kind" ? {
     lot_kind: null
+  } : value == "status_explanation" ? {
+    status_explanation: null
   } : value == "caption" ? {
     caption: null
   } : value == "event_kind" ? {
     event_kind: null
+  } : value == "enquiry_destination" ? {
+    enquiry_destination: null
   } : value;
 }
 function to_candid_Role_n37(_uploadFile, _downloadFile, value) {
@@ -35759,10 +35958,10 @@ function to_candid_Role_n37(_uploadFile, _downloadFile, value) {
     guest: null
   } : value;
 }
-function to_candid_SetPrincipalOverrideInput_n113(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n114(_uploadFile, _downloadFile, value);
+function to_candid_SetPrincipalOverrideInput_n121(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n122(_uploadFile, _downloadFile, value);
 }
-function to_candid_Site_n104(_uploadFile, _downloadFile, value) {
+function to_candid_Site_n112(_uploadFile, _downloadFile, value) {
   return value == "KFB" ? {
     KFB: null
   } : value == "LUS" ? {
@@ -35771,14 +35970,14 @@ function to_candid_Site_n104(_uploadFile, _downloadFile, value) {
     MFB: null
   } : value;
 }
-function to_candid_SplitInput_n119(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n120(_uploadFile, _downloadFile, value);
+function to_candid_SplitInput_n127(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n128(_uploadFile, _downloadFile, value);
 }
 function to_candid_StatusChangeInput_n44(_uploadFile, _downloadFile, value) {
   return to_candid_record_n45(_uploadFile, _downloadFile, value);
 }
-function to_candid_UpdateRolePermissionsInput_n124(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n125(_uploadFile, _downloadFile, value);
+function to_candid_UpdateRolePermissionsInput_n134(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n135(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n36(_uploadFile, _downloadFile, value) {
   return value == "admin" ? {
@@ -35798,37 +35997,37 @@ function to_candid_record_n10(_uploadFile, _downloadFile, value) {
     kind: to_candid_RefKind_n11(_uploadFile, _downloadFile, value.kind)
   };
 }
-function to_candid_record_n103(_uploadFile, _downloadFile, value) {
+function to_candid_record_n111(_uploadFile, _downloadFile, value) {
   return {
     gps: value.gps,
     grossG: value.grossG,
     workingRef: value.workingRef,
-    site: to_candid_Site_n104(_uploadFile, _downloadFile, value.site),
+    site: to_candid_Site_n112(_uploadFile, _downloadFile, value.site),
     sealNo: value.sealNo,
     fileHashes: value.fileHashes,
     photoFileIds: value.photoFileIds,
     licence: value.licence,
-    lotType: to_candid_LotType_n105(_uploadFile, _downloadFile, value.lotType),
+    lotType: to_candid_LotType_n113(_uploadFile, _downloadFile, value.lotType),
     project: value.project,
     fileIds: value.fileIds
   };
 }
-function to_candid_record_n114(_uploadFile, _downloadFile, value) {
+function to_candid_record_n122(_uploadFile, _downloadFile, value) {
   return {
     principal: value.principal,
-    capabilities: to_candid_vec_n115(_uploadFile, _downloadFile, value.capabilities),
+    capabilities: to_candid_vec_n123(_uploadFile, _downloadFile, value.capabilities),
     role: to_candid_Role_n37(_uploadFile, _downloadFile, value.role)
   };
 }
-function to_candid_record_n120(_uploadFile, _downloadFile, value) {
+function to_candid_record_n128(_uploadFile, _downloadFile, value) {
   return {
-    children: to_candid_vec_n121(_uploadFile, _downloadFile, value.children),
+    children: to_candid_vec_n129(_uploadFile, _downloadFile, value.children),
     parentId: value.parentId
   };
 }
-function to_candid_record_n125(_uploadFile, _downloadFile, value) {
+function to_candid_record_n135(_uploadFile, _downloadFile, value) {
   return {
-    capabilities: to_candid_vec_n115(_uploadFile, _downloadFile, value.capabilities),
+    capabilities: to_candid_vec_n123(_uploadFile, _downloadFile, value.capabilities),
     role: to_candid_Role_n37(_uploadFile, _downloadFile, value.role)
   };
 }
@@ -35846,11 +36045,11 @@ function to_candid_record_n45(_uploadFile, _downloadFile, value) {
     payload: value.payload
   };
 }
-function to_candid_vec_n115(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => to_candid_Capability_n116(_uploadFile, _downloadFile, x3));
+function to_candid_vec_n123(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => to_candid_Capability_n124(_uploadFile, _downloadFile, x3));
 }
-function to_candid_vec_n121(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => to_candid_NewLotInput_n102(_uploadFile, _downloadFile, x3));
+function to_candid_vec_n129(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => to_candid_NewLotInput_n110(_uploadFile, _downloadFile, x3));
 }
 function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
   const agent = options.agent || HttpAgent.createSync({
@@ -36101,11 +36300,99 @@ function summarizeDemoAnalytics(lots) {
     eventsOverTime: points
   };
 }
-const STORAGE_KEY$1 = "explor8-data-mode";
+function buildDemoLot(input) {
+  const now2 = BigInt(Date.now()) * 1000000n;
+  const contentHash = randomHash();
+  const by = demoPrincipal();
+  const events2 = [
+    {
+      seq: 1n,
+      kind: EventKind.extracted,
+      at: now2,
+      by,
+      payload: `Extracted at ${input.workingRef || pick(WORKING_REFS)}`,
+      payloadHash: randomHash(),
+      fileIds: []
+    }
+  ];
+  return {
+    id: input.id,
+    lotType: input.lotType,
+    licence: input.licence,
+    project: input.project,
+    gps: input.gps,
+    workingRef: input.workingRef,
+    grossG: input.grossG,
+    sealNo: input.sealNo,
+    status: LotStatus.open,
+    statusHistory: [
+      {
+        seq: 1n,
+        from: LotStatus.open,
+        to: LotStatus.open,
+        at: now2,
+        by
+      }
+    ],
+    parentIds: [],
+    photoFileIds: [],
+    fileIds: [],
+    fileHashes: [],
+    contentHash,
+    hashChain: [{ eventSeq: 1n, contentHash, at: now2 }],
+    events: events2,
+    frozen: false,
+    openedAt: now2,
+    openedBy: by
+  };
+}
+function appendDemoEvent(lot, input) {
+  const seq = BigInt(lot.events.length + 1);
+  const at = BigInt(Date.now()) * 1000000n;
+  const by = demoPrincipal();
+  const payloadHash = randomHash();
+  const event = {
+    seq,
+    kind: input.kind,
+    at,
+    by,
+    payload: input.payload,
+    payloadHash,
+    fileIds: []
+  };
+  const nextStatus = demoStatusAfter(input.kind) ?? lot.status;
+  const statusHistory = nextStatus === lot.status ? lot.statusHistory : [
+    ...lot.statusHistory,
+    { seq, from: lot.status, to: nextStatus, at, by }
+  ];
+  return {
+    ...lot,
+    status: nextStatus,
+    statusHistory,
+    events: [...lot.events, event],
+    hashChain: [
+      ...lot.hashChain,
+      { eventSeq: seq, contentHash: lot.contentHash, at }
+    ]
+  };
+}
+function demoStatusAfter(kind) {
+  switch (kind) {
+    case EventKind.moved:
+      return LotStatus.in_transit;
+    case EventKind.assay:
+      return LotStatus.assayed;
+    case EventKind.retail:
+      return LotStatus.retailed;
+    default:
+      return null;
+  }
+}
+const STORAGE_KEY$2 = "explor8-data-mode";
 function readStoredMode() {
   if (typeof window === "undefined") return "live";
   try {
-    return window.localStorage.getItem(STORAGE_KEY$1) === "demo" ? "demo" : "live";
+    return window.localStorage.getItem(STORAGE_KEY$2) === "demo" ? "demo" : "live";
   } catch {
     return "live";
   }
@@ -36117,7 +36404,7 @@ function DataModeProvider({ children }) {
   const setMode = reactExports.useCallback((next) => {
     setModeState(next);
     try {
-      window.localStorage.setItem(STORAGE_KEY$1, next);
+      window.localStorage.setItem(STORAGE_KEY$2, next);
     } catch {
     }
   }, []);
@@ -36128,13 +36415,52 @@ function DataModeProvider({ children }) {
     }
     setDemoLots(generateDemoLots());
   }, [mode]);
+  const registerDemoLot = reactExports.useCallback(
+    (draft) => {
+      if (mode !== "demo") return null;
+      const lot = buildDemoLot(draft);
+      setDemoLots((current) => [lot, ...current ?? []]);
+      return lot.id;
+    },
+    [mode]
+  );
+  const appendDemoEventToLot = reactExports.useCallback(
+    (lotId, input) => {
+      if (mode !== "demo") return null;
+      let updated = null;
+      setDemoLots((current) => {
+        if (!current) return current;
+        return current.map((lot) => {
+          if (lot.id !== lotId) return lot;
+          updated = appendDemoEvent(lot, input);
+          return updated;
+        });
+      });
+      return updated;
+    },
+    [mode]
+  );
   const demoSummary = reactExports.useMemo(
     () => demoLots ? summarizeDemoLots(demoLots) : null,
     [demoLots]
   );
   const value = reactExports.useMemo(
-    () => ({ mode, setMode, demoLots, demoSummary }),
-    [mode, setMode, demoLots, demoSummary]
+    () => ({
+      mode,
+      setMode,
+      demoLots,
+      demoSummary,
+      registerDemoLot,
+      appendDemoEventToLot
+    }),
+    [
+      mode,
+      setMode,
+      demoLots,
+      demoSummary,
+      registerDemoLot,
+      appendDemoEventToLot
+    ]
   );
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DataModeContext.Provider, { value, children });
 }
@@ -36511,7 +36837,7 @@ function roleLabel(role) {
 }
 const CAPABILITY_LABELS = {
   [Capability.create_lot]: "Register a lot",
-  [Capability.append_event]: "Append a provenance event",
+  [Capability.append_event]: "Append a Precious Material Origin History event",
   [Capability.change_status]: "Change a lot's status",
   [Capability.split_lot]: "Split a lot",
   [Capability.merge_lot]: "Merge lots",
@@ -36667,6 +36993,17 @@ function formatGrams(grams) {
 }
 function humanizeToken(token) {
   return token.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+const EVENT_LABEL = {
+  extracted: "Recently Mined",
+  assay: "Testing Quality",
+  retail: "Retailed",
+  cut: "Applied for crafting",
+  frozen: "Confiscated by Authorities",
+  status_change: "Status change"
+};
+function eventLabel(kind) {
+  return EVENT_LABEL[kind] ?? humanizeToken(kind);
 }
 function formatIsoDay(day) {
   const parsed = /* @__PURE__ */ new Date(`${day}T00:00:00Z`);
@@ -41990,30 +42327,30 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$C = [
+const __iconNode$F = [
   ["rect", { width: "20", height: "5", x: "2", y: "3", rx: "1", key: "1wp1u1" }],
   ["path", { d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8", key: "1s80jp" }],
   ["path", { d: "M10 12h4", key: "a56b0p" }]
 ];
-const Archive = createLucideIcon("archive", __iconNode$C);
+const Archive = createLucideIcon("archive", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$B = [
+const __iconNode$E = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$B);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$A = [
+const __iconNode$D = [
   [
     "path",
     {
@@ -42023,47 +42360,80 @@ const __iconNode$A = [
   ],
   ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
 ];
-const Camera = createLucideIcon("camera", __iconNode$A);
+const Camera = createLucideIcon("camera", __iconNode$D);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$z);
+const __iconNode$C = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$y);
+const __iconNode$B = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$x);
+const __iconNode$A = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$A);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$w);
+const __iconNode$z = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$v = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$v);
+const __iconNode$y = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$y);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$x = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$x);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$w = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
+];
+const Clock3 = createLucideIcon("clock-3", __iconNode$w);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$v = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42071,10 +42441,10 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$u);
+const Copy = createLucideIcon("copy", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42082,10 +42452,10 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16.5 12", key: "1aq6pp" }]
+  ["path", { d: "m15 10 5 5-5 5", key: "qqa56n" }],
+  ["path", { d: "M4 4v7a4 4 0 0 0 4 4h12", key: "z08zvw" }]
 ];
-const Clock3 = createLucideIcon("clock-3", __iconNode$t);
+const CornerDownRight = createLucideIcon("corner-down-right", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42094,9 +42464,12 @@ const Clock3 = createLucideIcon("clock-3", __iconNode$t);
  */
 const __iconNode$s = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+  ["line", { x1: "22", x2: "18", y1: "12", y2: "12", key: "l9bcsi" }],
+  ["line", { x1: "6", x2: "2", y1: "12", y2: "12", key: "13hhkx" }],
+  ["line", { x1: "12", x2: "12", y1: "6", y2: "2", key: "10w3f3" }],
+  ["line", { x1: "12", x2: "12", y1: "22", y2: "18", key: "15g9kq" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$s);
+const Crosshair = createLucideIcon("crosshair", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42104,10 +42477,11 @@ const Clock = createLucideIcon("clock", __iconNode$s);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$r = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "m3 15 2 2 4-4", key: "1lhrkk" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$r);
+const FileCheck2 = createLucideIcon("file-check-2", __iconNode$r);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42115,10 +42489,13 @@ const Copy = createLucideIcon("copy", __iconNode$r);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$q = [
-  ["path", { d: "m15 10 5 5-5 5", key: "qqa56n" }],
-  ["path", { d: "M4 4v7a4 4 0 0 0 4 4h12", key: "z08zvw" }]
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M10 9H8", key: "b1mrlr" }],
+  ["path", { d: "M16 13H8", key: "t4e002" }],
+  ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const CornerDownRight = createLucideIcon("corner-down-right", __iconNode$q);
+const FileText = createLucideIcon("file-text", __iconNode$q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42126,46 +42503,6 @@ const CornerDownRight = createLucideIcon("corner-down-right", __iconNode$q);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$p = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "22", x2: "18", y1: "12", y2: "12", key: "l9bcsi" }],
-  ["line", { x1: "6", x2: "2", y1: "12", y2: "12", key: "13hhkx" }],
-  ["line", { x1: "12", x2: "12", y1: "6", y2: "2", key: "10w3f3" }],
-  ["line", { x1: "12", x2: "12", y1: "22", y2: "18", key: "15g9kq" }]
-];
-const Crosshair = createLucideIcon("crosshair", __iconNode$p);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$o = [
-  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "m3 15 2 2 4-4", key: "1lhrkk" }]
-];
-const FileCheck2 = createLucideIcon("file-check-2", __iconNode$o);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$n = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M10 9H8", key: "b1mrlr" }],
-  ["path", { d: "M16 13H8", key: "t4e002" }],
-  ["path", { d: "M16 17H8", key: "z1uh3a" }]
-];
-const FileText = createLucideIcon("file-text", __iconNode$n);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$m = [
   ["line", { x1: "2", x2: "22", y1: "2", y2: "22", key: "a6p6uj" }],
   ["path", { d: "M10.41 10.41a2 2 0 1 1-2.83-2.83", key: "1bzlo9" }],
   ["line", { x1: "13.5", x2: "6", y1: "13.5", y2: "21", key: "1q0aeu" }],
@@ -42179,21 +42516,53 @@ const __iconNode$m = [
   ],
   ["path", { d: "M21 15V5a2 2 0 0 0-2-2H9", key: "43el77" }]
 ];
-const ImageOff = createLucideIcon("image-off", __iconNode$m);
+const ImageOff = createLucideIcon("image-off", __iconNode$p);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$o = [
   ["path", { d: "M16 5h6", key: "1vod17" }],
   ["path", { d: "M19 2v6", key: "4bpg5p" }],
   ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
   ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
   ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
 ];
-const ImagePlus = createLucideIcon("image-plus", __iconNode$l);
+const ImagePlus = createLucideIcon("image-plus", __iconNode$o);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$n = [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
+  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
+];
+const Image = createLucideIcon("image", __iconNode$n);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$m = [
+  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
+  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
+  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+];
+const Link2 = createLucideIcon("link-2", __iconNode$m);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42201,11 +42570,10 @@ const ImagePlus = createLucideIcon("image-plus", __iconNode$l);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$k = [
-  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
-  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
-  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Image = createLucideIcon("image", __iconNode$k);
+const Lock = createLucideIcon("lock", __iconNode$k);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42213,19 +42581,23 @@ const Image = createLucideIcon("image", __iconNode$k);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$j = [
-  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
-  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
-  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
+  ["path", { d: "M15 12H3", key: "6jk70r" }],
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const Link2 = createLucideIcon("link-2", __iconNode$j);
+const LogIn = createLucideIcon("log-in", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$i);
+const __iconNode$i = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42233,10 +42605,12 @@ const LoaderCircle = createLucideIcon("loader-circle", __iconNode$i);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$h = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+  ["path", { d: "M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9", key: "1j9vog" }],
+  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }],
+  ["path", { d: "m17 17 4 4", key: "1b3523" }],
+  ["path", { d: "m21 17-4 4", key: "uinynz" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$h);
+const MailX = createLucideIcon("mail-x", __iconNode$h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42244,31 +42618,28 @@ const Lock = createLucideIcon("lock", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
-  ["path", { d: "M15 12H3", key: "6jk70r" }],
-  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
+  ["path", { d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7", key: "132q7q" }],
+  ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$g);
+const Mail = createLucideIcon("mail", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$f);
+const __iconNode$f = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$e);
+const __iconNode$e = [
+  ["path", { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z", key: "a7tn18" }]
+];
+const Moon = createLucideIcon("moon", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42276,16 +42647,6 @@ const Minus = createLucideIcon("minus", __iconNode$e);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$d = [
-  ["path", { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z", key: "a7tn18" }]
-];
-const Moon = createLucideIcon("moon", __iconNode$d);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$c = [
   ["path", { d: "M13.234 20.252 21 12.3", key: "1cbrk9" }],
   [
     "path",
@@ -42295,14 +42656,14 @@ const __iconNode$c = [
     }
   ]
 ];
-const Paperclip = createLucideIcon("paperclip", __iconNode$c);
+const Paperclip = createLucideIcon("paperclip", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [
+const __iconNode$c = [
   [
     "path",
     {
@@ -42312,7 +42673,18 @@ const __iconNode$b = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$b);
+const Pencil = createLucideIcon("pencil", __iconNode$c);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42320,10 +42692,10 @@ const Pencil = createLucideIcon("pencil", __iconNode$b);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$a = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$a);
+const Search = createLucideIcon("search", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -42331,10 +42703,16 @@ const Plus = createLucideIcon("plus", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
 ];
-const Search = createLucideIcon("search", __iconNode$9);
+const Send = createLucideIcon("send", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -47266,7 +47644,9 @@ const REF_KINDS = [
   RefKind.status,
   RefKind.event_kind,
   RefKind.caption,
-  RefKind.form_default
+  RefKind.form_default,
+  RefKind.status_explanation,
+  RefKind.enquiry_destination
 ];
 ({
   [RefKind.lot_kind]: "Item kinds",
@@ -47274,15 +47654,19 @@ const REF_KINDS = [
   [RefKind.status]: "Statuses",
   [RefKind.event_kind]: "Event kinds",
   [RefKind.caption]: "Captions",
-  [RefKind.form_default]: "Form defaults"
+  [RefKind.form_default]: "Form defaults",
+  [RefKind.status_explanation]: "Status explanations",
+  [RefKind.enquiry_destination]: "Enquiry destination"
 });
 ({
   [RefKind.lot_kind]: "The item kinds an officer can register.",
   [RefKind.site]: "Extraction and workshop mining sites, and the id prefix each one uses.",
   [RefKind.status]: "The register statuses a lot can carry.",
-  [RefKind.event_kind]: "The provenance events an officer can append.",
+  [RefKind.event_kind]: "The Precious Material Origin History events an officer can append.",
   [RefKind.caption]: "The photo captions the register asks for.",
-  [RefKind.form_default]: "Prefilled values for the register-lot form."
+  [RefKind.form_default]: "Prefilled values for the register-lot form.",
+  [RefKind.status_explanation]: "The explanation shown for each status in the home page's status information section.",
+  [RefKind.enquiry_destination]: "The optional email address that receives purchase enquiries."
 });
 function emptyReferenceIndex() {
   return {
@@ -47291,7 +47675,9 @@ function emptyReferenceIndex() {
     [RefKind.status]: [],
     [RefKind.event_kind]: [],
     [RefKind.caption]: [],
-    [RefKind.form_default]: []
+    [RefKind.form_default]: [],
+    [RefKind.status_explanation]: [],
+    [RefKind.enquiry_destination]: []
   };
 }
 function indexReferenceEntries(entries) {
@@ -47327,7 +47713,8 @@ const ALL_KINDS = [
   RefKind.status,
   RefKind.event_kind,
   RefKind.caption,
-  RefKind.form_default
+  RefKind.form_default,
+  RefKind.status_explanation
 ];
 function useReferenceData() {
   const { actor, isFetching } = useActor(createActor);
@@ -47530,6 +47917,8 @@ function initialDraft$1(lotType, site, licence, project) {
 function useRegisterLotForm() {
   var _a2, _b2;
   const { optionsFor, valueFor: valueFor2, isLoading } = useReferenceData();
+  const { mode, registerDemoLot } = useDataMode();
+  const isDemo = mode === "demo";
   const kindOptions = optionsFor("lot_kind");
   const siteOptions = optionsFor("site");
   const licenceDefault = valueFor2("form_default", "licence") ?? DEFAULT_LICENCE;
@@ -47626,6 +48015,37 @@ function useRegisterLotForm() {
     const found = validate();
     setErrors(found);
     if (Object.keys(found).length > 0) return null;
+    if (isDemo) {
+      const lotId = registerDemoLot({
+        id: draft.id.trim(),
+        lotType: draft.lotType,
+        site: draft.site,
+        licence: draft.licence.trim(),
+        project: draft.project.trim(),
+        gps: draft.gps.trim(),
+        workingRef: draft.workingRef.trim(),
+        grossG: draft.grossG.trim(),
+        sealNo: draft.sealNo.trim()
+      });
+      if (!lotId) {
+        setSubmitError(
+          "Demo registration is only available in Demo-data mode."
+        );
+        return null;
+      }
+      setCreatedId(lotId);
+      setDraft(
+        initialDraft$1(
+          firstKind || draft.lotType,
+          firstSite || draft.site,
+          licenceDefault,
+          projectDefault
+        )
+      );
+      setIdEdited(false);
+      upload.clear();
+      return lotId;
+    }
     try {
       const uploaded = await upload.uploadAll();
       const input = {
@@ -47676,7 +48096,9 @@ function useRegisterLotForm() {
     firstKind,
     firstSite,
     licenceDefault,
-    projectDefault
+    projectDefault,
+    isDemo,
+    registerDemoLot
   ]);
   const reset = reactExports.useCallback(() => {
     setDraft(
@@ -47768,7 +48190,7 @@ function RegisterLotPanel({
             },
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Item kind", htmlFor: "register-type", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$3, { label: "Item kind", htmlFor: "register-type", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "select",
                   {
                     id: "register-type",
@@ -47779,7 +48201,7 @@ function RegisterLotPanel({
                     children: kindOptions.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: option.value, children: option.label }, option.value))
                   }
                 ) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Mining Site", htmlFor: "register-site", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$3, { label: "Mining Site", htmlFor: "register-site", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "select",
                   {
                     id: "register-site",
@@ -47790,7 +48212,7 @@ function RegisterLotPanel({
                     children: siteOptions.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: option.value, children: option.label }, option.value))
                   }
                 ) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Date", htmlFor: "register-date", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$3, { label: "Date", htmlFor: "register-date", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "input",
                   {
                     id: "register-date",
@@ -47802,7 +48224,7 @@ function RegisterLotPanel({
                   }
                 ) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Field$2,
+                  Field$3,
                   {
                     label: "Lot id",
                     htmlFor: "register-id",
@@ -47822,9 +48244,9 @@ function RegisterLotPanel({
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Field$2,
+                  Field$3,
                   {
-                    label: "Licence",
+                    label: "Mining Licence",
                     htmlFor: "register-licence",
                     error: form.errors.licence,
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47841,9 +48263,9 @@ function RegisterLotPanel({
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Field$2,
+                  Field$3,
                   {
-                    label: "Project",
+                    label: "Mining Site",
                     htmlFor: "register-project",
                     error: form.errors.project,
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47860,7 +48282,7 @@ function RegisterLotPanel({
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Field$2,
+                  Field$3,
                   {
                     label: "Gross weight (grams)",
                     htmlFor: "register-gross",
@@ -47880,9 +48302,9 @@ function RegisterLotPanel({
                   }
                 ),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Field$2,
+                  Field$3,
                   {
-                    label: "Seal number",
+                    label: "Lot number",
                     htmlFor: "register-seal",
                     error: form.errors.sealNo,
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47898,7 +48320,7 @@ function RegisterLotPanel({
                     )
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Working ref", htmlFor: "register-ref", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Field$3, { label: "Working ref", htmlFor: "register-ref", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "input",
                   {
                     id: "register-ref",
@@ -48003,7 +48425,7 @@ function RegisterLotPanel({
   ) });
 }
 const inputClass$3 = "h-12 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground transition-quick placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-11";
-function Field$2({
+function Field$3({
   label,
   htmlFor,
   error,
@@ -48026,11 +48448,11 @@ function Field$2({
     error ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-destructive", role: "alert", children: error }) : null
   ] });
 }
-const STORAGE_KEY = "explor8-theme";
+const STORAGE_KEY$1 = "explor8-theme";
 const DEFAULT_THEME = "dark";
 function readStoredTheme() {
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(STORAGE_KEY$1);
     return stored === "dark" || stored === "light" ? stored : null;
   } catch {
     return null;
@@ -48051,7 +48473,7 @@ function useTheme() {
   const setTheme = reactExports.useCallback((next) => {
     setThemeState(next);
     try {
-      window.localStorage.setItem(STORAGE_KEY, next);
+      window.localStorage.setItem(STORAGE_KEY$1, next);
     } catch {
     }
   }, []);
@@ -48059,7 +48481,7 @@ function useTheme() {
     setThemeState((current) => {
       const next = current === "dark" ? "light" : "dark";
       try {
-        window.localStorage.setItem(STORAGE_KEY, next);
+        window.localStorage.setItem(STORAGE_KEY$1, next);
       } catch {
       }
       return next;
@@ -48083,13 +48505,84 @@ function ThemeToggle() {
     }
   );
 }
+const STORAGE_KEY = "explor8-text-size";
+const TEXT_SIZE_STEPS = [87.5, 100, 112.5, 125, 137.5];
+const DEFAULT_TEXT_SIZE_INDEX = 1;
+function clampIndex(index2) {
+  if (!Number.isFinite(index2)) return DEFAULT_TEXT_SIZE_INDEX;
+  return Math.min(Math.max(Math.round(index2), 0), TEXT_SIZE_STEPS.length - 1);
+}
+function readStoredIndex() {
+  if (typeof window === "undefined") return DEFAULT_TEXT_SIZE_INDEX;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw === null) return DEFAULT_TEXT_SIZE_INDEX;
+    return clampIndex(Number.parseInt(raw, 10));
+  } catch {
+    return DEFAULT_TEXT_SIZE_INDEX;
+  }
+}
+function applyTextSize(index2) {
+  if (typeof document === "undefined") return;
+  const step = TEXT_SIZE_STEPS[clampIndex(index2)];
+  document.documentElement.style.fontSize = `${step}%`;
+}
+function useTextSize() {
+  const [index2, setIndex] = reactExports.useState(readStoredIndex);
+  reactExports.useEffect(() => {
+    applyTextSize(index2);
+  }, [index2]);
+  const persist = reactExports.useCallback((next) => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, String(next));
+    } catch {
+    }
+  }, []);
+  const setStep = reactExports.useCallback(
+    (next) => {
+      const clamped = clampIndex(next);
+      setIndex(clamped);
+      persist(clamped);
+    },
+    [persist]
+  );
+  const increase = reactExports.useCallback(() => {
+    setIndex((current) => {
+      const next = clampIndex(current + 1);
+      persist(next);
+      return next;
+    });
+  }, [persist]);
+  const decrease = reactExports.useCallback(() => {
+    setIndex((current) => {
+      const next = clampIndex(current - 1);
+      persist(next);
+      return next;
+    });
+  }, [persist]);
+  const reset = reactExports.useCallback(() => {
+    setIndex(DEFAULT_TEXT_SIZE_INDEX);
+    persist(DEFAULT_TEXT_SIZE_INDEX);
+  }, [persist]);
+  return {
+    index: index2,
+    step: TEXT_SIZE_STEPS[index2],
+    isDefault: index2 === DEFAULT_TEXT_SIZE_INDEX,
+    canIncrease: index2 < TEXT_SIZE_STEPS.length - 1,
+    canDecrease: index2 > 0,
+    increase,
+    decrease,
+    reset,
+    setStep
+  };
+}
 function AppHeader() {
   const { login, clear, isAuthenticated, isLoggingIn, isInitializing } = useInternetIdentity();
   const { capabilities, principal } = useMyRole();
   const { mode } = useDataMode();
   const [registerOpen, setRegisterOpen] = reactExports.useState(false);
-  const canRegister = capabilities.canWrite && mode === "live";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "border-b border-border bg-card", children: [
+  const canRegister = mode === "demo" ? isAuthenticated : capabilities.canWrite;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "above-field sticky top-0 z-30 border-b border-border bg-card", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 items-center gap-3", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ChainMark, { className: "h-8 w-14 md:h-9 md:w-16" }),
@@ -48102,9 +48595,10 @@ function AppHeader() {
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-x-3 gap-y-2 md:justify-end", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "order-last w-full text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:order-none md:w-auto md:max-w-[20rem] md:text-right", children: "Licensed mineral dealer · Licence reminder: every lot must carry a valid JOA licence reference." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "order-last w-full text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:order-none md:w-auto md:max-w-[20rem] md:text-right", children: "Licensed miner & dealer · Licence reminder: every lot must carry a valid JOA licence reference." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(DataModeToggle, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TextSizeControl, {}),
           canRegister ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
@@ -48172,6 +48666,82 @@ function AppHeader() {
       }
     )
   ] });
+}
+function TextSizeControl() {
+  const {
+    index: index2,
+    step,
+    isDefault,
+    canIncrease,
+    canDecrease,
+    increase,
+    decrease,
+    reset
+  } = useTextSize();
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "fieldset",
+    {
+      className: "inline-flex items-center rounded-sm border border-border bg-background p-0.5",
+      "aria-label": "Text size",
+      "data-ocid": "header.text_size_control",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: decrease,
+            disabled: !canDecrease,
+            "aria-label": "Decrease text size",
+            "data-ocid": "header.text_size_decrease_button",
+            className: "inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground transition-quick hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 sm:size-8",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Minus, { className: "size-3.5", "aria-hidden": "true" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: reset,
+            "aria-label": "Reset text size to default",
+            "aria-pressed": isDefault,
+            "data-ocid": "header.text_size_reset_button",
+            className: cn(
+              "inline-flex h-9 items-center rounded-sm px-2 font-display text-sm leading-none tracking-tight transition-quick focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-8",
+              isDefault ? "text-muted-foreground hover:text-foreground" : "text-accent"
+            ),
+            children: "A-a"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: increase,
+            disabled: !canIncrease,
+            "aria-label": "Increase text size",
+            "data-ocid": "header.text_size_increase_button",
+            className: "inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground transition-quick hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 sm:size-8",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "span",
+          {
+            className: "sr-only",
+            "aria-live": "polite",
+            "data-ocid": "header.text_size_value",
+            children: [
+              "Text size ",
+              step,
+              "% (step ",
+              index2 + 1,
+              " of 5)"
+            ]
+          }
+        )
+      ]
+    }
+  );
 }
 function DataModeToggle() {
   const { mode, setMode } = useDataMode();
@@ -48905,6 +49475,16 @@ const REFERENCE_KINDS = [
     kind: "form_default",
     label: "Form defaults",
     hint: "Values prefilled when a lot is registered."
+  },
+  {
+    kind: "status_explanation",
+    label: "Status explanations",
+    hint: "The explanation shown for each status in the home page's status information section."
+  },
+  {
+    kind: "enquiry_destination",
+    label: "Enquiry destination",
+    hint: "The optional email address that receives purchase enquiries."
   }
 ];
 function AdminAnalyticsSection({ enabled }) {
@@ -49218,7 +49798,7 @@ function Skeleton({ className, ...props }) {
     }
   );
 }
-const SKELETON_IDS$3 = Array.from(
+const SKELETON_IDS$4 = Array.from(
   { length: 3 },
   (_2, index2) => `document-skeleton-${index2}`
 );
@@ -49242,7 +49822,7 @@ function AdminDocumentsSection({ enabled }) {
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-5", "data-ocid": "admin.documents_panel", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(DocumentUploadForm, {}),
-    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", "data-ocid": "admin.documents_loading_state", children: SKELETON_IDS$3.map((id) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-16 w-full rounded-sm" }, id)) }) : isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", "data-ocid": "admin.documents_loading_state", children: SKELETON_IDS$4.map((id) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-16 w-full rounded-sm" }, id)) }) : isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
         className: "block-face px-4 py-6",
@@ -49490,6 +50070,252 @@ function DocumentUploadForm() {
             children: error
           }
         ) : null
+      ]
+    }
+  );
+}
+const enquiryKeys = {
+  mine: ["my-enquiries"],
+  inbox: ["admin-enquiries"]
+};
+function enquiryErrorMessage(kind, detail) {
+  switch (kind) {
+    case "notAuthenticated":
+      return "Sign in with Internet Identity to submit or withdraw an enquiry.";
+    case "notAuthorized":
+      return "Only an administrator can read the enquiry inbox.";
+    case "unknownEnquiry":
+      return "That enquiry is no longer in the register.";
+    case "invalidInput":
+      return detail && detail.trim().length > 0 ? detail : "The enquiry is incomplete. Fill in every required field.";
+    default:
+      return "The register rejected this enquiry request.";
+  }
+}
+function useMyEnquiries(enabled) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: enquiryKeys.mine,
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listMyEnquiries();
+      if (result.__kind__ === "err") {
+        throw new Error(
+          enquiryErrorMessage(
+            result.err.__kind__,
+            enquiryErrorDetail(result.err)
+          )
+        );
+      }
+      return result.ok;
+    },
+    enabled: !!actor && !isFetching && enabled
+  });
+}
+function useAdminEnquiries(enabled) {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: enquiryKeys.inbox,
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listEnquiries();
+      if (result.__kind__ === "err") {
+        throw new Error(
+          enquiryErrorMessage(
+            result.err.__kind__,
+            enquiryErrorDetail(result.err)
+          )
+        );
+      }
+      return result.ok;
+    },
+    enabled: !!actor && !isFetching && enabled
+  });
+}
+function useSubmitEnquiry() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (input) => {
+      if (!actor) throw new Error("Backend is not ready");
+      const result = await actor.submitEnquiry(input);
+      if (result.__kind__ === "err") {
+        throw new Error(
+          enquiryErrorMessage(
+            result.err.__kind__,
+            enquiryErrorDetail(result.err)
+          )
+        );
+      }
+      return result.ok;
+    },
+    onSuccess: () => {
+      void queryClient2.invalidateQueries({ queryKey: enquiryKeys.mine });
+      void queryClient2.invalidateQueries({ queryKey: enquiryKeys.inbox });
+    }
+  });
+}
+function useWithdrawEnquiry() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (id) => {
+      if (!actor) throw new Error("Backend is not ready");
+      const result = await actor.withdrawEnquiry(id);
+      if (result.__kind__ === "err") {
+        throw new Error(
+          enquiryErrorMessage(
+            result.err.__kind__,
+            enquiryErrorDetail(result.err)
+          )
+        );
+      }
+      return result.ok;
+    },
+    onSuccess: () => {
+      void queryClient2.invalidateQueries({ queryKey: enquiryKeys.mine });
+      void queryClient2.invalidateQueries({ queryKey: enquiryKeys.inbox });
+    }
+  });
+}
+function enquiryErrorDetail(error) {
+  return error.__kind__ === "invalidInput" ? String(error.invalidInput) : void 0;
+}
+const SKELETON_IDS$3 = Array.from(
+  { length: 3 },
+  (_2, index2) => `enquiry-skeleton-${index2}`
+);
+function AdminEnquirySection() {
+  const { capabilities } = useMyRole();
+  const { mode } = useDataMode();
+  const isDemo = mode === "demo";
+  const enabled = capabilities.canAdminister;
+  const {
+    data: enquiries,
+    isLoading,
+    isError
+  } = useAdminEnquiries(enabled && !isDemo);
+  const { data: referenceEntries } = useAllReferenceEntries(enabled);
+  const destination = (referenceEntries ?? []).find(
+    (entry) => entry.kind === RefKind.enquiry_destination && entry.active
+  );
+  const destinationEmail = (destination == null ? void 0 : destination.value.trim()) ?? "";
+  if (!enabled) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-8", "data-ocid": "admin.enquiries_section", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl tracking-tight text-foreground md:text-3xl", children: "Purchase enquiries" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "Enquiries submitted from the register, newest first." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "mt-3 block-face px-4 py-6",
+          "data-ocid": "admin.enquiries_locked_state",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-muted-foreground", children: "Only an administrator can read the purchase enquiry inbox." })
+        }
+      )
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-8", "data-ocid": "admin.enquiries_section", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl tracking-tight text-foreground md:text-3xl", children: "Purchase enquiries" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "Enquiries submitted from the register, newest first. A submitter who withdraws permission is removed from this inbox." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-5", "data-ocid": "admin.enquiries_panel", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DestinationNotice, { email: destinationEmail }),
+      isDemo ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "block-face px-4 py-6",
+          "data-ocid": "admin.enquiries_demo_notice",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-muted-foreground", children: "Demo data — the register is simulated in this browser, so the enquiry inbox is not read here. Switch to Real-time mode to see live enquiries." })
+        }
+      ) : isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", "data-ocid": "admin.enquiries_loading_state", children: SKELETON_IDS$3.map((id) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-24 w-full rounded-sm" }, id)) }) : isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "block-face px-4 py-6",
+          "data-ocid": "admin.enquiries_error_state",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-destructive", children: "The enquiry inbox could not be read. Reload the page to try again." })
+        }
+      ) : (enquiries ?? []).length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "block-face px-4 py-6",
+          "data-ocid": "admin.enquiries_empty_state",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-muted-foreground", children: "No open enquiries. A purchase enquiry submitted from the register appears here until its submitter withdraws permission." })
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-2", "data-ocid": "admin.enquiries_list", children: (enquiries ?? []).map((enquiry, index2) => /* @__PURE__ */ jsxRuntimeExports.jsx(EnquiryRow$1, { enquiry, index: index2 }, enquiry.id)) })
+    ] })
+  ] });
+}
+function DestinationNotice({ email }) {
+  if (email.length === 0) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "block-face px-4 py-5",
+        "data-ocid": "admin.enquiries_destination_unset",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            MailX,
+            {
+              className: "mt-0.5 size-4 shrink-0 text-muted-foreground",
+              "aria-hidden": "true"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-medium text-foreground", children: "No destination email is set" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1.5 text-base leading-relaxed text-muted-foreground", children: "No enquiry email is sent while no address is set. Add one under Reference data → Enquiry destination to record where enquiries should go." })
+          ] })
+        ] })
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "block-face block-face-open px-4 py-5",
+      "data-ocid": "admin.enquiries_destination_set",
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Mail,
+          {
+            className: "mt-0.5 size-4 shrink-0 text-accent",
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-base font-medium text-foreground", children: [
+            "Enquiries are directed to ",
+            email
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1.5 text-base leading-relaxed text-muted-foreground", children: "This address is stored as reference data. Edit or remove it under Reference data → Enquiry destination." })
+        ] })
+      ] })
+    }
+  );
+}
+function EnquiryRow$1({
+  enquiry,
+  index: index2
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "li",
+    {
+      className: "block-face px-4 py-4",
+      "data-ocid": `admin.enquiries_item.${index2 + 1}`,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-start justify-between gap-x-4 gap-y-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-medium text-foreground", children: enquiry.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 text-sm text-muted-foreground", children: [
+              enquiry.email,
+              enquiry.phone ? ` · ${enquiry.phone}` : ""
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "shrink-0 text-sm text-muted-foreground", children: formatTimestamp(enquiry.submittedAt) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-base leading-relaxed text-foreground", children: enquiry.message }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "hash mt-3 break-all", children: [
+          "Submitted by ",
+          shortenPrincipal(enquiry.submittedBy.toString())
+        ] })
       ]
     }
   );
@@ -54408,7 +55234,7 @@ function EntryForm({
       "data-ocid": `admin.reference_form.${kind}`,
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Key", htmlFor: `reference-key-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Key", htmlFor: `reference-key-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "input",
             {
               id: `reference-key-${kind}`,
@@ -54421,7 +55247,7 @@ function EntryForm({
               className: "h-11 w-full rounded-sm border border-input bg-background px-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 md:h-10"
             }
           ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Display name", htmlFor: `reference-name-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Display name", htmlFor: `reference-name-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "input",
             {
               id: `reference-name-${kind}`,
@@ -54433,7 +55259,7 @@ function EntryForm({
               className: "h-11 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
             }
           ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Value", htmlFor: `reference-value-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Value", htmlFor: `reference-value-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "input",
             {
               id: `reference-value-${kind}`,
@@ -54445,7 +55271,7 @@ function EntryForm({
               className: "h-11 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
             }
           ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Sort order", htmlFor: `reference-order-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Field$2, { label: "Sort order", htmlFor: `reference-order-${kind}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "input",
             {
               id: `reference-order-${kind}`,
@@ -54509,7 +55335,7 @@ function EntryForm({
     }
   );
 }
-function Field$1({
+function Field$2({
   label,
   htmlFor,
   children
@@ -54711,7 +55537,7 @@ const STATUS_CLASS = {
   frozen: "pill-frozen",
   closed: "pill-frozen"
 };
-const STATUS_LABEL = {
+const STATUS_LABEL$1 = {
   open: "Recently Mined",
   in_transit: "In transit",
   assayed: "Testing Quality",
@@ -54726,7 +55552,7 @@ function StatusPill({ status, className }) {
     {
       className: cn("pill", STATUS_CLASS[status] ?? "pill-open", className),
       "data-ocid": "lot.status_pill",
-      children: labelFor(RefKind.status, status) ?? STATUS_LABEL[status] ?? humanizeToken(status)
+      children: labelFor(RefKind.status, status) ?? STATUS_LABEL$1[status] ?? humanizeToken(status)
     }
   );
 }
@@ -55077,7 +55903,7 @@ function AwaitingRoleNotice({
         className: cn("block-face px-4 py-5", className),
         "data-ocid": "auth.signed_out_notice",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: "Reading the Explor8 register is open to everyone. Sign in with Internet Identity to register lots and append provenance events." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: "Reading the Explor8 register is open to everyone. Sign in with Internet Identity to register lots and append Precious Material Origin History events." }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SignInButton, {}) })
         ]
       }
@@ -55173,6 +55999,8 @@ function AdminPage() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(AdminAnalyticsSection, { enabled: capabilities.canAdminister })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rule-gold" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AdminEnquirySection, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rule-gold" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-8", "data-ocid": "admin.documents_section", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl tracking-tight text-foreground md:text-3xl", children: "Analysis documents" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "Assay reports, spreadsheets and other analysis files kept beside the register. Each file is hashed in the browser before it is stored." }),
@@ -55208,6 +56036,314 @@ function AdminPage() {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "Remove every lot, event and stored file from the register. This is offered only to signed-in administrators and requires confirmation from more than half of the register's administrators." }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPurgeSection, { canAdminister: capabilities.canAdminister })
     ] })
+  ] });
+}
+const EMPTY_DRAFT = {
+  name: "",
+  email: "",
+  phone: "",
+  message: "",
+  consent: false
+};
+function EnquirySection() {
+  const { isAuthenticated } = useInternetIdentity();
+  const { mode } = useDataMode();
+  const isDemo = mode === "demo";
+  const [open, setOpen] = reactExports.useState(false);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-9 md:py-12", "data-ocid": "home.enquiry_section", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl tracking-tight text-foreground md:text-3xl", children: "Contact us to make a purchase" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "Send the register an enquiry about a lot you would like to buy. Sign in is required to submit, and you can withdraw your permission at any time." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        type: "button",
+        onClick: () => setOpen((current) => !current),
+        "aria-expanded": open,
+        "aria-controls": "purchase-enquiry-form",
+        "data-ocid": "home.enquiry_toggle",
+        className: "mt-4 inline-flex h-11 items-center gap-2 rounded-sm border border-border bg-background px-4 text-xs font-semibold uppercase tracking-[0.08em] text-foreground transition-quick hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "size-3.5", "aria-hidden": "true" }),
+          open ? "Close the enquiry form" : "Open the enquiry form",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ChevronDown,
+            {
+              className: cn(
+                "size-4 transition-quick",
+                open ? "rotate-180" : "rotate-0"
+              ),
+              "aria-hidden": "true"
+            }
+          )
+        ]
+      }
+    ),
+    open ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "purchase-enquiry-form", className: "mt-4", children: isDemo ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "block-face px-4 py-5",
+        "data-ocid": "home.enquiry_demo_notice",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: "Demo data — the register is simulated in this browser, so enquiries cannot be submitted here. Switch to Real-time mode to send a real enquiry." })
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(EnquiryForm, { isAuthenticated }) }) : null
+  ] });
+}
+function EnquiryForm({ isAuthenticated }) {
+  const submitEnquiry = useSubmitEnquiry();
+  const [draft, setDraft] = reactExports.useState(EMPTY_DRAFT);
+  const [submitted, setSubmitted] = reactExports.useState(false);
+  const canSubmit = isAuthenticated && draft.consent && draft.name.trim().length > 0 && draft.email.trim().length > 0 && draft.message.trim().length > 0;
+  function handleSubmit() {
+    if (!canSubmit) return;
+    const input = {
+      name: draft.name.trim(),
+      email: draft.email.trim(),
+      phone: draft.phone.trim(),
+      message: draft.message.trim(),
+      consent: draft.consent
+    };
+    setDraft(EMPTY_DRAFT);
+    setSubmitted(false);
+    submitEnquiry.mutate(input, {
+      onSuccess: () => setSubmitted(true),
+      onError: () => setDraft(
+        (current) => current.name === "" && current.message === "" ? input : current
+      )
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "block-face px-4 py-5", "data-ocid": "home.enquiry_form", children: [
+      !isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "mb-5 border border-accent/40 bg-accent/5 px-3 py-3",
+          "data-ocid": "home.enquiry_sign_in_required",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: "Sign in with Internet Identity to submit an enquiry. Your principal is recorded with the enquiry so you can withdraw it later." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SignInButton, {}) })
+          ]
+        }
+      ) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 gap-4 sm:grid-cols-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Your name", htmlFor: "enquiry-name", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            id: "enquiry-name",
+            type: "text",
+            value: draft.name,
+            onChange: (event) => setDraft((current) => ({
+              ...current,
+              name: event.target.value
+            })),
+            autoComplete: "name",
+            "data-ocid": "home.enquiry_name_input",
+            className: "h-11 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Email address", htmlFor: "enquiry-email", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            id: "enquiry-email",
+            type: "email",
+            value: draft.email,
+            onChange: (event) => setDraft((current) => ({
+              ...current,
+              email: event.target.value
+            })),
+            autoComplete: "email",
+            "data-ocid": "home.enquiry_email_input",
+            className: "h-11 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "Phone (optional)", htmlFor: "enquiry-phone", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            id: "enquiry-phone",
+            type: "tel",
+            value: draft.phone,
+            onChange: (event) => setDraft((current) => ({
+              ...current,
+              phone: event.target.value
+            })),
+            autoComplete: "tel",
+            "data-ocid": "home.enquiry_phone_input",
+            className: "h-11 w-full rounded-sm border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:h-10"
+          }
+        ) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Field$1, { label: "What would you like to buy?", htmlFor: "enquiry-message", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "textarea",
+        {
+          id: "enquiry-message",
+          value: draft.message,
+          onChange: (event) => setDraft((current) => ({
+            ...current,
+            message: event.target.value
+          })),
+          rows: 4,
+          "data-ocid": "home.enquiry_message_input",
+          className: "w-full rounded-sm border border-input bg-background px-3 py-2.5 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        }
+      ) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "mt-4 flex items-start gap-3 text-base leading-relaxed text-muted-foreground", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            type: "checkbox",
+            checked: draft.consent,
+            onChange: (event) => setDraft((current) => ({
+              ...current,
+              consent: event.target.checked
+            })),
+            "data-ocid": "home.enquiry_consent_checkbox",
+            className: "mt-0.5 size-5 shrink-0 rounded-sm border-input accent-[oklch(var(--lime))]"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "I consent to Jewel of Africa holding and sharing the information in this enquiry until I withdraw it. I can withdraw permission for any submission at any time." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 flex flex-wrap items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: handleSubmit,
+            disabled: !canSubmit || submitEnquiry.isPending,
+            "data-ocid": "home.enquiry_submit_button",
+            className: "inline-flex h-11 items-center gap-1.5 rounded-sm bg-primary px-4 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 md:h-10",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "size-3.5", "aria-hidden": "true" }),
+              submitEnquiry.isPending ? "Sending…" : "Send enquiry"
+            ]
+          }
+        ),
+        !isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground", children: "Sign in to enable submission." }) : !draft.consent ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground", children: "Tick the consent box to enable submission." }) : null
+      ] }),
+      submitEnquiry.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          className: "mt-3 text-base text-destructive",
+          "data-ocid": "home.enquiry_error_state",
+          children: submitEnquiry.error instanceof Error ? submitEnquiry.error.message : "The enquiry could not be sent."
+        }
+      ) : null,
+      submitted ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          className: "mt-3 text-base text-accent",
+          "data-ocid": "home.enquiry_success_state",
+          children: "Thank you — your enquiry has been recorded. You can withdraw it below at any time."
+        }
+      ) : null
+    ] }),
+    isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(MyEnquiries, {}) : null
+  ] });
+}
+function MyEnquiries() {
+  const { data: enquiries, isLoading, isError } = useMyEnquiries(true);
+  const withdrawEnquiry = useWithdrawEnquiry();
+  const [pendingId, setPendingId] = reactExports.useState(null);
+  if (isLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: "text-base text-muted-foreground",
+        "data-ocid": "home.enquiry_mine_loading_state",
+        children: "Reading your enquiries…"
+      }
+    );
+  }
+  if (isError) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: "text-base text-destructive",
+        "data-ocid": "home.enquiry_mine_error_state",
+        children: "Your enquiries could not be read. Reload the page to try again."
+      }
+    );
+  }
+  if ((enquiries ?? []).length === 0) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: "text-base text-muted-foreground",
+        "data-ocid": "home.enquiry_mine_empty_state",
+        children: "You have not submitted an enquiry yet."
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "home.enquiry_mine_list", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "micro-label", children: "Your enquiries" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-3 space-y-2", children: (enquiries ?? []).map((enquiry, index2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      EnquiryRow,
+      {
+        enquiry,
+        index: index2,
+        pending: withdrawEnquiry.isPending && pendingId === enquiry.id,
+        onWithdraw: () => {
+          setPendingId(enquiry.id);
+          withdrawEnquiry.mutate(enquiry.id, {
+            onSettled: () => setPendingId(null)
+          });
+        }
+      },
+      enquiry.id
+    )) }),
+    withdrawEnquiry.isError ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "p",
+      {
+        className: "mt-3 text-base text-destructive",
+        "data-ocid": "home.enquiry_withdraw_error_state",
+        children: withdrawEnquiry.error instanceof Error ? withdrawEnquiry.error.message : "The enquiry could not be withdrawn."
+      }
+    ) : null
+  ] });
+}
+function EnquiryRow({
+  enquiry,
+  index: index2,
+  pending,
+  onWithdraw
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "li",
+    {
+      className: "block-face px-4 py-4",
+      "data-ocid": `home.enquiry_mine_item.${index2 + 1}`,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-start justify-between gap-x-4 gap-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-foreground", children: enquiry.message }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 text-sm text-muted-foreground", children: [
+            "Submitted ",
+            formatTimestamp(enquiry.submittedAt)
+          ] })
+        ] }),
+        enquiry.withdrawn ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pill pill-frozen", children: "Withdrawn" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: onWithdraw,
+            disabled: pending,
+            "data-ocid": `home.enquiry_withdraw_button.${index2 + 1}`,
+            className: "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-sm border border-destructive/40 bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-destructive transition-quick hover:border-destructive hover:bg-destructive/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-9",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Undo2, { className: "size-3.5", "aria-hidden": "true" }),
+              pending ? "Withdrawing…" : "Withdraw permission"
+            ]
+          }
+        )
+      ] })
+    }
+  );
+}
+function Field$1({
+  label,
+  htmlFor,
+  children
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor, className: "micro-label", children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1.5", children })
   ] });
 }
 function EmptyState({ filtered, onClear, className }) {
@@ -55403,7 +56539,7 @@ function EventKindFields({
         className: inputClass$2
       }
     ) }) : null,
-    draft.kind === EventKind.sealed ? /* @__PURE__ */ jsxRuntimeExports.jsx(Field, { label: "Seal number", htmlFor: "event-seal", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    draft.kind === EventKind.sealed ? /* @__PURE__ */ jsxRuntimeExports.jsx(Field, { label: "Lot number", htmlFor: "event-seal", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "input",
       {
         id: "event-seal",
@@ -55728,6 +56864,8 @@ function useAppendEventForm(lot) {
   const [draft, setDraft] = reactExports.useState(initialDraft);
   const [error, setError] = reactExports.useState(null);
   const [success, setSuccess] = reactExports.useState(null);
+  const { mode, appendDemoEventToLot } = useDataMode();
+  const isDemo = mode === "demo";
   const upload = useFileUpload();
   const appendEvent = useAppendEvent();
   const splitLot = useSplitLot();
@@ -55797,6 +56935,19 @@ function useAppendEventForm(lot) {
       if (payload === null) {
         setError("Complete the fields for this event kind.");
         return null;
+      }
+      if (isDemo) {
+        const updated = appendDemoEventToLot(lot.id, {
+          kind: draft.kind,
+          payload
+        });
+        if (!updated) {
+          setError("Demo appends are only available in Demo-data mode.");
+          return null;
+        }
+        setDraft(initialDraft());
+        setSuccess(`Event appended to ${lot.id}.`);
+        return lot.id;
       }
       let uploaded = [];
       if (draft.kind === EventKind.photo || draft.kind === EventKind.assay) {
@@ -55886,7 +57037,9 @@ function useAppendEventForm(lot) {
     upload,
     childIds,
     childWeights,
-    sourceIds
+    sourceIds,
+    isDemo,
+    appendDemoEventToLot
   ]);
   const reset = reactExports.useCallback(() => {
     setDraft(initialDraft());
@@ -56259,7 +57412,7 @@ function EventRow({
             "#",
             event.seq.toString()
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-medium text-foreground", children: isStatusChange ? "Status change" : humanizeToken(event.kind) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-medium text-foreground", children: isStatusChange ? "Status change" : eventLabel(event.kind) })
         ] }),
         isStatusChange && statusChange ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
@@ -57622,7 +58775,7 @@ function StatusChangeControl({
     setError(null);
     setSuccess(null);
   }
-  const label = (status) => labelFor(RefKind.status, status) ?? STATUS_LABEL[status] ?? humanizeToken(status);
+  const label = (status) => labelFor(RefKind.status, status) ?? STATUS_LABEL$1[status] ?? humanizeToken(status);
   if (lot.frozen) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       "p",
@@ -57821,7 +58974,7 @@ function StatusHistoryPanel({
     setSeen({ lotId: lot.id, length: history.length });
     setIndex(history.length === 0 ? 0 : history.length - 1);
   }
-  const label = (status) => labelFor(RefKind.status, status) ?? STATUS_LABEL[status] ?? humanizeToken(status);
+  const label = (status) => labelFor(RefKind.status, status) ?? STATUS_LABEL$1[status] ?? humanizeToken(status);
   if (history.length === 0) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       "p",
@@ -58135,16 +59288,16 @@ function LotExpandedPanel({
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "data-ocid": "lot.facts_section", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground", children: "Lot facts" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("dl", { className: "mt-3 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Licence", value: lot.licence || "—", mono: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Project", value: lot.project || "—" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Mining Licence", value: lot.licence || "—", mono: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Mining Site", value: lot.project || "—" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Coordinates", value: lot.gps || "—", mono: true }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Working ref", value: lot.workingRef || "—", mono: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Seal number", value: lot.sealNo || "—", mono: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Lot number", value: lot.sealNo || "—", mono: true }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Fact, { label: "Gross weight", value: formatGrams(lot.grossG) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Fact,
             {
-              label: "Opened at",
+              label: "Registered at",
               value: formatTimestamp(lot.openedAt),
               mono: true
             }
@@ -58152,7 +59305,7 @@ function LotExpandedPanel({
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Fact,
             {
-              label: "Opened by",
+              label: "Registered by",
               value: shortenPrincipal(lot.openedBy.toString()),
               title: lot.openedBy.toString(),
               mono: true
@@ -58199,7 +59352,7 @@ function LotExpandedPanel({
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mt-7", "data-ocid": "lot.events_section", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground", children: "Provenance events" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground", children: "Precious Material Origin History events" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(EventTimeline, { lot, canAppend, frozen: lot.frozen }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -68991,6 +70144,267 @@ function Kpi({ label, value }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-display text-3xl leading-none tracking-tight text-foreground md:text-4xl", children: value })
   ] });
 }
+const FALLBACK_STATUSES = [
+  "open",
+  "in_transit",
+  "assayed",
+  "retailed",
+  "closed",
+  "frozen"
+];
+const STATUS_LABEL = {
+  open: "Recently Mined",
+  in_transit: "In transit",
+  assayed: "Testing Quality",
+  retailed: "Retailed",
+  closed: "Applied for crafting",
+  frozen: "Confiscated by Authorities"
+};
+const TOGGLE_LABEL = "CLICK HERE TO UNDERSTAND THIS STATUS";
+function StatusInfoSection() {
+  const { index: index2, labelFor } = useReferenceData();
+  const { effectiveCapabilities } = useMyRole();
+  const [openKey, setOpenKey] = reactExports.useState(null);
+  const canEdit = effectiveCapabilities.includes(
+    Capability.manage_reference_data
+  );
+  const statusEntries = index2[RefKind.status].filter((entry) => entry.active);
+  const statuses = statusEntries.length > 0 ? statusEntries.map((entry) => entry.key) : [...FALLBACK_STATUSES];
+  const explanationFor = (status) => index2[RefKind.status_explanation].find((entry) => entry.key === status) ?? null;
+  const labelForStatus = (status) => labelFor(RefKind.status, status) ?? STATUS_LABEL[status] ?? humanizeToken(status);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-9 md:py-12", "data-ocid": "home.status_info_section", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl tracking-tight text-foreground md:text-3xl", children: "Understanding each status" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-2xl text-base text-muted-foreground", children: "What each register status means for a lot, folded open one status at a time." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-5 space-y-2.5", children: statuses.map((status, position) => /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      StatusExplanation,
+      {
+        status,
+        label: labelForStatus(status),
+        entry: explanationFor(status),
+        open: openKey === status,
+        canEdit,
+        position: position + 1,
+        onToggle: () => setOpenKey((current) => current === status ? null : status)
+      }
+    ) }, status)) })
+  ] });
+}
+function StatusExplanation({
+  status,
+  label,
+  entry,
+  open,
+  canEdit,
+  position,
+  onToggle
+}) {
+  const panelId = `status-explanation-${status}`;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "article",
+    {
+      className: cn(
+        "block-face px-4 py-3.5 transition-quick sm:px-5",
+        open && "block-face-open"
+      ),
+      "data-ocid": `home.status_info_item.${position}`,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "min-w-0 font-display text-lg tracking-tight text-foreground md:text-xl", children: label }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              type: "button",
+              onClick: onToggle,
+              "aria-expanded": open,
+              "aria-controls": panelId,
+              "data-ocid": `home.status_info_toggle.${position}`,
+              className: "inline-flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-10 sm:w-auto",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  ChevronDown,
+                  {
+                    className: cn(
+                      "size-4 shrink-0 transition-transform duration-200",
+                      open && "rotate-180"
+                    ),
+                    "aria-hidden": "true"
+                  }
+                ),
+                TOGGLE_LABEL
+              ]
+            }
+          )
+        ] }),
+        open ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            id: panelId,
+            className: "mt-3.5 border-t border-border pt-3.5",
+            "data-ocid": `home.status_info_panel.${position}`,
+            children: entry ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ExplanationBody,
+              {
+                entry,
+                canEdit,
+                position
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
+              {
+                className: "text-base text-muted-foreground",
+                "data-ocid": `home.status_info_empty_state.${position}`,
+                children: canEdit ? "No explanation is stored for this status yet. Add one from the admin panel's Status explanations block." : "No explanation has been recorded for this status yet."
+              }
+            )
+          }
+        ) : null
+      ]
+    }
+  );
+}
+function ExplanationBody({
+  entry,
+  canEdit,
+  position
+}) {
+  const updateEntry = useUpdateReferenceEntry();
+  const queryClient2 = useQueryClient();
+  const [editing, setEditing] = reactExports.useState(false);
+  const [draft, setDraft] = reactExports.useState(entry.value);
+  const [error, setError] = reactExports.useState(null);
+  const text = entry.value.trim();
+  const startEditing = () => {
+    setDraft(entry.value);
+    setError(null);
+    setEditing(true);
+  };
+  const save = () => {
+    setError(null);
+    const next = draft.trim();
+    updateEntry.mutate(
+      {
+        id: entry.id,
+        displayName: entry.displayName,
+        value: next,
+        sortOrder: entry.sortOrder,
+        active: entry.active
+      },
+      {
+        onSuccess: () => {
+          void queryClient2.invalidateQueries({ queryKey: referenceKeys.all });
+          setEditing(false);
+        },
+        onError: (caught) => {
+          setError(
+            caught instanceof Error ? caught.message : "The explanation could not be saved."
+          );
+        }
+      }
+    );
+  };
+  if (!editing) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          className: "min-w-0 whitespace-pre-line text-base leading-relaxed text-muted-foreground",
+          "data-ocid": `home.status_info_text.${position}`,
+          children: text || "No explanation has been recorded for this status yet."
+        }
+      ),
+      canEdit ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: startEditing,
+          "data-ocid": `home.status_info_edit_button.${position}`,
+          className: "inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-10",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "size-3.5", "aria-hidden": "true" }),
+            "Edit explanation"
+          ]
+        }
+      ) : null
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": `home.status_info_editor.${position}`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "label",
+      {
+        htmlFor: `status-explanation-input-${entry.key}`,
+        className: "micro-label",
+        children: [
+          "Explanation for ",
+          entry.displayName
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "textarea",
+      {
+        id: `status-explanation-input-${entry.key}`,
+        value: draft,
+        onChange: (event) => {
+          setDraft(event.target.value);
+          setError(null);
+        },
+        rows: 4,
+        "data-ocid": `home.status_info_textarea.${position}`,
+        className: "mt-1.5 w-full rounded-sm border border-input bg-background px-3 py-2.5 text-base leading-relaxed text-foreground transition-quick placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      }
+    ),
+    error ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "p",
+      {
+        className: "mt-2.5 inline-flex items-start gap-2 rounded-sm border border-destructive/40 bg-destructive/5 px-3 py-2.5 text-sm text-destructive",
+        role: "alert",
+        "data-ocid": `home.status_info_error_state.${position}`,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            TriangleAlert,
+            {
+              className: "mt-0.5 size-4 shrink-0",
+              "aria-hidden": "true"
+            }
+          ),
+          error
+        ]
+      }
+    ) : null,
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex flex-wrap items-center justify-end gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => {
+            setEditing(false);
+            setError(null);
+          },
+          "data-ocid": `home.status_info_cancel_button.${position}`,
+          className: "inline-flex h-11 items-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-10",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-3.5", "aria-hidden": "true" }),
+            "Cancel"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: save,
+          disabled: updateEntry.isPending,
+          "data-ocid": `home.status_info_save_button.${position}`,
+          className: "inline-flex h-11 items-center gap-1.5 rounded-sm bg-primary px-4 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-10",
+          children: [
+            updateEntry.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "size-3.5 animate-spin", "aria-hidden": "true" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-3.5", "aria-hidden": "true" }),
+            updateEntry.isPending ? "Saving…" : "Save explanation"
+          ]
+        }
+      )
+    ] })
+  ] });
+}
 function HomePage() {
   const [filters, setFilters] = reactExports.useState(
     () => readFiltersFromUrl()
@@ -69066,9 +70480,11 @@ function HomePage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-12", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "pb-7", "data-ocid": "home.intro_section", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground", children: "Jewel of Africa Limited · Lusaka" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-4 max-w-3xl font-display text-3xl leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl", children: "The Explor8 provenance register" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg", children: "From extraction to verification, every precious metal and gemstone mined by Jewel of Africa is weighed, tested, and sealed as a unique block in this registry. Each block bears a cryptographic hash of its recorded data and supporting files, with every subsequent event added to its chain of custody. History unfolds downward, preserving a traceable record of provenance, integrity, and accountability; from the earth to the registry." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-4 max-w-3xl font-display text-3xl leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl", children: "The Explor8 Precious Material Origin History register" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg", children: "From extraction to verification, every precious metal and gemstone mined by Jewel of Africa is weighed, tested, and sealed as a unique block in this registry. Each block bears a cryptographic hash of its recorded data and supporting files, with every subsequent event added to its chain of custody. History unfolds downward, preserving a traceable record of Precious Material Origin History, integrity, and accountability; from the earth to the registry." })
     ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(StatusInfoSection, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(EnquirySection, {}),
     isDemo ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "p",
       {

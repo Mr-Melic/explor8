@@ -34,7 +34,8 @@ export interface CorrectionTarget {
 }
 
 /**
- * Append a provenance event at the bottom of an expanded block.
+ * Append a Precious Material Origin History event at the bottom of an expanded
+ * block.
  *
  * The register is append-only: a correction is a new event that points at an
  * earlier sequence, and the original line stays visible. Split and merge are

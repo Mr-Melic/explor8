@@ -73,6 +73,8 @@ describe("App header", () => {
         /Licence reminder: every lot must carry a valid JOA licence reference/i,
       ),
     ).toBeInTheDocument();
+    // The accepted request renames the reminder prefix to 'Licensed miner & dealer'.
+    expect(screen.getByText(/Licensed miner & dealer/i)).toBeInTheDocument();
   });
 
   it("offers Real-time and Demo data buttons with Real-time active by default", () => {

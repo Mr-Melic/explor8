@@ -1,5 +1,6 @@
 import { AdminAnalyticsSection } from "@/components/admin/AdminAnalyticsSection";
 import { AdminDocumentsSection } from "@/components/admin/AdminDocumentsSection";
+import { AdminEnquirySection } from "@/components/admin/AdminEnquirySection";
 import { AdminPermissionsSection } from "@/components/admin/AdminPermissionsSection";
 import { AdminPurgeSection } from "@/components/admin/AdminPurgeSection";
 import { AdminReferenceDataSection } from "@/components/admin/AdminReferenceDataSection";
@@ -132,6 +133,10 @@ export function AdminPage() {
         </p>
         <AdminAnalyticsSection enabled={capabilities.canAdminister} />
       </section>
+
+      <div className="rule-gold" />
+
+      <AdminEnquirySection />
 
       <div className="rule-gold" />
 

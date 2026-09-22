@@ -16,6 +16,12 @@ module {
   public type FileId = Text;
 
   /// The category a reference entry belongs to.
+  ///
+  /// `#status_explanation` carries one entry per lot status whose `key` is the
+  /// stable status key and whose `value` is the explanation text shown in the
+  /// home page's per-status information panel. `#enquiry_destination` carries
+  /// at most one entry whose `value` is the optional destination email for
+  /// purchase enquiries; when no such entry exists no enquiry email is sent.
   public type RefKind = {
     #lot_kind;
     #site;
@@ -23,6 +29,8 @@ module {
     #event_kind;
     #caption;
     #form_default;
+    #status_explanation;
+    #enquiry_destination;
   };
 
   /// One admin-managed reference entry.

@@ -429,4 +429,14 @@ export const REFERENCE_KINDS: { kind: RefKind; label: string; hint: string }[] =
       label: "Form defaults",
       hint: "Values prefilled when a lot is registered.",
     },
+    {
+      kind: "status_explanation" as RefKind,
+      label: "Status explanations",
+      hint: "The explanation shown for each status in the home page's status information section.",
+    },
+    {
+      kind: "enquiry_destination" as RefKind,
+      label: "Enquiry destination",
+      hint: "The optional email address that receives purchase enquiries.",
+    },
   ];

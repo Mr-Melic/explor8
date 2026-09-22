@@ -16,7 +16,8 @@ interface StatusChangeControlProps {
 }
 
 /**
- * Move a block's status, recording the change as a provenance event.
+ * Move a block's status, recording the change as a Precious Material Origin
+ * History event.
  *
  * The control offers only the transitions the caller's role is permitted to
  * make: the backend's `getMyCapabilities` is the authority for whether the

@@ -26,6 +26,7 @@ const ALL_KINDS: RefKind[] = [
   RefKind.event_kind,
   RefKind.caption,
   RefKind.form_default,
+  RefKind.status_explanation,
 ];
 
 /** A selectable option derived from a reference entry. */

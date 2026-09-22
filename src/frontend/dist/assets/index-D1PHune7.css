@@ -938,8 +938,17 @@ video {
     font-synthesis-style: none;
   }
 
+  /*
+   * The site-wide text-size control writes a percentage onto this element's
+   * inline `font-size` (see hooks/use-text-size.ts). Every type size in the
+   * design system is expressed in `rem`, so scaling the root scales headings,
+   * labels, table cells and body copy together. 100% is the design default;
+   * the transition is short and only animates the size, never layout.
+   */
   html {
     color-scheme: dark;
+    font-size: 100%;
+    transition: font-size 0.16s cubic-bezier(0.4, 0, 0.2, 1);
   }
   html.light {
     color-scheme: light;
@@ -1118,6 +1127,9 @@ video {
 .z-20 {
   z-index: 20;
 }
+.z-30 {
+  z-index: 30;
+}
 .z-50 {
   z-index: 50;
 }
@@ -1166,6 +1178,9 @@ video {
 .-mt-4 {
   margin-top: -1rem;
 }
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
 .mb-7 {
   margin-bottom: 1.75rem;
 }
@@ -1196,6 +1211,9 @@ video {
 .mt-3 {
   margin-top: 0.75rem;
 }
+.mt-3\.5 {
+  margin-top: 0.875rem;
+}
 .mt-4 {
   margin-top: 1rem;
 }
@@ -1222,6 +1240,9 @@ video {
 }
 .inline-block {
   display: inline-block;
+}
+.inline {
+  display: inline;
 }
 .flex {
   display: flex;
@@ -1601,6 +1622,10 @@ video {
   --tw-translate-y: calc(-50% - 2px);
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.rotate-0 {
+  --tw-rotate: 0deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .rotate-180 {
   --tw-rotate: 180deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1777,6 +1802,9 @@ video {
 .gap-2 {
   gap: 0.5rem;
 }
+.gap-2\.5 {
+  gap: 0.625rem;
+}
 .gap-3 {
   gap: 0.75rem;
 }
@@ -1887,6 +1915,9 @@ video {
 }
 .whitespace-nowrap {
   white-space: nowrap;
+}
+.whitespace-pre-line {
+  white-space: pre-line;
 }
 .text-balance {
   text-wrap: balance;
@@ -2185,6 +2216,10 @@ video {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
+.py-3\.5 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -2261,6 +2296,9 @@ video {
 }
 .pt-3 {
   padding-top: 0.75rem;
+}
+.pt-3\.5 {
+  padding-top: 0.875rem;
 }
 .pt-4 {
   padding-top: 1rem;
@@ -2991,6 +3029,9 @@ video {
   .transition-quick {
     transition: none;
   }
+  html {
+    transition: none;
+  }
 }
 
 .selection\:bg-primary *::-moz-selection {
@@ -3407,6 +3448,10 @@ video {
 
 .disabled\:cursor-not-allowed:disabled {
   cursor: not-allowed;
+}
+
+.disabled\:opacity-40:disabled {
+  opacity: 0.4;
 }
 
 .disabled\:opacity-50:disabled {
@@ -4480,6 +4525,11 @@ video {
     height: 10rem;
   }
 
+  .sm\:size-8 {
+    width: 2rem;
+    height: 2rem;
+  }
+
   .sm\:size-9 {
     width: 2.25rem;
     height: 2.25rem;
@@ -4577,6 +4627,10 @@ video {
     gap: 0.625rem;
   }
 
+  .sm\:gap-4 {
+    gap: 1rem;
+  }
+
   .sm\:gap-x-2 {
     -moz-column-gap: 0.5rem;
          column-gap: 0.5rem;
@@ -4599,6 +4653,11 @@ video {
 
   .sm\:gap-y-2 {
     row-gap: 0.5rem;
+  }
+
+  .sm\:px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
   .sm\:px-6 {

@@ -29,7 +29,7 @@ export const Error = IDL.Variant({
     'expected' : IDL.Vec(IDL.Text),
   }),
 });
-export const Result_18 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
+export const Result_20 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
 export const HashHex = IDL.Text;
 export const FileId = IDL.Text;
 export const NewAnalysisDocumentInput = IDL.Record({
@@ -58,7 +58,7 @@ export const ReferenceError = IDL.Variant({
   'notAuthenticated' : IDL.Null,
   'unknownEntry' : IDL.Text,
 });
-export const Result_17 = IDL.Variant({
+export const Result_19 = IDL.Variant({
   'ok' : AnalysisDocumentView,
   'err' : ReferenceError,
 });
@@ -67,8 +67,10 @@ export const RefKind = IDL.Variant({
   'site' : IDL.Null,
   'form_default' : IDL.Null,
   'lot_kind' : IDL.Null,
+  'status_explanation' : IDL.Null,
   'caption' : IDL.Null,
   'event_kind' : IDL.Null,
+  'enquiry_destination' : IDL.Null,
 });
 export const NewRefEntryInput = IDL.Record({
   'key' : IDL.Text,
@@ -86,7 +88,7 @@ export const RefEntryView = IDL.Record({
   'sortOrder' : IDL.Nat,
   'kind' : RefKind,
 });
-export const Result_1 = IDL.Variant({
+export const Result_2 = IDL.Variant({
   'ok' : RefEntryView,
   'err' : ReferenceError,
 });
@@ -177,7 +179,7 @@ export const RegisterError = IDL.Variant({
   'lotFrozen' : LotId,
   'notAuthenticated' : IDL.Null,
 });
-export const Result_7 = IDL.Variant({ 'ok' : LotView, 'err' : RegisterError });
+export const Result_8 = IDL.Variant({ 'ok' : LotView, 'err' : RegisterError });
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -194,7 +196,7 @@ export const ActorRole = IDL.Record({
   'principal' : IDL.Principal,
   'role' : Role,
 });
-export const Result_16 = IDL.Variant({
+export const Result_18 = IDL.Variant({
   'ok' : ActorRole,
   'err' : RegisterError,
 });
@@ -202,7 +204,7 @@ export const StatusChangeInput = IDL.Record({
   'to' : LotStatus,
   'payload' : IDL.Text,
 });
-export const Result_15 = IDL.Variant({ 'ok' : Role, 'err' : RegisterError });
+export const Result_17 = IDL.Variant({ 'ok' : Role, 'err' : RegisterError });
 export const PurgeRequestView = IDL.Record({
   'id' : IDL.Text,
   'confirmedBy' : IDL.Vec(IDL.Principal),
@@ -232,11 +234,11 @@ export const PurgeError = IDL.Variant({
   'noPendingRequest' : IDL.Null,
   'invalidPhrase' : IDL.Null,
 });
-export const Result_4 = IDL.Variant({
+export const Result_5 = IDL.Variant({
   'ok' : PurgeOutcome,
   'err' : PurgeError,
 });
-export const Result_14 = IDL.Variant({ 'ok' : LotId, 'err' : RegisterError });
+export const Result_16 = IDL.Variant({ 'ok' : LotId, 'err' : RegisterError });
 export const Value = IDL.Variant({
   'int' : IDL.Int,
   'nat' : IDL.Nat,
@@ -289,25 +291,47 @@ export const PermissionsError = IDL.Variant({
   'invalidInput' : IDL.Text,
   'notAuthenticated' : IDL.Null,
 });
-export const Result_13 = IDL.Variant({
+export const Result_15 = IDL.Variant({
   'ok' : PermissionsView,
   'err' : PermissionsError,
 });
-export const Result_12 = IDL.Variant({
+export const Result_14 = IDL.Variant({
   'ok' : IDL.Opt(PurgeRequestView),
   'err' : PurgeError,
 });
-export const Result_11 = IDL.Variant({
+export const Result_13 = IDL.Variant({
   'ok' : IDL.Vec(ActorRole),
   'err' : RegisterError,
 });
-export const Result_10 = IDL.Variant({
+export const Result_12 = IDL.Variant({
   'ok' : IDL.Vec(RefEntryView),
   'err' : ReferenceError,
 });
-export const Result_9 = IDL.Variant({
+export const Result_11 = IDL.Variant({
   'ok' : IDL.Vec(AnalysisDocumentView),
   'err' : ReferenceError,
+});
+export const EnquiryView = IDL.Record({
+  'id' : IDL.Text,
+  'consent' : IDL.Bool,
+  'name' : IDL.Text,
+  'submittedAt' : Timestamp,
+  'submittedBy' : IDL.Principal,
+  'email' : IDL.Text,
+  'withdrawnAt' : IDL.Opt(Timestamp),
+  'message' : IDL.Text,
+  'phone' : IDL.Text,
+  'withdrawn' : IDL.Bool,
+});
+export const EnquiryError = IDL.Variant({
+  'notAuthorized' : IDL.Null,
+  'unknownEnquiry' : IDL.Text,
+  'invalidInput' : IDL.Text,
+  'notAuthenticated' : IDL.Null,
+});
+export const Result_10 = IDL.Variant({
+  'ok' : IDL.Vec(EnquiryView),
+  'err' : EnquiryError,
 });
 export const RoleInfo = IDL.Record({ 'displayName' : IDL.Text, 'role' : Role });
 export const MergeInput = IDL.Record({
@@ -333,7 +357,7 @@ export const RegisterAnalytics = IDL.Record({
   'lotsOverTime' : IDL.Vec(AnalyticsPoint),
   'byStatus' : IDL.Vec(AnalyticsBucket),
 });
-export const Result_8 = IDL.Variant({
+export const Result_9 = IDL.Variant({
   'ok' : RegisterAnalytics,
   'err' : ReferenceError,
 });
@@ -368,11 +392,11 @@ export const RegisterSummary = IDL.Record({
   'byStatus' : IDL.Vec(CountBucket),
   'activity' : IDL.Vec(ActivityPoint),
 });
-export const Result_5 = IDL.Variant({
+export const Result_6 = IDL.Variant({
   'ok' : IDL.Null,
   'err' : ReferenceError,
 });
-export const Result_6 = IDL.Variant({
+export const Result_7 = IDL.Variant({
   'ok' : IDL.Null,
   'err' : PermissionsError,
 });
@@ -389,7 +413,7 @@ export const SetPrincipalOverrideInput = IDL.Record({
   'capabilities' : IDL.Vec(Capability),
   'role' : Role,
 });
-export const Result_3 = IDL.Variant({
+export const Result_4 = IDL.Variant({
   'ok' : PrincipalOverride,
   'err' : PermissionsError,
 });
@@ -397,10 +421,18 @@ export const SplitInput = IDL.Record({
   'children' : IDL.Vec(NewLotInput),
   'parentId' : LotId,
 });
-export const Result_2 = IDL.Variant({
+export const Result_3 = IDL.Variant({
   'ok' : IDL.Vec(LotView),
   'err' : RegisterError,
 });
+export const NewEnquiryInput = IDL.Record({
+  'consent' : IDL.Bool,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+  'phone' : IDL.Text,
+});
+export const Result = IDL.Variant({ 'ok' : EnquiryView, 'err' : EnquiryError });
 export const UpdateRefEntryInput = IDL.Record({
   'id' : IDL.Text,
   'active' : IDL.Bool,
@@ -412,78 +444,82 @@ export const UpdateRolePermissionsInput = IDL.Record({
   'capabilities' : IDL.Vec(Capability),
   'role' : Role,
 });
-export const Result = IDL.Variant({
+export const Result_1 = IDL.Variant({
   'ok' : RolePermissions,
   'err' : PermissionsError,
 });
 
 export const idlService = IDL.Service({
   '_initialize_access_control' : IDL.Func([], [], []),
-  '_internet_identity_sign_in_finish' : IDL.Func([], [Result_18], []),
+  '_internet_identity_sign_in_finish' : IDL.Func([], [Result_20], []),
   '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
-  'addAnalysisDocument' : IDL.Func([NewAnalysisDocumentInput], [Result_17], []),
-  'addReferenceEntry' : IDL.Func([NewRefEntryInput], [Result_1], []),
-  'appendEvent' : IDL.Func([LotId, NewEventInput], [Result_7], []),
+  'addAnalysisDocument' : IDL.Func([NewAnalysisDocumentInput], [Result_19], []),
+  'addReferenceEntry' : IDL.Func([NewRefEntryInput], [Result_2], []),
+  'appendEvent' : IDL.Func([LotId, NewEventInput], [Result_8], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'assignRole' : IDL.Func([IDL.Principal, Role], [Result_16], []),
+  'assignRole' : IDL.Func([IDL.Principal, Role], [Result_18], []),
   'canonicalEventJson' : IDL.Func(
       [EventKind, IDL.Text, IDL.Vec(HashHex)],
       [IDL.Text],
       ['query'],
     ),
   'canonicalSnapshotJson' : IDL.Func([LotId], [IDL.Opt(IDL.Text)], ['query']),
-  'changeStatus' : IDL.Func([LotId, StatusChangeInput], [Result_7], []),
-  'claimAdmin' : IDL.Func([], [Result_15], []),
-  'confirmPurge' : IDL.Func([], [Result_4], []),
-  'deleteLot' : IDL.Func([LotId], [Result_14], []),
+  'changeStatus' : IDL.Func([LotId, StatusChangeInput], [Result_8], []),
+  'claimAdmin' : IDL.Func([], [Result_17], []),
+  'confirmPurge' : IDL.Func([], [Result_5], []),
+  'deleteLot' : IDL.Func([LotId], [Result_16], []),
   'execute' : IDL.Func([IDL.Text], [Result__1], ['query']),
-  'freezeLot' : IDL.Func([LotId], [Result_7], []),
+  'freezeLot' : IDL.Func([LotId], [Result_8], []),
   'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getLot' : IDL.Func([LotId], [IDL.Opt(LotView)], ['query']),
   'getMyCapabilities' : IDL.Func([], [IDL.Vec(Capability)], ['query']),
   'getMyRole' : IDL.Func([], [Role], ['query']),
-  'getPermissions' : IDL.Func([], [Result_13], ['query']),
-  'getPurgeRequest' : IDL.Func([], [Result_12], ['query']),
+  'getPermissions' : IDL.Func([], [Result_15], ['query']),
+  'getPurgeRequest' : IDL.Func([], [Result_14], ['query']),
   'hasAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'listActors' : IDL.Func([], [Result_11], ['query']),
-  'listAllReferenceEntries' : IDL.Func([], [Result_10], ['query']),
-  'listAnalysisDocuments' : IDL.Func([], [Result_9], ['query']),
+  'listActors' : IDL.Func([], [Result_13], ['query']),
+  'listAllReferenceEntries' : IDL.Func([], [Result_12], ['query']),
+  'listAnalysisDocuments' : IDL.Func([], [Result_11], ['query']),
+  'listEnquiries' : IDL.Func([], [Result_10], ['query']),
   'listLots' : IDL.Func([], [IDL.Vec(LotView)], ['query']),
+  'listMyEnquiries' : IDL.Func([], [Result_10], ['query']),
   'listReferenceEntries' : IDL.Func(
       [RefKind],
       [IDL.Vec(RefEntryView)],
       ['query'],
     ),
   'listRoles' : IDL.Func([], [IDL.Vec(RoleInfo)], ['query']),
-  'mergeLots' : IDL.Func([MergeInput], [Result_7], []),
-  'registerAnalytics' : IDL.Func([], [Result_8], ['query']),
-  'registerLot' : IDL.Func([NewLotInput], [Result_7], []),
+  'mergeLots' : IDL.Func([MergeInput], [Result_8], []),
+  'registerAnalytics' : IDL.Func([], [Result_9], ['query']),
+  'registerLot' : IDL.Func([NewLotInput], [Result_8], []),
   'registerSummary' : IDL.Func([], [RegisterSummary], ['query']),
-  'removeAnalysisDocument' : IDL.Func([IDL.Text], [Result_5], []),
-  'removePrincipalOverride' : IDL.Func([IDL.Principal], [Result_6], []),
-  'removeReferenceEntry' : IDL.Func([IDL.Text], [Result_5], []),
-  'requestPurge' : IDL.Func([IDL.Text], [Result_4], []),
+  'removeAnalysisDocument' : IDL.Func([IDL.Text], [Result_6], []),
+  'removePrincipalOverride' : IDL.Func([IDL.Principal], [Result_7], []),
+  'removeReferenceEntry' : IDL.Func([IDL.Text], [Result_6], []),
+  'requestPurge' : IDL.Func([IDL.Text], [Result_5], []),
   'roleDisplayName' : IDL.Func([Role], [IDL.Text], ['query']),
   'schema' : IDL.Func([], [IDL.Text], ['query']),
   'searchLots' : IDL.Func([IDL.Text], [IDL.Vec(LotSearchHit)], ['query']),
   'setPrincipalOverride' : IDL.Func(
       [SetPrincipalOverrideInput],
-      [Result_3],
+      [Result_4],
       [],
     ),
   'sha256Hex' : IDL.Func([IDL.Text], [HashHex], ['query']),
   'sha256HexOfBlob' : IDL.Func([IDL.Vec(IDL.Nat8)], [HashHex], ['query']),
-  'splitLot' : IDL.Func([SplitInput], [Result_2], []),
+  'splitLot' : IDL.Func([SplitInput], [Result_3], []),
   'statusHistory' : IDL.Func([LotId], [IDL.Vec(StatusChange)], ['query']),
+  'submitEnquiry' : IDL.Func([NewEnquiryInput], [Result], []),
   'suggestLotId' : IDL.Func([Site, IDL.Text], [LotId], ['query']),
-  'updateReferenceEntry' : IDL.Func([UpdateRefEntryInput], [Result_1], []),
+  'updateReferenceEntry' : IDL.Func([UpdateRefEntryInput], [Result_2], []),
   'updateRolePermissions' : IDL.Func(
       [UpdateRolePermissionsInput],
-      [Result],
+      [Result_1],
       [],
     ),
+  'withdrawEnquiry' : IDL.Func([IDL.Text], [Result], []),
 });
 
 export const idlInitArgs = [];
@@ -510,7 +546,7 @@ export const idlFactory = ({ IDL }) => {
       'expected' : IDL.Vec(IDL.Text),
     }),
   });
-  const Result_18 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
+  const Result_20 = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
   const HashHex = IDL.Text;
   const FileId = IDL.Text;
   const NewAnalysisDocumentInput = IDL.Record({
@@ -539,7 +575,7 @@ export const idlFactory = ({ IDL }) => {
     'notAuthenticated' : IDL.Null,
     'unknownEntry' : IDL.Text,
   });
-  const Result_17 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     'ok' : AnalysisDocumentView,
     'err' : ReferenceError,
   });
@@ -548,8 +584,10 @@ export const idlFactory = ({ IDL }) => {
     'site' : IDL.Null,
     'form_default' : IDL.Null,
     'lot_kind' : IDL.Null,
+    'status_explanation' : IDL.Null,
     'caption' : IDL.Null,
     'event_kind' : IDL.Null,
+    'enquiry_destination' : IDL.Null,
   });
   const NewRefEntryInput = IDL.Record({
     'key' : IDL.Text,
@@ -567,7 +605,7 @@ export const idlFactory = ({ IDL }) => {
     'sortOrder' : IDL.Nat,
     'kind' : RefKind,
   });
-  const Result_1 = IDL.Variant({ 'ok' : RefEntryView, 'err' : ReferenceError });
+  const Result_2 = IDL.Variant({ 'ok' : RefEntryView, 'err' : ReferenceError });
   const LotId = IDL.Text;
   const EventKind = IDL.Variant({
     'cut' : IDL.Null,
@@ -652,7 +690,7 @@ export const idlFactory = ({ IDL }) => {
     'lotFrozen' : LotId,
     'notAuthenticated' : IDL.Null,
   });
-  const Result_7 = IDL.Variant({ 'ok' : LotView, 'err' : RegisterError });
+  const Result_8 = IDL.Variant({ 'ok' : LotView, 'err' : RegisterError });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -666,12 +704,12 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const ActorRole = IDL.Record({ 'principal' : IDL.Principal, 'role' : Role });
-  const Result_16 = IDL.Variant({ 'ok' : ActorRole, 'err' : RegisterError });
+  const Result_18 = IDL.Variant({ 'ok' : ActorRole, 'err' : RegisterError });
   const StatusChangeInput = IDL.Record({
     'to' : LotStatus,
     'payload' : IDL.Text,
   });
-  const Result_15 = IDL.Variant({ 'ok' : Role, 'err' : RegisterError });
+  const Result_17 = IDL.Variant({ 'ok' : Role, 'err' : RegisterError });
   const PurgeRequestView = IDL.Record({
     'id' : IDL.Text,
     'confirmedBy' : IDL.Vec(IDL.Principal),
@@ -701,8 +739,8 @@ export const idlFactory = ({ IDL }) => {
     'noPendingRequest' : IDL.Null,
     'invalidPhrase' : IDL.Null,
   });
-  const Result_4 = IDL.Variant({ 'ok' : PurgeOutcome, 'err' : PurgeError });
-  const Result_14 = IDL.Variant({ 'ok' : LotId, 'err' : RegisterError });
+  const Result_5 = IDL.Variant({ 'ok' : PurgeOutcome, 'err' : PurgeError });
+  const Result_16 = IDL.Variant({ 'ok' : LotId, 'err' : RegisterError });
   const Value = IDL.Variant({
     'int' : IDL.Int,
     'nat' : IDL.Nat,
@@ -755,25 +793,47 @@ export const idlFactory = ({ IDL }) => {
     'invalidInput' : IDL.Text,
     'notAuthenticated' : IDL.Null,
   });
-  const Result_13 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     'ok' : PermissionsView,
     'err' : PermissionsError,
   });
-  const Result_12 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     'ok' : IDL.Opt(PurgeRequestView),
     'err' : PurgeError,
   });
-  const Result_11 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     'ok' : IDL.Vec(ActorRole),
     'err' : RegisterError,
   });
-  const Result_10 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     'ok' : IDL.Vec(RefEntryView),
     'err' : ReferenceError,
   });
-  const Result_9 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     'ok' : IDL.Vec(AnalysisDocumentView),
     'err' : ReferenceError,
+  });
+  const EnquiryView = IDL.Record({
+    'id' : IDL.Text,
+    'consent' : IDL.Bool,
+    'name' : IDL.Text,
+    'submittedAt' : Timestamp,
+    'submittedBy' : IDL.Principal,
+    'email' : IDL.Text,
+    'withdrawnAt' : IDL.Opt(Timestamp),
+    'message' : IDL.Text,
+    'phone' : IDL.Text,
+    'withdrawn' : IDL.Bool,
+  });
+  const EnquiryError = IDL.Variant({
+    'notAuthorized' : IDL.Null,
+    'unknownEnquiry' : IDL.Text,
+    'invalidInput' : IDL.Text,
+    'notAuthenticated' : IDL.Null,
+  });
+  const Result_10 = IDL.Variant({
+    'ok' : IDL.Vec(EnquiryView),
+    'err' : EnquiryError,
   });
   const RoleInfo = IDL.Record({ 'displayName' : IDL.Text, 'role' : Role });
   const MergeInput = IDL.Record({
@@ -796,7 +856,7 @@ export const idlFactory = ({ IDL }) => {
     'lotsOverTime' : IDL.Vec(AnalyticsPoint),
     'byStatus' : IDL.Vec(AnalyticsBucket),
   });
-  const Result_8 = IDL.Variant({
+  const Result_9 = IDL.Variant({
     'ok' : RegisterAnalytics,
     'err' : ReferenceError,
   });
@@ -828,8 +888,8 @@ export const idlFactory = ({ IDL }) => {
     'byStatus' : IDL.Vec(CountBucket),
     'activity' : IDL.Vec(ActivityPoint),
   });
-  const Result_5 = IDL.Variant({ 'ok' : IDL.Null, 'err' : ReferenceError });
-  const Result_6 = IDL.Variant({ 'ok' : IDL.Null, 'err' : PermissionsError });
+  const Result_6 = IDL.Variant({ 'ok' : IDL.Null, 'err' : ReferenceError });
+  const Result_7 = IDL.Variant({ 'ok' : IDL.Null, 'err' : PermissionsError });
   const LotSearchHit = IDL.Record({
     'id' : LotId,
     'status' : LotStatus,
@@ -843,7 +903,7 @@ export const idlFactory = ({ IDL }) => {
     'capabilities' : IDL.Vec(Capability),
     'role' : Role,
   });
-  const Result_3 = IDL.Variant({
+  const Result_4 = IDL.Variant({
     'ok' : PrincipalOverride,
     'err' : PermissionsError,
   });
@@ -851,10 +911,18 @@ export const idlFactory = ({ IDL }) => {
     'children' : IDL.Vec(NewLotInput),
     'parentId' : LotId,
   });
-  const Result_2 = IDL.Variant({
+  const Result_3 = IDL.Variant({
     'ok' : IDL.Vec(LotView),
     'err' : RegisterError,
   });
+  const NewEnquiryInput = IDL.Record({
+    'consent' : IDL.Bool,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+    'phone' : IDL.Text,
+  });
+  const Result = IDL.Variant({ 'ok' : EnquiryView, 'err' : EnquiryError });
   const UpdateRefEntryInput = IDL.Record({
     'id' : IDL.Text,
     'active' : IDL.Bool,
@@ -866,82 +934,86 @@ export const idlFactory = ({ IDL }) => {
     'capabilities' : IDL.Vec(Capability),
     'role' : Role,
   });
-  const Result = IDL.Variant({
+  const Result_1 = IDL.Variant({
     'ok' : RolePermissions,
     'err' : PermissionsError,
   });
   
   return IDL.Service({
     '_initialize_access_control' : IDL.Func([], [], []),
-    '_internet_identity_sign_in_finish' : IDL.Func([], [Result_18], []),
+    '_internet_identity_sign_in_finish' : IDL.Func([], [Result_20], []),
     '_internet_identity_sign_in_start' : IDL.Func([], [IDL.Vec(IDL.Nat8)], []),
     'addAnalysisDocument' : IDL.Func(
         [NewAnalysisDocumentInput],
-        [Result_17],
+        [Result_19],
         [],
       ),
-    'addReferenceEntry' : IDL.Func([NewRefEntryInput], [Result_1], []),
-    'appendEvent' : IDL.Func([LotId, NewEventInput], [Result_7], []),
+    'addReferenceEntry' : IDL.Func([NewRefEntryInput], [Result_2], []),
+    'appendEvent' : IDL.Func([LotId, NewEventInput], [Result_8], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'assignRole' : IDL.Func([IDL.Principal, Role], [Result_16], []),
+    'assignRole' : IDL.Func([IDL.Principal, Role], [Result_18], []),
     'canonicalEventJson' : IDL.Func(
         [EventKind, IDL.Text, IDL.Vec(HashHex)],
         [IDL.Text],
         ['query'],
       ),
     'canonicalSnapshotJson' : IDL.Func([LotId], [IDL.Opt(IDL.Text)], ['query']),
-    'changeStatus' : IDL.Func([LotId, StatusChangeInput], [Result_7], []),
-    'claimAdmin' : IDL.Func([], [Result_15], []),
-    'confirmPurge' : IDL.Func([], [Result_4], []),
-    'deleteLot' : IDL.Func([LotId], [Result_14], []),
+    'changeStatus' : IDL.Func([LotId, StatusChangeInput], [Result_8], []),
+    'claimAdmin' : IDL.Func([], [Result_17], []),
+    'confirmPurge' : IDL.Func([], [Result_5], []),
+    'deleteLot' : IDL.Func([LotId], [Result_16], []),
     'execute' : IDL.Func([IDL.Text], [Result__1], ['query']),
-    'freezeLot' : IDL.Func([LotId], [Result_7], []),
+    'freezeLot' : IDL.Func([LotId], [Result_8], []),
     'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getLot' : IDL.Func([LotId], [IDL.Opt(LotView)], ['query']),
     'getMyCapabilities' : IDL.Func([], [IDL.Vec(Capability)], ['query']),
     'getMyRole' : IDL.Func([], [Role], ['query']),
-    'getPermissions' : IDL.Func([], [Result_13], ['query']),
-    'getPurgeRequest' : IDL.Func([], [Result_12], ['query']),
+    'getPermissions' : IDL.Func([], [Result_15], ['query']),
+    'getPurgeRequest' : IDL.Func([], [Result_14], ['query']),
     'hasAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'listActors' : IDL.Func([], [Result_11], ['query']),
-    'listAllReferenceEntries' : IDL.Func([], [Result_10], ['query']),
-    'listAnalysisDocuments' : IDL.Func([], [Result_9], ['query']),
+    'listActors' : IDL.Func([], [Result_13], ['query']),
+    'listAllReferenceEntries' : IDL.Func([], [Result_12], ['query']),
+    'listAnalysisDocuments' : IDL.Func([], [Result_11], ['query']),
+    'listEnquiries' : IDL.Func([], [Result_10], ['query']),
     'listLots' : IDL.Func([], [IDL.Vec(LotView)], ['query']),
+    'listMyEnquiries' : IDL.Func([], [Result_10], ['query']),
     'listReferenceEntries' : IDL.Func(
         [RefKind],
         [IDL.Vec(RefEntryView)],
         ['query'],
       ),
     'listRoles' : IDL.Func([], [IDL.Vec(RoleInfo)], ['query']),
-    'mergeLots' : IDL.Func([MergeInput], [Result_7], []),
-    'registerAnalytics' : IDL.Func([], [Result_8], ['query']),
-    'registerLot' : IDL.Func([NewLotInput], [Result_7], []),
+    'mergeLots' : IDL.Func([MergeInput], [Result_8], []),
+    'registerAnalytics' : IDL.Func([], [Result_9], ['query']),
+    'registerLot' : IDL.Func([NewLotInput], [Result_8], []),
     'registerSummary' : IDL.Func([], [RegisterSummary], ['query']),
-    'removeAnalysisDocument' : IDL.Func([IDL.Text], [Result_5], []),
-    'removePrincipalOverride' : IDL.Func([IDL.Principal], [Result_6], []),
-    'removeReferenceEntry' : IDL.Func([IDL.Text], [Result_5], []),
-    'requestPurge' : IDL.Func([IDL.Text], [Result_4], []),
+    'removeAnalysisDocument' : IDL.Func([IDL.Text], [Result_6], []),
+    'removePrincipalOverride' : IDL.Func([IDL.Principal], [Result_7], []),
+    'removeReferenceEntry' : IDL.Func([IDL.Text], [Result_6], []),
+    'requestPurge' : IDL.Func([IDL.Text], [Result_5], []),
     'roleDisplayName' : IDL.Func([Role], [IDL.Text], ['query']),
     'schema' : IDL.Func([], [IDL.Text], ['query']),
     'searchLots' : IDL.Func([IDL.Text], [IDL.Vec(LotSearchHit)], ['query']),
     'setPrincipalOverride' : IDL.Func(
         [SetPrincipalOverrideInput],
-        [Result_3],
+        [Result_4],
         [],
       ),
     'sha256Hex' : IDL.Func([IDL.Text], [HashHex], ['query']),
     'sha256HexOfBlob' : IDL.Func([IDL.Vec(IDL.Nat8)], [HashHex], ['query']),
-    'splitLot' : IDL.Func([SplitInput], [Result_2], []),
+    'splitLot' : IDL.Func([SplitInput], [Result_3], []),
     'statusHistory' : IDL.Func([LotId], [IDL.Vec(StatusChange)], ['query']),
+    'submitEnquiry' : IDL.Func([NewEnquiryInput], [Result], []),
     'suggestLotId' : IDL.Func([Site, IDL.Text], [LotId], ['query']),
-    'updateReferenceEntry' : IDL.Func([UpdateRefEntryInput], [Result_1], []),
+    'updateReferenceEntry' : IDL.Func([UpdateRefEntryInput], [Result_2], []),
     'updateRolePermissions' : IDL.Func(
         [UpdateRolePermissionsInput],
-        [Result],
+        [Result_1],
         [],
       ),
+    'withdrawEnquiry' : IDL.Func([IDL.Text], [Result], []),
   });
 };
 

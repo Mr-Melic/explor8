@@ -108,19 +108,19 @@ export function LotExpandedPanel({
             Lot facts
           </p>
           <dl className="mt-3 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
-            <Fact label="Licence" value={lot.licence || "—"} mono />
-            <Fact label="Project" value={lot.project || "—"} />
+            <Fact label="Mining Licence" value={lot.licence || "—"} mono />
+            <Fact label="Mining Site" value={lot.project || "—"} />
             <Fact label="Coordinates" value={lot.gps || "—"} mono />
             <Fact label="Working ref" value={lot.workingRef || "—"} mono />
-            <Fact label="Seal number" value={lot.sealNo || "—"} mono />
+            <Fact label="Lot number" value={lot.sealNo || "—"} mono />
             <Fact label="Gross weight" value={formatGrams(lot.grossG)} />
             <Fact
-              label="Opened at"
+              label="Registered at"
               value={formatTimestamp(lot.openedAt)}
               mono
             />
             <Fact
-              label="Opened by"
+              label="Registered by"
               value={shortenPrincipal(lot.openedBy.toString())}
               title={lot.openedBy.toString()}
               mono
@@ -168,7 +168,7 @@ export function LotExpandedPanel({
 
       <section className="mt-7" data-ocid="lot.events_section">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Provenance events
+          Precious Material Origin History events
         </p>
         <div className="mt-3">
           <EventTimeline lot={lot} canAppend={canAppend} frozen={lot.frozen} />

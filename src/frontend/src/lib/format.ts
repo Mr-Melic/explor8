@@ -85,6 +85,29 @@ export function humanizeToken(token: string): string {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+/**
+ * The display name for a register event kind.
+ *
+ * Event names shown in a lot block align with the current status names, so an
+ * event that records a status reads with that status's own term rather than a
+ * generic verb: `extracted` reads "Recently Mined", `assay` reads "Testing
+ * Quality", `retail` reads "Retailed", and so on. Kinds with no status
+ * counterpart fall back to their humanized token.
+ */
+const EVENT_LABEL: Record<string, string> = {
+  extracted: "Recently Mined",
+  assay: "Testing Quality",
+  retail: "Retailed",
+  cut: "Applied for crafting",
+  frozen: "Confiscated by Authorities",
+  status_change: "Status change",
+};
+
+/** The display name for an event kind, aligned with the status terms. */
+export function eventLabel(kind: string): string {
+  return EVENT_LABEL[kind] ?? humanizeToken(kind);
+}
+
 /** `2026-03-14` → `14 Mar 2026`. */
 export function formatIsoDay(day: string): string {
   const parsed = new Date(`${day}T00:00:00Z`);

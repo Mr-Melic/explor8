@@ -1,8 +1,10 @@
+import { EnquirySection } from "@/components/enquiry/EnquirySection";
 import { EmptyState } from "@/components/library/EmptyState";
 import { LibraryGrid } from "@/components/library/LibraryGrid";
 import { LibraryToolbar } from "@/components/library/LibraryToolbar";
 import { RegisterGraph } from "@/components/library/RegisterGraph";
 import { RegisterStats } from "@/components/library/RegisterStats";
+import { StatusInfoSection } from "@/components/status-info/StatusInfoSection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDataMode } from "@/hooks/use-data-mode";
 import { useDeepLink } from "@/hooks/use-deep-link";
@@ -145,7 +147,7 @@ export function HomePage() {
           Jewel of Africa Limited · Lusaka
         </p>
         <h1 className="mt-4 max-w-3xl font-display text-3xl leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl">
-          The Explor8 provenance register
+          The Explor8 Precious Material Origin History register
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
           From extraction to verification, every precious metal and gemstone
@@ -153,10 +155,14 @@ export function HomePage() {
           block in this registry. Each block bears a cryptographic hash of its
           recorded data and supporting files, with every subsequent event added
           to its chain of custody. History unfolds downward, preserving a
-          traceable record of provenance, integrity, and accountability; from
-          the earth to the registry.
+          traceable record of Precious Material Origin History, integrity, and
+          accountability; from the earth to the registry.
         </p>
       </section>
+
+      <StatusInfoSection />
+
+      <EnquirySection />
 
       {isDemo ? (
         <p

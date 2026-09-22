@@ -24,7 +24,8 @@ export function AwaitingRoleNotice({
       >
         <p className="text-base leading-relaxed text-muted-foreground">
           Reading the Explor8 register is open to everyone. Sign in with
-          Internet Identity to register lots and append provenance events.
+          Internet Identity to register lots and append Precious Material Origin
+          History events.
         </p>
         <div className="mt-4">
           <SignInButton />

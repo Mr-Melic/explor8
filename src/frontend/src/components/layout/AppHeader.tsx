@@ -3,23 +3,30 @@ import { RegisterLotPanel } from "@/components/lot/RegisterLotPanel";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useDataMode } from "@/hooks/use-data-mode";
 import { useMyRole } from "@/hooks/use-role";
+import { useTextSize } from "@/hooks/use-text-size";
 import { shortenPrincipal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
-import { LogIn, LogOut, Plus } from "lucide-react";
+import { LogIn, LogOut, Minus, Plus, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 /**
  * The register masthead: the Explor8 wordmark, its Jewel of Africa parentage,
- * the animated chain mark, the licence reminder, the live/demo switch and the
- * sign-in state.
+ * the animated chain mark, the licence reminder, the live/demo switch, the
+ * site-wide text-size control and the sign-in state.
+ *
+ * The header is sticky at the top of the viewport on every route, so the
+ * register's controls stay reachable while a long block list scrolls beneath
+ * it. It sits above the animated diamond field through `.above-field`.
  *
  * The subtitle is never truncated and never wraps: it stays on ONE horizontal
  * line at every viewport width, shrinking its font on a phone and lighting
  * "JEWEL OF AFRICA" in the accent while "A product of" stays muted.
  *
- * A writing role also gets the fixed "Register lot" action, which opens the
- * register drawer over the library rather than navigating away.
+ * A writing role gets the fixed "Register lot" action, which opens the
+ * register drawer over the library rather than navigating away. In demo mode
+ * any signed-in reader may register a lot: the drawer simulates the seal in
+ * the browser and never writes to the register.
  */
 export function AppHeader() {
   const { login, clear, isAuthenticated, isLoggingIn, isInitializing } =
@@ -28,12 +35,13 @@ export function AppHeader() {
   const { mode } = useDataMode();
   const [registerOpen, setRegisterOpen] = useState(false);
 
-  // Demo data is browser-only, so no write affordance is offered while it is
-  // on — the register drawer would have nothing real to seal against.
-  const canRegister = capabilities.canWrite && mode === "live";
+  // In Real-time mode only a writing role may seal a lot. In Demo-data mode
+  // the register is simulated in the browser, so any signed-in reader may
+  // register one — nothing reaches the canister.
+  const canRegister = mode === "demo" ? isAuthenticated : capabilities.canWrite;
 
   return (
-    <header className="border-b border-border bg-card">
+    <header className="above-field sticky top-0 z-30 border-b border-border bg-card">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-4">
         <div className="flex min-w-0 items-center gap-3">
           <ChainMark className="h-8 w-14 md:h-9 md:w-16" />
@@ -50,12 +58,14 @@ export function AppHeader() {
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:justify-end">
           <p className="order-last w-full text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:order-none md:w-auto md:max-w-[20rem] md:text-right">
-            Licensed mineral dealer · Licence reminder: every lot must carry a
-            valid JOA licence reference.
+            Licensed miner &amp; dealer · Licence reminder: every lot must carry
+            a valid JOA licence reference.
           </p>
 
           <div className="flex flex-wrap items-center gap-2">
             <DataModeToggle />
+
+            <TextSizeControl />
 
             {canRegister ? (
               <button
@@ -119,6 +129,82 @@ export function AppHeader() {
         onRegistered={openRegisteredLot}
       />
     </header>
+  );
+}
+
+/**
+ * The site-wide text-size control.
+ *
+ * Three actions — decrease, reset to the default, increase — scale the root
+ * font size, so every `rem`-based size in the design system grows or shrinks
+ * together. The chosen step is remembered across reloads. The control reports
+ * the current step to assistive technology and disables an action at its
+ * bound rather than wrapping.
+ */
+function TextSizeControl() {
+  const {
+    index,
+    step,
+    isDefault,
+    canIncrease,
+    canDecrease,
+    increase,
+    decrease,
+    reset,
+  } = useTextSize();
+
+  return (
+    <fieldset
+      className="inline-flex items-center rounded-sm border border-border bg-background p-0.5"
+      aria-label="Text size"
+      data-ocid="header.text_size_control"
+    >
+      <button
+        type="button"
+        onClick={decrease}
+        disabled={!canDecrease}
+        aria-label="Decrease text size"
+        data-ocid="header.text_size_decrease_button"
+        className="inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground transition-quick hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 sm:size-8"
+      >
+        <Minus className="size-3.5" aria-hidden="true" />
+      </button>
+
+      <button
+        type="button"
+        onClick={reset}
+        aria-label="Reset text size to default"
+        aria-pressed={isDefault}
+        data-ocid="header.text_size_reset_button"
+        className={cn(
+          "inline-flex h-9 items-center rounded-sm px-2 font-display text-sm leading-none tracking-tight transition-quick focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-8",
+          isDefault
+            ? "text-muted-foreground hover:text-foreground"
+            : "text-accent",
+        )}
+      >
+        A-a
+      </button>
+
+      <button
+        type="button"
+        onClick={increase}
+        disabled={!canIncrease}
+        aria-label="Increase text size"
+        data-ocid="header.text_size_increase_button"
+        className="inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground transition-quick hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 sm:size-8"
+      >
+        <Plus className="size-3.5" aria-hidden="true" />
+      </button>
+
+      <span
+        className="sr-only"
+        aria-live="polite"
+        data-ocid="header.text_size_value"
+      >
+        Text size {step}% (step {index + 1} of 5)
+      </span>
+    </fieldset>
   );
 }
 

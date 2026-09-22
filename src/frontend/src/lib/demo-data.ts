@@ -236,7 +236,6 @@ export function summarizeDemoLots(lots: LotView[]): RegisterSummary {
   const bySite = new Map<string, number>();
   const activity = new Map<string, number>();
   let totalEvents = 0;
-
   for (const lot of lots) {
     byType.set(lot.lotType, (byType.get(lot.lotType) ?? 0) + 1);
     byStatus.set(lot.status, (byStatus.get(lot.status) ?? 0) + 1);
@@ -332,4 +331,133 @@ export function summarizeDemoAnalytics(lots: LotView[]): RegisterAnalytics {
     lotsOverTime: points,
     eventsOverTime: points,
   };
+}
+
+/**
+ * Build a demo lot from a register-lot draft.
+ *
+ * Demo registration is fully simulated in the browser: the lot is composed
+ * from the operator's own draft, sealed with a random content hash and given
+ * an opening extraction event, exactly as the register would. Nothing here is
+ * uploaded or persisted — the caller holds the result in memory only.
+ */
+export function buildDemoLot(input: {
+  id: string;
+  lotType: string;
+  site: string;
+  licence: string;
+  project: string;
+  gps: string;
+  workingRef: string;
+  grossG: string;
+  sealNo: string;
+}): LotView {
+  const now = BigInt(Date.now()) * 1_000_000n;
+  const contentHash = randomHash();
+  const by = demoPrincipal();
+
+  const events: EventView[] = [
+    {
+      seq: 1n,
+      kind: EventKind.extracted,
+      at: now,
+      by,
+      payload: `Extracted at ${input.workingRef || pick(WORKING_REFS)}`,
+      payloadHash: randomHash(),
+      fileIds: [],
+    },
+  ];
+
+  return {
+    id: input.id,
+    lotType: input.lotType as LotType,
+    licence: input.licence,
+    project: input.project,
+    gps: input.gps,
+    workingRef: input.workingRef,
+    grossG: input.grossG,
+    sealNo: input.sealNo,
+    status: LotStatus.open,
+    statusHistory: [
+      {
+        seq: 1n,
+        from: LotStatus.open,
+        to: LotStatus.open,
+        at: now,
+        by,
+      },
+    ],
+    parentIds: [],
+    photoFileIds: [],
+    fileIds: [],
+    fileHashes: [],
+    contentHash,
+    hashChain: [{ eventSeq: 1n, contentHash, at: now }],
+    events,
+    frozen: false,
+    openedAt: now,
+    openedBy: by,
+  };
+}
+
+/**
+ * Append a simulated event to a demo lot.
+ *
+ * The register is append-only, so the event is added at the next sequence and
+ * the lot's hash chain grows with it. The lot's status follows the same rule
+ * the backend applies: `moved`, `assay` and `retail` move it, everything else
+ * leaves it unchanged. Nothing is persisted.
+ */
+export function appendDemoEvent(
+  lot: LotView,
+  input: { kind: EventKind; payload: string },
+): LotView {
+  const seq = BigInt(lot.events.length + 1);
+  const at = BigInt(Date.now()) * 1_000_000n;
+  const by = demoPrincipal();
+  const payloadHash = randomHash();
+
+  const event: EventView = {
+    seq,
+    kind: input.kind,
+    at,
+    by,
+    payload: input.payload,
+    payloadHash,
+    fileIds: [],
+  };
+
+  const nextStatus = demoStatusAfter(input.kind) ?? lot.status;
+  const statusHistory =
+    nextStatus === lot.status
+      ? lot.statusHistory
+      : [
+          ...lot.statusHistory,
+          { seq, from: lot.status, to: nextStatus, at, by },
+        ];
+
+  return {
+    ...lot,
+    status: nextStatus,
+    statusHistory,
+    events: [...lot.events, event],
+    hashChain: [
+      ...lot.hashChain,
+      { eventSeq: seq, contentHash: lot.contentHash, at },
+    ],
+  };
+}
+
+/** The status a demo lot moves to after an event kind, mirroring the backend. */
+function demoStatusAfter(kind: EventKind): LotStatus | null {
+  switch (kind) {
+    case EventKind.moved:
+      return LotStatus.in_transit;
+    case EventKind.assay:
+      return LotStatus.assayed;
+    case EventKind.retail:
+      return LotStatus.retailed;
+    default:
+      return null;
+  }
 }

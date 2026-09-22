@@ -25,15 +25,18 @@ import RolesLib "lib/roles";
 import ReferenceLib "lib/reference";
 import PurgeLib "lib/purge";
 import PermissionsLib "lib/permissions";
+import EnquiryLib "lib/enquiry";
 import RegisterApi "mixins/register-api";
 import RolesApi "mixins/roles-api";
 import ReferenceApi "mixins/reference-api";
 import PurgeApi "mixins/purge-api";
 import PermissionsApi "mixins/permissions-api";
+import EnquiryApi "mixins/enquiry-api";
 import ApiDocMixin "mixins/api-doc";
 
 import ReferenceTypes "types/reference";
 import RegisterTypes "types/register";
+import EnquiryTypes "types/enquiry";
 
 actor {
   /// The canonical tag text for a reference kind, used as the OQL column value.
@@ -45,6 +48,8 @@ actor {
       case (#event_kind) "event_kind";
       case (#caption) "caption";
       case (#form_default) "form_default";
+      case (#status_explanation) "status_explanation";
+      case (#enquiry_destination) "enquiry_destination";
     };
   };
 
@@ -65,6 +70,7 @@ actor {
   let referenceState : ReferenceLib.State;
   let purgeState : PurgeLib.State;
   let permissionsState : PermissionsLib.State;
+  let enquiryState : EnquiryLib.State;
 
   include MixinAuthorization(accessControlState, null);
   include RegisterApi(registerState, rolesState, permissionsState);
@@ -72,6 +78,7 @@ actor {
   include ReferenceApi(referenceState, registerState, rolesState);
   include PurgeApi(purgeState, registerState, rolesState);
   include PermissionsApi(permissionsState, rolesState);
+  include EnquiryApi(enquiryState, rolesState);
   include ApiDocMixin();
   include Expose({
     entities = [
@@ -119,6 +126,37 @@ actor {
         .payload("principal", func (assignment : { principal : Text; role : Text }) : Text = assignment.principal)
         .payload("role", func (assignment : { principal : Text; role : Text }) : Text = assignment.role)
         .controllerOnly()
+        .build(),
+      Entity.manual<EnquiryTypes.Enquiry>(
+        "enquiry",
+        func () = enquiryState.enquiries.values(),
+        "Enquiry",
+        "id",
+      )
+        .payload("id", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.id)
+        .payload("submittedBy", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.submittedBy.toText())
+        .payload("name", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.name)
+        .payload("email", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.email)
+        .payload("phone", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.phone)
+        .payload("message", func (enquiry : EnquiryTypes.Enquiry) : Text = enquiry.message)
+        .payload("consent", func (enquiry : EnquiryTypes.Enquiry) : Bool = enquiry.consent)
+        .payload("submittedAt", func (enquiry : EnquiryTypes.Enquiry) : Int = enquiry.submittedAt)
+        .payload("withdrawn", func (enquiry : EnquiryTypes.Enquiry) : Bool = enquiry.withdrawn)
+        .payload("withdrawnAt", func (enquiry : EnquiryTypes.Enquiry) : Int = enquiry.withdrawnAt ?? 0)
+        .sample({
+          id = "enq-0";
+          submittedBy = Principal.fromText("aaaaa-aa");
+          name = "";
+          email = "";
+          phone = "";
+          message = "";
+          consent = false;
+          submittedAt = 0;
+          withdrawn = false;
+          withdrawnAt = null;
+        })
+        .controllerOrScoped()
+        .ownedBy("submittedBy")
         .build(),
     ];
   });

@@ -56,7 +56,9 @@ describe("Library home page", () => {
     renderWithProviders(<HomePage />);
 
     expect(
-      screen.getByRole("heading", { name: /Explor8 provenance register/i }),
+      screen.getByRole("heading", {
+        name: /Explor8 Precious Material Origin History register/i,
+      }),
     ).toBeInTheDocument();
     // The accepted request renamed the section heading to
     // 'Asset Registry Explorer'.

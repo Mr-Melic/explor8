@@ -140,7 +140,7 @@ export function RegisterLotPanel({
             </Field>
 
             <Field
-              label="Licence"
+              label="Mining Licence"
               htmlFor="register-licence"
               error={form.errors.licence}
             >
@@ -157,7 +157,7 @@ export function RegisterLotPanel({
             </Field>
 
             <Field
-              label="Project"
+              label="Mining Site"
               htmlFor="register-project"
               error={form.errors.project}
             >
@@ -192,7 +192,7 @@ export function RegisterLotPanel({
             </Field>
 
             <Field
-              label="Seal number"
+              label="Lot number"
               htmlFor="register-seal"
               error={form.errors.sealNo}
             >
