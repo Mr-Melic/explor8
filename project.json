@@ -1,0 +1,20 @@
+{
+  "overview": "A provenance register for Jewel of Africa that records each mined lot as a sealed, hash-chained block with a full chain of custody.",
+  "features": [
+    "Register mined lots as sealed, hash-chained blocks",
+    "Append provenance events and change status with role-gated transitions",
+    "Search and explore the asset registry with stats and graphs",
+    "Admin panel for roles, permissions, reference data, documents and analytics",
+    "Admin-only deletion of individual blocks and full register purge",
+    "Per-role permission matrix with checkbox editing"
+  ],
+  "category": "provenance-register",
+  "tags": [
+    "provenance",
+    "blockchain",
+    "mining",
+    "registry",
+    "admin"
+  ],
+  "last_updated": "2026-09-22T14:03:14.177Z"
+}

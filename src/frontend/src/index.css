@@ -1,0 +1,804 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Explor8 / JOA Gold Book — bundled typefaces ─────────────────────
+ *
+ * SINGLE TYPEFACE RULE: Work Sans is the typeface for the whole app. It IS
+ * bundled at public/assets/fonts/WorkSans.woff2 and declared via the
+ * @font-face block directly below, and it leads --font-display / --font-body
+ * / --font-mono, so headings, body text, labels and the wordmark all render
+ * in Work Sans. The other faces below are fallbacks only; every consumer
+ * reads the CSS variables, so nothing else needs to change to re-point them.
+ *
+ * NO ITALIC RULE: none of the faces below ships or declares an italic
+ * face, and @layer base forces font-style: normal on every element.
+ */
+@font-face {
+  font-family: "Work Sans";
+  src: url("/assets/fonts/WorkSans.woff2") format("woff2-variations");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("/assets/fonts/GeneralSans.woff2") format("woff2");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  /*
+   * Dark-first. The register opens on a deep night-sky ground so the sealed
+   * blocks and the diamond lattice read as light against the dark, the way a
+   * launch console reads. Every colour below is derived from the eight-colour
+   * scheme: lime, light green, baby blue, baby pink, silk black, night sky,
+   * shine navy, deep blue-green. No cream white is used as a surface.
+   */
+  :root {
+    /*
+     * Work Sans leads each stack: if WorkSans.woff2 is present it wins,
+     * otherwise the browser falls through to the bundled upright grotesque.
+     * Mono stays a true monospace for hashes and block heights.
+     */
+    --font-display: "Work Sans", "Space Grotesk", "General Sans", sans-serif;
+    --font-body: "Work Sans", "Space Grotesk", "General Sans", sans-serif;
+    --font-mono: "Geist Mono", "Space Grotesk", monospace;
+    --radius: 0.25rem;
+
+    /* Surfaces — silk black ground, night-sky raised faces */
+    --background: 0.208 0.014 232;
+    --foreground: 0.955 0.008 220;
+    --card: 0.262 0.018 232;
+    --card-foreground: 0.955 0.008 220;
+    --popover: 0.288 0.02 232;
+    --popover-foreground: 0.955 0.008 220;
+
+    /* Shine navy — primary authority */
+    --primary: 0.585 0.132 252;
+    --primary-foreground: 0.985 0.004 220;
+
+    /* Night sky — secondary surfaces */
+    --secondary: 0.318 0.022 234;
+    --secondary-foreground: 0.93 0.01 220;
+
+    --muted: 0.3 0.02 233;
+    --muted-foreground: 0.735 0.022 226;
+
+    /* Peter Pan lime — the single living accent */
+    --accent: 0.715 0.162 138;
+    --accent-foreground: 0.185 0.02 232;
+
+    --destructive: 0.62 0.17 25;
+    --destructive-foreground: 0.985 0.004 220;
+
+    --success: 0.715 0.162 138;
+    --success-foreground: 0.185 0.02 232;
+    --warning: 0.869 0.122 118;
+    --warning-foreground: 0.185 0.02 232;
+
+    --border: 0.352 0.024 233;
+    --input: 0.352 0.024 233;
+    --ring: 0.715 0.162 138;
+
+    /* Register chart scale — navy → lime, no neon */
+    --chart-1: 0.715 0.162 138;
+    --chart-2: 0.585 0.132 252;
+    --chart-3: 0.869 0.122 118;
+    --chart-4: 0.518 0.095 222;
+    --chart-5: 0.557 0.035 246;
+
+    /* Sidebar / rail */
+    --sidebar: 0.262 0.018 232;
+    --sidebar-foreground: 0.955 0.008 220;
+    --sidebar-primary: 0.585 0.132 252;
+    --sidebar-primary-foreground: 0.985 0.004 220;
+    --sidebar-accent: 0.318 0.022 234;
+    --sidebar-accent-foreground: 0.93 0.01 220;
+    --sidebar-border: 0.352 0.024 233;
+    --sidebar-ring: 0.715 0.162 138;
+
+    /* ── Explor8 semantic tokens ─────────────────────────────────────── */
+    --gold: 0.715 0.162 138;
+    --gold-bright: 0.869 0.122 118;
+    --gold-deep: 0.6 0.14 140;
+    --navy: 0.585 0.132 252;
+    --navy-deep: 0.411 0.124 252;
+    --cream: 0.262 0.018 232;
+    --stone: 0.318 0.022 234;
+    --ink: 0.955 0.008 220;
+
+    /* The eight-colour scheme, exposed for the diamond lattice */
+    --scheme-lime: 0.715 0.162 138;
+    --scheme-light-green: 0.869 0.122 118;
+    --scheme-baby-blue: 0.89 0.046 223;
+    --scheme-baby-pink: 0.946 0.025 52;
+    --scheme-silk-black: 0.372 0.018 232;
+    --scheme-night-sky: 0.557 0.035 246;
+    --scheme-shine-navy: 0.411 0.124 252;
+    --scheme-deep-blue-green: 0.518 0.095 222;
+
+    /*
+     * Short aliases for the same eight colours. tailwind.config.js maps
+     * `lime`, `baby-blue`, `silk-black` … onto these names, so they must exist
+     * here or every palette utility resolves to an undefined variable.
+     */
+    --lime: 0.715 0.162 138;
+    --lime-bright: 0.869 0.122 118;
+    --baby-blue: 0.89 0.046 223;
+    --baby-pink: 0.946 0.025 52;
+    --silk-black: 0.372 0.018 232;
+    --night-sky: 0.557 0.035 246;
+    --shine-navy: 0.411 0.124 252;
+    --blue-green: 0.518 0.095 222;
+
+    /* Status pills */
+    --status-open: 0.3 0.02 233;
+    --status-open-fg: 0.82 0.014 224;
+    --status-open-border: 0.38 0.024 233;
+    --status-transit: 0.262 0.018 232;
+    --status-transit-fg: 0.869 0.122 118;
+    --status-transit-border: 0.715 0.162 138;
+    --status-assayed: 0.411 0.124 252;
+    --status-assayed-fg: 0.97 0.006 220;
+    --status-assayed-border: 0.585 0.132 252;
+    --status-retailed: 0.715 0.162 138;
+    --status-retailed-fg: 0.185 0.02 232;
+    --status-retailed-border: 0.869 0.122 118;
+    --status-frozen: 0.28 0.012 232;
+    --status-frozen-fg: 0.6 0.014 226;
+    --status-frozen-border: 0.34 0.014 232;
+
+    /* Gradients — a single cool sheen, never a hero wash */
+    --gradient-primary: linear-gradient(
+      180deg,
+      oklch(0.63 0.135 252),
+      oklch(0.545 0.128 252)
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.262 0.018 232),
+      oklch(0.232 0.016 232)
+    );
+    --gradient-rule: linear-gradient(
+      90deg,
+      oklch(0.715 0.162 138 / 0),
+      oklch(0.715 0.162 138 / 0.55),
+      oklch(0.715 0.162 138 / 0)
+    );
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-quick: all 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /*
+     * ── Block colour schedule ─────────────────────────────────────────
+     * Eight block-surface tints, in schedule order. Each is the matching
+     * scheme colour mixed into the dark card face at a low, dark-first
+     * intensity, so a sealed block reads as a tinted night-sky slab and
+     * body text keeps AA+ contrast. The mix base is --card, so the same
+     * declarations re-tint correctly under .light (which redefines --card).
+     * Order: 1 lime · 2 light green · 3 baby blue · 4 baby pink ·
+     *        5 silk black · 6 night sky · 7 shine navy · 8 deep blue-green
+     */
+    --block-1: color-mix(in oklab, oklch(var(--lime)) 22%, oklch(var(--card)));
+    --block-2: color-mix(
+      in oklab,
+      oklch(var(--lime-bright)) 24%,
+      oklch(var(--card))
+    );
+    --block-3: color-mix(
+      in oklab,
+      oklch(var(--baby-blue)) 20%,
+      oklch(var(--card))
+    );
+    --block-4: color-mix(
+      in oklab,
+      oklch(var(--baby-pink)) 18%,
+      oklch(var(--card))
+    );
+    --block-5: color-mix(
+      in oklab,
+      oklch(var(--silk-black)) 34%,
+      oklch(var(--card))
+    );
+    --block-6: color-mix(
+      in oklab,
+      oklch(var(--night-sky)) 26%,
+      oklch(var(--card))
+    );
+    --block-7: color-mix(
+      in oklab,
+      oklch(var(--shine-navy)) 30%,
+      oklch(var(--card))
+    );
+    --block-8: color-mix(
+      in oklab,
+      oklch(var(--blue-green)) 26%,
+      oklch(var(--card))
+    );
+
+    /* Matching hairline for each tinted face. */
+    --block-1-edge: color-mix(
+      in oklab,
+      oklch(var(--lime)) 42%,
+      oklch(var(--border))
+    );
+    --block-2-edge: color-mix(
+      in oklab,
+      oklch(var(--lime-bright)) 44%,
+      oklch(var(--border))
+    );
+    --block-3-edge: color-mix(
+      in oklab,
+      oklch(var(--baby-blue)) 40%,
+      oklch(var(--border))
+    );
+    --block-4-edge: color-mix(
+      in oklab,
+      oklch(var(--baby-pink)) 38%,
+      oklch(var(--border))
+    );
+    --block-5-edge: color-mix(
+      in oklab,
+      oklch(var(--silk-black)) 50%,
+      oklch(var(--border))
+    );
+    --block-6-edge: color-mix(
+      in oklab,
+      oklch(var(--night-sky)) 46%,
+      oklch(var(--border))
+    );
+    --block-7-edge: color-mix(
+      in oklab,
+      oklch(var(--shine-navy)) 50%,
+      oklch(var(--border))
+    );
+    --block-8-edge: color-mix(
+      in oklab,
+      oklch(var(--blue-green)) 46%,
+      oklch(var(--border))
+    );
+  }
+
+  /*
+   * The light variant is a cool daylight inversion of the same scheme — a
+   * pale baby-blue paper ground with silk-black ink. It is deliberately not a
+   * cream surface.
+   */
+  .light {
+    --background: 0.965 0.008 223;
+    --foreground: 0.262 0.018 232;
+    --card: 0.995 0.003 223;
+    --card-foreground: 0.262 0.018 232;
+    --popover: 1 0 0;
+    --popover-foreground: 0.262 0.018 232;
+
+    --primary: 0.411 0.124 252;
+    --primary-foreground: 0.985 0.004 220;
+
+    --secondary: 0.925 0.014 223;
+    --secondary-foreground: 0.372 0.018 232;
+
+    --muted: 0.925 0.014 223;
+    --muted-foreground: 0.505 0.026 236;
+
+    --accent: 0.6 0.15 140;
+    --accent-foreground: 0.985 0.004 220;
+
+    --destructive: 0.55 0.18 25;
+    --destructive-foreground: 0.985 0.004 220;
+
+    --success: 0.6 0.15 140;
+    --success-foreground: 0.985 0.004 220;
+    --warning: 0.72 0.13 118;
+    --warning-foreground: 0.262 0.018 232;
+
+    --border: 0.885 0.012 223;
+    --input: 0.885 0.012 223;
+    --ring: 0.6 0.15 140;
+
+    --chart-1: 0.6 0.15 140;
+    --chart-2: 0.411 0.124 252;
+    --chart-3: 0.72 0.13 118;
+    --chart-4: 0.518 0.095 222;
+    --chart-5: 0.557 0.035 246;
+
+    --sidebar: 0.945 0.01 223;
+    --sidebar-foreground: 0.262 0.018 232;
+    --sidebar-primary: 0.411 0.124 252;
+    --sidebar-primary-foreground: 0.985 0.004 220;
+    --sidebar-accent: 0.925 0.014 223;
+    --sidebar-accent-foreground: 0.372 0.018 232;
+    --sidebar-border: 0.885 0.012 223;
+    --sidebar-ring: 0.6 0.15 140;
+
+    --gold: 0.6 0.15 140;
+    --gold-bright: 0.72 0.13 118;
+    --gold-deep: 0.5 0.13 142;
+    --navy: 0.411 0.124 252;
+    --navy-deep: 0.33 0.1 252;
+    --cream: 0.995 0.003 223;
+    --stone: 0.925 0.014 223;
+    --ink: 0.262 0.018 232;
+
+    /* Same eight-colour aliases, tuned for the daylight inversion. */
+    --lime: 0.6 0.15 140;
+    --lime-bright: 0.72 0.13 118;
+    --baby-blue: 0.9 0.04 223;
+    --baby-pink: 0.94 0.03 52;
+    --silk-black: 0.372 0.018 232;
+    --night-sky: 0.557 0.035 246;
+    --shine-navy: 0.411 0.124 252;
+    --blue-green: 0.518 0.095 222;
+
+    --status-open: 0.925 0.014 223;
+    --status-open-fg: 0.42 0.024 232;
+    --status-open-border: 0.86 0.014 223;
+    --status-transit: 0.995 0.003 223;
+    --status-transit-fg: 0.5 0.13 142;
+    --status-transit-border: 0.6 0.15 140;
+    --status-assayed: 0.411 0.124 252;
+    --status-assayed-fg: 0.985 0.004 220;
+    --status-assayed-border: 0.411 0.124 252;
+    --status-retailed: 0.6 0.15 140;
+    --status-retailed-fg: 0.985 0.004 220;
+    --status-retailed-border: 0.5 0.13 142;
+    --status-frozen: 0.9 0.008 223;
+    --status-frozen-fg: 0.6 0.014 226;
+    --status-frozen-border: 0.86 0.008 223;
+
+    --gradient-primary: linear-gradient(
+      180deg,
+      oklch(0.45 0.128 252),
+      oklch(0.385 0.12 252)
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.995 0.003 223),
+      oklch(0.955 0.01 223)
+    );
+    --gradient-rule: linear-gradient(
+      90deg,
+      oklch(0.6 0.15 140 / 0),
+      oklch(0.6 0.15 140 / 0.55),
+      oklch(0.6 0.15 140 / 0)
+    );
+
+    /*
+     * Daylight inversion of the block schedule: the same eight colours are
+     * mixed into the pale card face at a slightly higher intensity so the
+     * tint survives on paper. --card is already redefined above, so only
+     * the mix ratios change.
+     */
+    --block-1: color-mix(in oklab, oklch(var(--lime)) 26%, oklch(var(--card)));
+    --block-2: color-mix(
+      in oklab,
+      oklch(var(--lime-bright)) 34%,
+      oklch(var(--card))
+    );
+    --block-3: color-mix(
+      in oklab,
+      oklch(var(--baby-blue)) 34%,
+      oklch(var(--card))
+    );
+    --block-4: color-mix(
+      in oklab,
+      oklch(var(--baby-pink)) 42%,
+      oklch(var(--card))
+    );
+    --block-5: color-mix(
+      in oklab,
+      oklch(var(--silk-black)) 16%,
+      oklch(var(--card))
+    );
+    --block-6: color-mix(
+      in oklab,
+      oklch(var(--night-sky)) 20%,
+      oklch(var(--card))
+    );
+    --block-7: color-mix(
+      in oklab,
+      oklch(var(--shine-navy)) 16%,
+      oklch(var(--card))
+    );
+    --block-8: color-mix(
+      in oklab,
+      oklch(var(--blue-green)) 18%,
+      oklch(var(--card))
+    );
+
+    --block-1-edge: color-mix(
+      in oklab,
+      oklch(var(--lime)) 55%,
+      oklch(var(--border))
+    );
+    --block-2-edge: color-mix(
+      in oklab,
+      oklch(var(--lime-bright)) 60%,
+      oklch(var(--border))
+    );
+    --block-3-edge: color-mix(
+      in oklab,
+      oklch(var(--baby-blue)) 55%,
+      oklch(var(--border))
+    );
+    --block-4-edge: color-mix(
+      in oklab,
+      oklch(var(--baby-pink)) 60%,
+      oklch(var(--border))
+    );
+    --block-5-edge: color-mix(
+      in oklab,
+      oklch(var(--silk-black)) 40%,
+      oklch(var(--border))
+    );
+    --block-6-edge: color-mix(
+      in oklab,
+      oklch(var(--night-sky)) 45%,
+      oklch(var(--border))
+    );
+    --block-7-edge: color-mix(
+      in oklab,
+      oklch(var(--shine-navy)) 40%,
+      oklch(var(--border))
+    );
+    --block-8-edge: color-mix(
+      in oklab,
+      oklch(var(--blue-green)) 42%,
+      oklch(var(--border))
+    );
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  /*
+   * NO ITALIC, ANYWHERE. Defensive base rule: no element — including any
+   * future <em>, <i>, <cite>, <blockquote> or utility class — may render
+   * italic or oblique. The wordmark, headings and body all stay upright.
+   * font-style is forced at the element level, and the font-synthesis
+   * properties stop the browser from faking an italic or oblique face.
+   */
+  *,
+  *::before,
+  *::after {
+    font-style: normal !important;
+    font-synthesis-style: none;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+  html.light {
+    color-scheme: light;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  ::selection {
+    background: oklch(var(--accent) / 0.28);
+  }
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  .transition-quick {
+    transition: var(--transition-quick);
+  }
+
+  /*
+   * The shared micro-label: field labels, table headers, section eyebrows and
+   * pill text. Enlarged from the old 11px and letter-spaced so it stays legible
+   * on a phone, and set in the body face at semibold so it reads as a label
+   * rather than fine print.
+   */
+  .micro-label {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: oklch(var(--muted-foreground));
+  }
+
+  /*
+   * Content that must sit above the animated diamond field. The field is a
+   * fixed, pointer-events-none layer at -z-10, so any surface that needs its
+   * own stacking context (sticky headers, dialogs, sheets) opts in here.
+   */
+  .above-field {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Large numeric readout used by the admin stat strip. */
+  .stat-figure {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: oklch(var(--foreground));
+  }
+  @media (min-width: 768px) {
+    .stat-figure {
+      font-size: 2.25rem;
+    }
+  }
+
+  /* Thin accent ledger rule */
+  .rule-gold {
+    background-image: var(--gradient-rule);
+    height: 1px;
+    width: 100%;
+  }
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+  .bg-gradient-subtle {
+    background-image: var(--gradient-subtle);
+  }
+
+  /* Monospace hash / block reference */
+  .hash {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: oklch(var(--muted-foreground));
+  }
+
+  /* Expanded block face: accent left edge */
+  .block-face {
+    background-color: oklch(var(--card));
+    border: 1px solid oklch(var(--border));
+    border-radius: 2px;
+  }
+  .block-face-open {
+    border-left: 3px solid oklch(var(--accent));
+  }
+
+  /*
+   * ── Block colour schedule — surface variants ──────────────────────
+   * Apply ONE of .block-face-1 .. .block-face-8 alongside .block-face to
+   * tint that block's surface from the eight-colour schedule. The variant
+   * only overrides background-color and border-color, so .block-face
+   * (radius, hairline) and .block-face-open (lime left edge) keep working
+   * untouched. Consumers pick a variant by index — see DESIGN.md.
+   */
+  .block-face-1 {
+    background-color: var(--block-1);
+    border-color: var(--block-1-edge);
+  }
+  .block-face-2 {
+    background-color: var(--block-2);
+    border-color: var(--block-2-edge);
+  }
+  .block-face-3 {
+    background-color: var(--block-3);
+    border-color: var(--block-3-edge);
+  }
+  .block-face-4 {
+    background-color: var(--block-4);
+    border-color: var(--block-4-edge);
+  }
+  .block-face-5 {
+    background-color: var(--block-5);
+    border-color: var(--block-5-edge);
+  }
+  .block-face-6 {
+    background-color: var(--block-6);
+    border-color: var(--block-6-edge);
+  }
+  .block-face-7 {
+    background-color: var(--block-7);
+    border-color: var(--block-7-edge);
+  }
+  .block-face-8 {
+    background-color: var(--block-8);
+    border-color: var(--block-8-edge);
+  }
+
+  /*
+   * data-attribute driven alternative, for consumers that prefer one class
+   * plus an index attribute: <article class="block-face" data-block-face="3">.
+   * Same eight tints, same order.
+   */
+  .block-face[data-block-face="1"] {
+    background-color: var(--block-1);
+    border-color: var(--block-1-edge);
+  }
+  .block-face[data-block-face="2"] {
+    background-color: var(--block-2);
+    border-color: var(--block-2-edge);
+  }
+  .block-face[data-block-face="3"] {
+    background-color: var(--block-3);
+    border-color: var(--block-3-edge);
+  }
+  .block-face[data-block-face="4"] {
+    background-color: var(--block-4);
+    border-color: var(--block-4-edge);
+  }
+  .block-face[data-block-face="5"] {
+    background-color: var(--block-5);
+    border-color: var(--block-5-edge);
+  }
+  .block-face[data-block-face="6"] {
+    background-color: var(--block-6);
+    border-color: var(--block-6-edge);
+  }
+  .block-face[data-block-face="7"] {
+    background-color: var(--block-7);
+    border-color: var(--block-7-edge);
+  }
+  .block-face[data-block-face="8"] {
+    background-color: var(--block-8);
+    border-color: var(--block-8-edge);
+  }
+
+  /*
+   * ── Header subtitle ───────────────────────────────────────────────
+   * 'A product of Jewel of Africa' on ONE line at every width. The line
+   * never wraps; the font shrinks instead (clamp), and 'JEWEL OF AFRICA'
+   * is lit in the accent while 'A product of' stays muted.
+   */
+  .header-subtitle {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 0.3em;
+    white-space: nowrap;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 600;
+    font-size: clamp(0.5rem, 2.6vw, 0.8125rem);
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: oklch(var(--muted-foreground));
+  }
+  .header-subtitle .subtitle-brand {
+    color: oklch(var(--accent));
+    font-weight: 700;
+  }
+
+  /* Status pills */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    padding: 0.1875rem 0.5625rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .pill-open {
+    background-color: oklch(var(--status-open));
+    color: oklch(var(--status-open-fg));
+    border-color: oklch(var(--status-open-border));
+  }
+  .pill-in-transit {
+    background-color: oklch(var(--status-transit));
+    color: oklch(var(--status-transit-fg));
+    border-color: oklch(var(--status-transit-border));
+  }
+  .pill-assayed {
+    background-color: oklch(var(--status-assayed));
+    color: oklch(var(--status-assayed-fg));
+    border-color: oklch(var(--status-assayed-border));
+  }
+  .pill-retailed {
+    background-color: oklch(var(--status-retailed));
+    color: oklch(var(--status-retailed-fg));
+    border-color: oklch(var(--status-retailed-border));
+  }
+  .pill-frozen {
+    background-color: oklch(var(--status-frozen));
+    color: oklch(var(--status-frozen-fg));
+    border-color: oklch(var(--status-frozen-border));
+  }
+
+  /* Header chain/infinity mark — thin accent strokes */
+  .chain-link {
+    stroke: oklch(var(--accent));
+    stroke-width: 1.25;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .chain-draw {
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    animation: chain-draw 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  .chain-pulse {
+    animation: chain-pulse 3.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  /* Chart ink helpers */
+  .chart-grid {
+    stroke: oklch(var(--border));
+    stroke-width: 1;
+  }
+  .chart-axis-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    fill: oklch(var(--muted-foreground));
+  }
+}
+
+@keyframes chain-draw {
+  0% {
+    stroke-dashoffset: 240;
+    opacity: 0.35;
+  }
+  45% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  70% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -240;
+    opacity: 0.35;
+  }
+}
+
+@keyframes chain-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chain-draw,
+  .chain-pulse {
+    animation: none;
+  }
+  .chain-draw {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  .transition-smooth,
+  .transition-quick {
+    transition: none;
+  }
+}

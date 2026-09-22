@@ -1,0 +1,1110 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type AnalysisDocument__273257964 =
+  {
+    contentHash : HashHex__349012136;
+    docKind : Text;
+    fileId : FileId__782034067;
+    id : Text;
+    note : Text;
+    title : Text;
+    uploadedAt : Timestamp__927928243;
+    uploadedBy : Principal
+  };
+type AnalysisDocument__411220782 =
+  {
+    contentHash : HashHex__823316742;
+    docKind : Text;
+    fileId : FileId__907918733;
+    id : Text;
+    note : Text;
+    title : Text;
+    uploadedAt : Timestamp__732535324;
+    uploadedBy : Principal
+  };
+type AnalysisDocument__724353571 =
+  {
+    contentHash : HashHex__935867189;
+    docKind : Text;
+    fileId : FileId__74015493;
+    id : Text;
+    note : Text;
+    title : Text;
+    uploadedAt : Timestamp__774698200;
+    uploadedBy : Principal
+  };
+type AnalysisDocument__793748043 =
+  {
+    contentHash : HashHex__498164857;
+    docKind : Text;
+    fileId : FileId__119821852;
+    id : Text;
+    note : Text;
+    title : Text;
+    uploadedAt : Timestamp__503351762;
+    uploadedBy : Principal
+  };
+type AnalysisDocument__921594690 =
+  {
+    contentHash : HashHex__823314646;
+    docKind : Text;
+    fileId : FileId__766808520;
+    id : Text;
+    note : Text;
+    title : Text;
+    uploadedAt : Timestamp__486448937;
+    uploadedBy : Principal
+  };
+type Capability__413099094 =
+  {
+    #append_event;
+    #change_status;
+    #create_lot;
+    #freeze_lot;
+    #manage_analysis_documents;
+    #manage_reference_data;
+    #manage_roles;
+    #merge_lot;
+    #purge_register;
+    #split_lot;
+    #view_analytics
+  };
+type Capability__545233809 =
+  {
+    #append_event;
+    #change_status;
+    #create_lot;
+    #delete_lot;
+    #freeze_lot;
+    #manage_analysis_documents;
+    #manage_reference_data;
+    #manage_roles;
+    #merge_lot;
+    #purge_register;
+    #split_lot;
+    #view_analytics
+  };
+type Capability__834243372 =
+  {
+    #append_event;
+    #change_status;
+    #create_lot;
+    #delete_lot;
+    #freeze_lot;
+    #manage_analysis_documents;
+    #manage_reference_data;
+    #manage_roles;
+    #merge_lot;
+    #purge_register;
+    #split_lot;
+    #view_analytics
+  };
+type Cell__355711456 =
+  {
+    #bool : Bool;
+    #bytes : Blob;
+    #float : Float;
+    #int : Int64;
+    #nat : Nat64;
+    #text : Text
+  };
+type ColIndex__83074562<Ref> =
+  Map__230067015<Value__686215127, Posting__806489308<Ref>>;
+type ColType__100759299 = {#bool; #bytes : Nat; #float; #int; #nat; #text};
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type Data__846125122<T> = {var count : Nat__227979830; elements : [var ?T]};
+type Entry__1061798269 =
+  {
+    colIdx : Nat;
+    var coveredEnd : Nat;
+    var deadCount : Nat;
+    keyType : ColType__100759299;
+    kind : Kind__447823668;
+    var segDirCap : Nat;
+    var segDirOff : Nat64;
+    segments : List__836382695<Segment__793047190>;
+    slot : Nat;
+    var state : Nat8
+  };
+type EventKind__100599563 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #status_change;
+    #weighed
+  };
+type EventKind__1052011288 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #status_change;
+    #weighed
+  };
+type EventKind__113331323 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #status_change;
+    #weighed
+  };
+type EventKind__218631466 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #weighed
+  };
+type EventKind__349213318 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #weighed
+  };
+type EventKind__706889177 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #weighed
+  };
+type Event__223602305 =
+  {
+    at : Timestamp__503351762;
+    by : Principal;
+    fileIds : [FileId__119821852];
+    kind : EventKind__349213318;
+    payload : Text;
+    payloadHash : HashHex__498164857;
+    seq : Nat
+  };
+type Event__29369250 =
+  {
+    at : Timestamp__486448937;
+    by : Principal;
+    fileIds : [FileId__766808520];
+    kind : EventKind__218631466;
+    payload : Text;
+    payloadHash : HashHex__823314646;
+    seq : Nat
+  };
+type Event__395434036 =
+  {
+    at : Timestamp__319649374;
+    by : Principal;
+    fileIds : [FileId__111287159];
+    kind : EventKind__706889177;
+    payload : Text;
+    payloadHash : HashHex__956905727;
+    seq : Nat
+  };
+type Event__47015416 =
+  {
+    at : Timestamp__774698200;
+    by : Principal;
+    fileIds : [FileId__74015493];
+    kind : EventKind__113331323;
+    payload : Text;
+    payloadHash : HashHex__935867189;
+    seq : Nat
+  };
+type Event__652040899 =
+  {
+    at : Timestamp__424084415;
+    by : Principal;
+    fileIds : [FileId__404992717];
+    kind : EventKind__100599563;
+    payload : Text;
+    payloadHash : HashHex__469887725;
+    seq : Nat
+  };
+type Event__934018927 =
+  {
+    at : Timestamp__927928243;
+    by : Principal;
+    fileIds : [FileId__782034067];
+    kind : EventKind__1052011288;
+    payload : Text;
+    payloadHash : HashHex__349012136;
+    seq : Nat
+  };
+type FileHash__228733453 =
+  {contentHash : HashHex__498164857; fileId : FileId__119821852};
+type FileHash__380259186 =
+  {contentHash : HashHex__935867189; fileId : FileId__74015493};
+type FileHash__656619319 =
+  {contentHash : HashHex__469887725; fileId : FileId__404992717};
+type FileHash__719809517 =
+  {contentHash : HashHex__956905727; fileId : FileId__111287159};
+type FileHash__794375257 =
+  {contentHash : HashHex__349012136; fileId : FileId__782034067};
+type FileHash__941878866 =
+  {contentHash : HashHex__823314646; fileId : FileId__766808520};
+type FileId__111287159 = Text;
+type FileId__119821852 = Text;
+type FileId__404992717 = Text;
+type FileId__74015493 = Text;
+type FileId__766808520 = Text;
+type FileId__782034067 = Text;
+type FileId__907918733 = Text;
+type Footer__539191345 =
+  {count : Nat; max : ?Cell__355711456; min : ?Cell__355711456; nulls : Nat};
+type HashChainEntry__183277845 =
+  {
+    at : Timestamp__503351762;
+    contentHash : HashHex__498164857;
+    eventSeq : Nat
+  };
+type HashChainEntry__206676848 =
+  {
+    at : Timestamp__486448937;
+    contentHash : HashHex__823314646;
+    eventSeq : Nat
+  };
+type HashChainEntry__256010495 =
+  {
+    at : Timestamp__774698200;
+    contentHash : HashHex__935867189;
+    eventSeq : Nat
+  };
+type HashChainEntry__30824962 =
+  {
+    at : Timestamp__927928243;
+    contentHash : HashHex__349012136;
+    eventSeq : Nat
+  };
+type HashChainEntry__490169540 =
+  {
+    at : Timestamp__424084415;
+    contentHash : HashHex__469887725;
+    eventSeq : Nat
+  };
+type HashChainEntry__818671573 =
+  {
+    at : Timestamp__319649374;
+    contentHash : HashHex__956905727;
+    eventSeq : Nat
+  };
+type HashHex__349012136 = Text;
+type HashHex__469887725 = Text;
+type HashHex__498164857 = Text;
+type HashHex__823314646 = Text;
+type HashHex__823316742 = Text;
+type HashHex__935867189 = Text;
+type HashHex__956905727 = Text;
+type Index__207025777<Ref> =
+  {
+    byCol : Map__230067015<Text, ColIndex__83074562<Ref>>;
+    byCols : Map__230067015<[Text], SeqIndex__419139429<Ref>>;
+    var decls : [(Text, Kind__459753664)];
+    var decls2 : [([Text], Kind__459753664)];
+    pending : Set__70493310<Text>;
+    pending2 : Set__70493310<[Text]>
+  };
+type Internal__23036296<T> =
+  {children : [var ?Node__620761243<T>]; data : Data__846125122<T>};
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Kind__447823668 = Kind__459753664;
+type Kind__459753664 = {#hash; #ordered};
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Leaf__948582970<T> = {data : Data__846125122<T>};
+type List__355132335<T> =
+  {
+    var blockIndex : Nat__227979830;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__227979830
+  };
+type List__836382695<T> = List__355132335<T>;
+type LotId__138917318 = Text;
+type LotId__203914684 = Text;
+type LotId__413167851 = Text;
+type LotId__765388077 = Text;
+type LotId__813554760 = Text;
+type LotId__923833216 = Text;
+type LotStatus__224069993 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotStatus__375474459 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotStatus__485265498 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotStatus__537999484 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotStatus__70222641 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotStatus__828586903 =
+  {#assayed; #closed; #frozen; #in_transit; #open; #retailed};
+type LotType__287422517 = {#emerald; #gold};
+type LotType__386216192 = {#emerald; #gold};
+type LotType__477193580 = {#emerald; #gold};
+type LotType__71488544 = {#emerald; #gold};
+type LotType__994970960 =
+  {#concentrate; #dore; #emerald; #jewel; #sample_bag};
+type Lot__1068771023 =
+  {
+    contentHash : HashHex__935867189;
+    events : [Event__47015416];
+    fileIds : [FileId__74015493];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__256010495];
+    id : LotId__203914684;
+    licence : Text;
+    lotType : LotType__386216192;
+    openedAt : Timestamp__774698200;
+    openedBy : Principal;
+    parentIds : [LotId__203914684];
+    photoFileIds : [FileId__74015493];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__375474459;
+    statusHistory : [StatusChange__690883701];
+    workingRef : Text
+  };
+type Lot__22349926 =
+  {
+    contentHash : HashHex__956905727;
+    events : [Event__395434036];
+    fileIds : [FileId__111287159];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__818671573];
+    id : LotId__813554760;
+    licence : Text;
+    lotType : LotType__994970960;
+    openedAt : Timestamp__319649374;
+    openedBy : Principal;
+    parentIds : [LotId__813554760];
+    photoFileIds : [FileId__111287159];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__485265498;
+    workingRef : Text
+  };
+type Lot__402855486 =
+  {
+    contentHash : HashHex__498164857;
+    events : [Event__223602305];
+    fileIds : [FileId__119821852];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__183277845];
+    id : LotId__765388077;
+    licence : Text;
+    lotType : LotType__71488544;
+    openedAt : Timestamp__503351762;
+    openedBy : Principal;
+    parentIds : [LotId__765388077];
+    photoFileIds : [FileId__119821852];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__828586903;
+    workingRef : Text
+  };
+type Lot__477976607 =
+  {
+    contentHash : HashHex__469887725;
+    events : [Event__652040899];
+    fileIds : [FileId__404992717];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__490169540];
+    id : LotId__138917318;
+    licence : Text;
+    lotType : LotType__287422517;
+    openedAt : Timestamp__424084415;
+    openedBy : Principal;
+    parentIds : [LotId__138917318];
+    photoFileIds : [FileId__404992717];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__537999484;
+    statusHistory : [StatusChange__734552792];
+    workingRef : Text
+  };
+type Lot__624314893 =
+  {
+    contentHash : HashHex__349012136;
+    events : [Event__934018927];
+    fileIds : [FileId__782034067];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__30824962];
+    id : LotId__413167851;
+    licence : Text;
+    lotType : LotType__477193580;
+    openedAt : Timestamp__927928243;
+    openedBy : Principal;
+    parentIds : [LotId__413167851];
+    photoFileIds : [FileId__782034067];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__70222641;
+    statusHistory : [StatusChange__1036896502];
+    workingRef : Text
+  };
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__145081306 =
+  {
+    accessControlState : AccessControlState__201339279;
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__813554760, [FileHash__719809517]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__813554760, Lot__22349926>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__13053442>
+      }
+  };
+type NewActor__252279821 =
+  {
+    accessControlState : AccessControlState__201339279;
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__793748043>;
+        entries : Map__230067015<Text, RefEntry__900607998>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__765388077, [FileHash__228733453]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__765388077, Lot__402855486>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__6603817>
+      }
+  };
+type NewActor__657500352 =
+  {
+    accessControlState : AccessControlState__201339279;
+    permissionsState :
+      {
+        overrides : Map__230067015<Principal, PrincipalOverride__79772084>;
+        roleDefaults : Map__230067015<Text, [Capability__413099094]>
+      };
+    purgeState :
+      {var nextRequestSeq : Nat; var pending : ?PurgeRequest__710896165};
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__724353571>;
+        entries : Map__230067015<Text, RefEntry__787046098>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__203914684, [FileHash__380259186]>;
+        var lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__203914684, Lot__1068771023>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__689636747>
+      }
+  };
+type NewActor__732283469 =
+  {
+    accessControlState : AccessControlState__201339279;
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__921594690>;
+        entries : Map__230067015<Text, RefEntry__343896185>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__923833216, [FileHash__941878866]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__923833216, NewLot__605634704>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__199823820>
+      }
+  };
+type NewActor__879736923 =
+  {
+    accessControlState : AccessControlState__201339279;
+    permissionsState :
+      {
+        overrides : Map__230067015<Principal, PrincipalOverride__193487368>;
+        roleDefaults : Map__230067015<Text, [Capability__545233809]>
+      };
+    purgeState :
+      {var nextRequestSeq : Nat; var pending : ?PurgeRequest__679885689};
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__273257964>;
+        entries : Map__230067015<Text, RefEntry__335189158>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__413167851, [FileHash__794375257]>;
+        var lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__413167851, Lot__624314893>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__509272594>
+      }
+  };
+type NewLotType__163565454 = {#emerald; #gold};
+type NewLot__605634704 =
+  {
+    contentHash : HashHex__823314646;
+    events : [Event__29369250];
+    fileIds : [FileId__766808520];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__206676848];
+    id : LotId__923833216;
+    licence : Text;
+    lotType : NewLotType__163565454;
+    openedAt : Timestamp__486448937;
+    openedBy : Principal;
+    parentIds : [LotId__923833216];
+    photoFileIds : [FileId__766808520];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__224069993;
+    workingRef : Text
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type Node__620761243<T> =
+  {#internal : Internal__23036296<T>; #leaf : Leaf__948582970<T>};
+type OldActor__1035117249 =
+  {
+    accessControlState : AccessControlState__201339279;
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__724353571>;
+        entries : Map__230067015<Text, RefEntry__787046098>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__203914684, [FileHash__380259186]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__203914684, OldLot__512091308>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__689636747>
+      }
+  };
+type OldActor__106941026 =
+  {
+    accessControlState : AccessControlState__201339279;
+    permissionsState :
+      {
+        overrides : Map__230067015<Principal, OldPrincipalOverride__639591913>;
+        roleDefaults : Map__230067015<Text, [OldCapability__776663208]>
+      };
+    purgeState :
+      {var nextRequestSeq : Nat; var pending : ?PurgeRequest__679885689};
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__273257964>;
+        entries : Map__230067015<Text, RefEntry__335189158>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__413167851, [FileHash__794375257]>;
+        var lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__413167851, Lot__624314893>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__509272594>
+      }
+  };
+type OldActor__124359355 = {};
+type OldActor__798261290 =
+  {
+    accessControlState : AccessControlState__201339279;
+    referenceState :
+      {
+        documents : Map__230067015<Text, AnalysisDocument__793748043>;
+        entries : Map__230067015<Text, RefEntry__900607998>;
+        var nextDocSeq : Nat;
+        var nextEntrySeq : Nat
+      };
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__765388077, [FileHash__228733453]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__765388077, Lot__402855486>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__6603817>
+      }
+  };
+type OldActor__853359044 =
+  {
+    accessControlState : AccessControlState__201339279;
+    registerState :
+      {
+        fileHashes : Map__230067015<LotId__923833216, [FileHash__941878866]>;
+        lotIndex : Table__552264512;
+        lots : Map__230067015<LotId__923833216, OldLot__825045146>;
+        var nextSeq : Nat
+      };
+    rolesState :
+      {
+        var firstAdminClaimed : Bool;
+        roles : Map__230067015<Principal, Role__199823820>
+      }
+  };
+type OldCapability__776663208 =
+  {
+    #append_event;
+    #change_status;
+    #create_lot;
+    #freeze_lot;
+    #manage_analysis_documents;
+    #manage_reference_data;
+    #manage_roles;
+    #merge_lot;
+    #purge_register;
+    #split_lot;
+    #view_analytics
+  };
+type OldEventKind__284676931 =
+  {
+    #assay;
+    #correction;
+    #cut;
+    #extracted;
+    #merge;
+    #moved;
+    #note;
+    #photo;
+    #retail;
+    #sealed;
+    #split;
+    #weighed
+  };
+type OldEvent__651403436 =
+  {
+    at : Timestamp__774698200;
+    by : Principal;
+    fileIds : [FileId__74015493];
+    kind : OldEventKind__284676931;
+    payload : Text;
+    payloadHash : HashHex__935867189;
+    seq : Nat
+  };
+type OldLotType__922022301 =
+  {#concentrate; #dore; #emerald; #jewel; #sample_bag};
+type OldLot__512091308 =
+  {
+    contentHash : HashHex__935867189;
+    events : [OldEvent__651403436];
+    fileIds : [FileId__74015493];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__256010495];
+    id : LotId__203914684;
+    licence : Text;
+    lotType : LotType__386216192;
+    openedAt : Timestamp__774698200;
+    openedBy : Principal;
+    parentIds : [LotId__203914684];
+    photoFileIds : [FileId__74015493];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__375474459;
+    workingRef : Text
+  };
+type OldLot__825045146 =
+  {
+    contentHash : HashHex__823314646;
+    events : [Event__29369250];
+    fileIds : [FileId__766808520];
+    frozen : Bool;
+    gps : Text;
+    grossG : Text;
+    hashChain : [HashChainEntry__206676848];
+    id : LotId__923833216;
+    licence : Text;
+    lotType : OldLotType__922022301;
+    openedAt : Timestamp__486448937;
+    openedBy : Principal;
+    parentIds : [LotId__923833216];
+    photoFileIds : [FileId__766808520];
+    project : Text;
+    sealNo : Text;
+    status : LotStatus__224069993;
+    workingRef : Text
+  };
+type OldPrincipalOverride__639591913 =
+  {
+    capabilities : [OldCapability__776663208];
+    principal : Principal;
+    role : Role__509272594
+  };
+type Posting__806489308<Ref> =
+  {var count : Nat; var refs : [var Ref]; var start : Nat};
+type PrincipalOverride__193487368 =
+  {
+    capabilities : [Capability__545233809];
+    principal : Principal;
+    role : Role__509272594
+  };
+type PrincipalOverride__426678575 =
+  {
+    capabilities : [Capability__834243372];
+    principal : Principal;
+    role : Role__1023220475
+  };
+type PrincipalOverride__79772084 =
+  {
+    capabilities : [Capability__413099094];
+    principal : Principal;
+    role : Role__689636747
+  };
+type PurgeConfirmation__1029403573 =
+  {admin : Principal; at : Timestamp__788186713};
+type PurgeConfirmation__430850211 =
+  {admin : Principal; at : Timestamp__927928243};
+type PurgeConfirmation__67547142 =
+  {admin : Principal; at : Timestamp__774698200};
+type PurgeRequest__679885689 =
+  {
+    confirmations : [PurgeConfirmation__430850211];
+    id : Text;
+    requestedAt : Timestamp__927928243;
+    requestedBy : Principal;
+    requiredConfirmations : Nat
+  };
+type PurgeRequest__710896165 =
+  {
+    confirmations : [PurgeConfirmation__67547142];
+    id : Text;
+    requestedAt : Timestamp__774698200;
+    requestedBy : Principal;
+    requiredConfirmations : Nat
+  };
+type PurgeRequest__881464844 =
+  {
+    confirmations : [PurgeConfirmation__1029403573];
+    id : Text;
+    requestedAt : Timestamp__788186713;
+    requestedBy : Principal;
+    requiredConfirmations : Nat
+  };
+type RefEntry__134394419 =
+  {
+    active : Bool;
+    displayName : Text;
+    id : Text;
+    key : Text;
+    kind : RefKind__49976145;
+    sortOrder : Nat;
+    value : Text
+  };
+type RefEntry__335189158 =
+  {
+    active : Bool;
+    displayName : Text;
+    id : Text;
+    key : Text;
+    kind : RefKind__939388078;
+    sortOrder : Nat;
+    value : Text
+  };
+type RefEntry__343896185 =
+  {
+    active : Bool;
+    displayName : Text;
+    id : Text;
+    key : Text;
+    kind : RefKind__49579037;
+    sortOrder : Nat;
+    value : Text
+  };
+type RefEntry__787046098 =
+  {
+    active : Bool;
+    displayName : Text;
+    id : Text;
+    key : Text;
+    kind : RefKind__783977898;
+    sortOrder : Nat;
+    value : Text
+  };
+type RefEntry__900607998 =
+  {
+    active : Bool;
+    displayName : Text;
+    id : Text;
+    key : Text;
+    kind : RefKind__925971649;
+    sortOrder : Nat;
+    value : Text
+  };
+type RefKind__49579037 =
+  {#caption; #event_kind; #form_default; #lot_kind; #site; #status};
+type RefKind__49976145 =
+  {#caption; #event_kind; #form_default; #lot_kind; #site; #status};
+type RefKind__783977898 =
+  {#caption; #event_kind; #form_default; #lot_kind; #site; #status};
+type RefKind__925971649 =
+  {#caption; #event_kind; #form_default; #lot_kind; #site; #status};
+type RefKind__939388078 =
+  {#caption; #event_kind; #form_default; #lot_kind; #site; #status};
+type Region__387902757 = Region;
+type Region__616970443 = Region__387902757;
+type Role__1023220475 = Role__300349085;
+type Role__13053442 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__199823820 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__300349085 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__461483151 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__509272594 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__6603817 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Role__689636747 = {#admin; #assayer; #field_officer; #guest; #workshop};
+type Segment__793047190 =
+  {
+    deadOff : Nat64;
+    firstRow : Nat;
+    rows : Nat;
+    segLen : Nat64;
+    segOff : Nat64
+  };
+type Segment__795901782 =
+  {
+    colBase : [Nat64];
+    footers : [Footer__539191345];
+    liveCount : [var Nat];
+    liveSum : [var Sum__923282758];
+    rows : Nat;
+    start : Nat
+  };
+type SeqIndex__419139429<Ref> =
+  Map__230067015<[Value__686215127], Posting__806489308<Ref>>;
+type Set__1053317950<T> =
+  {var root : Node__620761243<T>; var size : Nat__227979830};
+type Set__70493310<T> = Set__1053317950<T>;
+type Staging__124151294 =
+  {
+    colIdx : Nat;
+    var covered : Nat64;
+    firstRow : Nat;
+    keyType : ColType__100759299;
+    kind : Kind__447823668;
+    received : List__836382695<(Nat64, Nat64)>;
+    segLen : Nat64;
+    segOff : Nat64
+  };
+type State__1042486644 =
+  {
+    var end : Nat64;
+    entries : List__836382695<Entry__1061798269>;
+    var freeListHead : Nat64;
+    region : Region__616970443;
+    var staging : ?Staging__124151294
+  };
+type State__645416315 =
+  {
+    buffer : List__836382695<?[?Cell__355711456]>;
+    var bufferBytes : Nat;
+    bufferDead : List__836382695<(Nat, [?Cell__355711456])>;
+    cols : [ColType__100759299];
+    deleted : Set__70493310<Nat>;
+    var end : Nat64;
+    flushBytes : Nat;
+    flushEvery : Nat;
+    var imageRows : Nat;
+    var lastAppendEnd : Nat;
+    region : Region__616970443;
+    segments : List__836382695<Segment__795901782>;
+    staged : List__836382695<Segment__795901782>;
+    var watermark : Nat
+  };
+type StatusChange__1036896502 =
+  {
+    at : Timestamp__927928243;
+    by : Principal;
+    from : LotStatus__70222641;
+    seq : Nat;
+    to : LotStatus__70222641
+  };
+type StatusChange__690883701 =
+  {
+    at : Timestamp__774698200;
+    by : Principal;
+    from : LotStatus__375474459;
+    seq : Nat;
+    to : LotStatus__375474459
+  };
+type StatusChange__734552792 =
+  {
+    at : Timestamp__424084415;
+    by : Principal;
+    from : LotStatus__537999484;
+    seq : Nat;
+    to : LotStatus__537999484
+  };
+type Sum__923282758 = {#float : Float; #int : Int};
+type Table__552264512 =
+  {
+    ix : Index__207025777<Nat>;
+    names : [Text];
+    rix : State__1042486644;
+    store : State__645416315
+  };
+type Timestamp__319649374 = Int;
+type Timestamp__424084415 = Int;
+type Timestamp__486448937 = Int;
+type Timestamp__503351762 = Int;
+type Timestamp__732535324 = Int;
+type Timestamp__774698200 = Int;
+type Timestamp__788186713 = Int;
+type Timestamp__927928243 = Int;
+type UserRole__91647283 = {#admin; #guest; #user};
+type Value__340418662 =
+  {
+    #bool : Bool;
+    #float : Float;
+    #int : Int;
+    #nat : Nat;
+    #null_;
+    #text : Text
+  };
+type Value__686215127 = Value__340418662;
+{
+  "20260921_170000" : (_old : OldActor__124359355) -> NewActor__145081306;
+  "20260921_180000" : (old : OldActor__853359044) -> NewActor__732283469;
+  "20260921_190000" : (old : OldActor__798261290) -> NewActor__252279821;
+  "20260922_120000" : (old : OldActor__1035117249) -> NewActor__657500352;
+  "20260922_140000" : (old : OldActor__106941026) -> NewActor__879736923
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable permissionsState :
+    {
+      overrides : Map__230067015<Principal, PrincipalOverride__426678575>;
+      roleDefaults : Map__230067015<Text, [Capability__834243372]>
+    };
+  stable purgeState :
+    {var nextRequestSeq : Nat; var pending : ?PurgeRequest__881464844};
+  stable referenceState :
+    {
+      documents : Map__230067015<Text, AnalysisDocument__411220782>;
+      entries : Map__230067015<Text, RefEntry__134394419>;
+      var nextDocSeq : Nat;
+      var nextEntrySeq : Nat
+    };
+  stable registerState :
+    {
+      fileHashes : Map__230067015<LotId__138917318, [FileHash__656619319]>;
+      var lotIndex : Table__552264512;
+      lots : Map__230067015<LotId__138917318, Lot__477976607>;
+      var nextSeq : Nat
+    };
+  stable rolesState :
+    {
+      var firstAdminClaimed : Bool;
+      roles : Map__230067015<Principal, Role__461483151>
+    }
+};
