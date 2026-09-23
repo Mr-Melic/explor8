@@ -7,7 +7,7 @@ import { useTextSize } from "@/hooks/use-text-size";
 import { shortenPrincipal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
-import { LogIn, LogOut, Minus, Plus, RotateCcw } from "lucide-react";
+import { LogIn, LogOut, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
 /**
@@ -17,7 +17,9 @@ import { useState } from "react";
  *
  * The header is sticky at the top of the viewport on every route, so the
  * register's controls stay reachable while a long block list scrolls beneath
- * it. It sits above the animated diamond field through `.above-field`.
+ * it. It sits above the animated diamond field through `.above-field`, which
+ * contributes only the z-index — the `sticky` utility owns the position, so
+ * the pinning can never be undone by utility emission order.
  *
  * The subtitle is never truncated and never wraps: it stays on ONE horizontal
  * line at every viewport width, shrinking its font on a phone and lighting
@@ -42,8 +44,28 @@ export function AppHeader() {
 
   return (
     <header className="above-field sticky top-0 z-30 border-b border-border bg-card">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-4">
-        <div className="flex min-w-0 items-center gap-3">
+      {/*
+       * The shell is a wrapping flex row from `md` up. The identity region is
+       * a `basis-full` item, so it ALWAYS claims its own full-width row — the
+       * control cluster can never share a row with it and therefore can never
+       * compete for its width or cover the wordmark. The controls wrap onto
+       * the row(s) below, and the licence reminder is a `basis-full` item that
+       * wraps onto its own line beneath them.
+       *
+       * The identity region is a shrinkable flex child (`min-w-0`) so the
+       * nowrap subtitle line can shrink into its own row instead of setting an
+       * intrinsic floor that overflows a narrow phone. The control cluster
+       * takes its own full-width row and wraps its own controls, so neither
+       * side can push the other off the edge and the wordmark and the full
+       * subtitle stay clear of the buttons at every width and text-size step.
+       *
+       * The reminder used to live inside the control cluster, where its 20rem
+       * column competed with the identity region for horizontal space and
+       * squeezed the subtitle into a clip. On its own wrapped row it can never
+       * crowd the wordmark.
+       */}
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-x-6 md:gap-y-2 md:py-4">
+        <div className="header-identity flex min-w-0 basis-full flex-1 items-center gap-3 md:flex-none">
           <ChainMark className="h-8 w-14 md:h-9 md:w-16" />
           <div className="min-w-0">
             <p className="font-display text-2xl leading-none tracking-tight text-foreground md:text-3xl">
@@ -56,70 +78,68 @@ export function AppHeader() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:justify-end">
-          <p className="order-last w-full text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:order-none md:w-auto md:max-w-[20rem] md:text-right">
-            Licensed miner &amp; dealer · Licence reminder: every lot must carry
-            a valid JOA licence reference.
-          </p>
+        <div className="flex min-w-0 basis-full flex-wrap items-center gap-x-3 gap-y-2 md:justify-end">
+          <DataModeToggle />
 
-          <div className="flex flex-wrap items-center gap-2">
-            <DataModeToggle />
+          <TextSizeControl />
 
-            <TextSizeControl />
+          {canRegister ? (
+            <button
+              type="button"
+              onClick={() => setRegisterOpen(true)}
+              data-ocid="header.register_lot_button"
+              className="inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9"
+            >
+              <Plus className="size-3.5" aria-hidden="true" />
+              Register lot
+            </button>
+          ) : null}
 
-            {canRegister ? (
-              <button
-                type="button"
-                onClick={() => setRegisterOpen(true)}
-                data-ocid="header.register_lot_button"
-                className="inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9"
-              >
-                <Plus className="size-3.5" aria-hidden="true" />
-                Register lot
-              </button>
-            ) : null}
-
-            {isAuthenticated ? (
-              <>
-                <div className="min-w-0 text-right">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    {capabilities.awaitingRole
-                      ? "Awaiting role"
-                      : capabilities.label}
-                  </p>
-                  <p
-                    className="hash truncate"
-                    title={principal ?? undefined}
-                    data-ocid="header.principal"
-                  >
-                    {principal ? shortenPrincipal(principal) : "—"}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={clear}
-                  data-ocid="header.sign_out_button"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9"
+          {isAuthenticated ? (
+            <>
+              <div className="min-w-0 text-right">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  {capabilities.awaitingRole
+                    ? "Awaiting role"
+                    : capabilities.label}
+                </p>
+                <p
+                  className="hash truncate"
+                  title={principal ?? undefined}
+                  data-ocid="header.principal"
                 >
-                  <LogOut className="size-3.5" aria-hidden="true" />
-                  Sign out
-                </button>
-              </>
-            ) : (
+                  {principal ? shortenPrincipal(principal) : "—"}
+                </p>
+              </div>
               <button
                 type="button"
-                onClick={() => login()}
-                disabled={isLoggingIn || isInitializing}
-                data-ocid="header.sign_in_button"
-                className="inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-9"
+                onClick={clear}
+                data-ocid="header.sign_out_button"
+                className="inline-flex h-10 items-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9"
               >
-                <LogIn className="size-3.5" aria-hidden="true" />
-                {isLoggingIn ? "Signing in…" : "Sign in"}
+                <LogOut className="size-3.5" aria-hidden="true" />
+                Sign out
               </button>
-            )}
-            <ThemeToggle />
-          </div>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => login()}
+              disabled={isLoggingIn || isInitializing}
+              data-ocid="header.sign_in_button"
+              className="inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-9"
+            >
+              <LogIn className="size-3.5" aria-hidden="true" />
+              {isLoggingIn ? "Signing in…" : "Sign in"}
+            </button>
+          )}
+          <ThemeToggle />
         </div>
+
+        <p className="text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:basis-full md:text-right">
+          Licensed miner &amp; dealer · Licence reminder: every lot must carry a
+          valid JOA licence reference.
+        </p>
       </div>
       <div className="rule-gold" />
 

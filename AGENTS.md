@@ -4,6 +4,7 @@
 
 - Header title is 'Explor8' with the subtitle 'A product of Jewel of Africa'; never show 'Gold Book' in the header
 - The header subtitle 'A product of Jewel of Africa' must always render on a single line at every width, shrinking the font on mobile rather than wrapping; 'JEWEL OF AFRICA' is highlighted in the accent colour
+- The header identity region (wordmark + subtitle) and the control cluster must each own their own full-width row so no control can ever cover the title or subtitle
 - Work Sans is the typeface for headings, body text, labels and the wordmark; never use italic styling anywhere
 - Footer attribution reads '© 2026. Built with love by Le Royalties Sergio Melicio for Jewel of Africa' with the end year auto-advancing with the current year
 - Adjacent register blocks never share the same colour; block colours cycle through the 8-colour schedule
@@ -42,15 +43,6 @@
 
 ## Learnings
 
-- chmod u+w is required before editing a read-only migration file under src/backend/migrations/; the edit tool then applies the change normally.
-- mops.toml lives at the project root (not src/backend); [canisters.backend.migrations] chain = 'src/backend/migrations' with check-limit = 1 permits exactly one pending migration per deploy.
-- The localQa contract requires every accepted requirement feature index to appear in a flow's requirementIndexes or in sourceOnlyRequirementIndexes; a contract-validation error deploys nothing and spends no QA pass, so correct only the contract and call pre_commit_checks again.
-- A tester cover that adds or edits test files changes the app tree and invalidates a recorded pre_commit_checks pass; run the tester cover BEFORE the final source QA review and preflight, not after.
-- The frontend TRANSITIONS_BY_ROLE map must mirror backend lib/register.mo canTransition exactly; the backend remains the final authority and rejects unpermitted transitions with #notAuthorized.
-- Gating a role-gated control on a capability alone is wrong when the backend grants that capability only to admin but authorizes other roles via a separate transition matrix; gate on signed-in AND (capability OR role has an allowed transition from the current status).
-- The regenerated bindings added statusHistory: StatusChange[] to LotView and status_change to EventKind; any Record<EventKind, T> map and every LotView literal must be updated, including demo-data.ts and test fixtures.
-- getMyCapabilities is the authority for effective permissions (role defaults plus per-principal override), so permission gates should read it rather than re-deriving from the role alone.
-- roleDisplayName/listRoles are the backend authority for role labels; local ROLE_LABELS are only a pre-resolve fallback.
 - caffeineai-oql 0.6.2: Entity.new's 5th parameter is an implicit _toRow, not a positional argument; use Entity.manual<T>(...) + .payload(name, extract) for any T that is not a flat record of _toRow-derivable primitives (variants, Principal, computed columns), and import the concrete value modules (TextValue/NatValue/IntValue/BoolValue) in the same file.
 - The caffeineai-oql Table has no clear(); reset it by rebuilding with Table.new over the same column and index declarations, which requires the state field holding it to be var.
 - A Motoko variant type gets no derived equal, so use .any(func c = c == cap) for variant membership.
@@ -67,3 +59,12 @@
 - The admin panel's reference-kind labels live in use-admin-data.ts REFERENCE_KINDS, not lib/reference.ts REF_KIND_LABEL; the two differ ('Lot kinds' vs 'Item kinds') but only the former renders.
 - Demo registration and event appending are held in DataModeProvider memory only; nothing touches localStorage beyond the mode flag, satisfying the never-persisted rule.
 - The 'provenance' term survives only in generated bindings (backend.ts/backend.d.ts/declarations) and test files, which are not user-facing UI.
+- A custom utility that declares `position` competes with Tailwind's own position utilities in the same layer; the emitted order decides the winner, so a sticky element can be silently unpinned. Keep the custom utility to `z-index` only and let the consumer's `sticky`/`relative` utility own the position.
+- A flex child defaults to min-width:auto and refuses to shrink below its content's intrinsic width; a container-relative clamp() on a nowrap line only takes effect once min-width:0 is set on the container AND every intermediate wrapper down to the line.
+- A long informational paragraph placed inside a header's horizontal control cluster competes with the identity region for width and clips the wordmark; give it md:basis-full on a wrapping flex row to move it to its own line.
+- Sizing a nowrap header subtitle with container-query units (cqw) against a container whose width is not content-derived can over-shrink the line into an illegible smear at desktop widths; verify the rendered result in a browser, not just the structural markup contract.
+- The local-deploy autonomous tester is the only check that catches real rendered-geometry defects; jsdom component tests assert structural markup contracts and cannot detect overlap, clipping, or over-shrink.
+- Two sibling flex items both carrying basis-full each claim their own wrapped row, so neither can ever share a row and overlap the other — a structural guarantee stronger than min-w-0 alone.
+- Container-query units (cqw) resolve against the container's own inline size; when that container is a full-width flex item its size is not content-derived, so a cqw clamp can over-shrink a nowrap line at desktop widths. Viewport-relative vw sizing is stable for a full-width row.
+- A clamp() mixing rem and vw floors at the rem term once the root font-size is scaled up, so a minimum size expressed in rem grows with the text-size step while the vw term stays fixed.
+- pnpm fix (biome check --write) fails the whole command sequence on a lint error in a tester-owned test file even when typecheck and build pass; report the file rather than editing it.

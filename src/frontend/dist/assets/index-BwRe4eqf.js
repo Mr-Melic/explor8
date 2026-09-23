@@ -48583,8 +48583,8 @@ function AppHeader() {
   const [registerOpen, setRegisterOpen] = reactExports.useState(false);
   const canRegister = mode === "demo" ? isAuthenticated : capabilities.canWrite;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "above-field sticky top-0 z-30 border-b border-border bg-card", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 items-center gap-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-x-6 md:gap-y-2 md:py-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "header-identity flex min-w-0 basis-full flex-1 items-center gap-3 md:flex-none", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ChainMark, { className: "h-8 w-14 md:h-9 md:w-16" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl leading-none tracking-tight text-foreground md:text-3xl", children: "Explor8" }),
@@ -48594,67 +48594,65 @@ function AppHeader() {
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-x-3 gap-y-2 md:justify-end", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "order-last w-full text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:order-none md:w-auto md:max-w-[20rem] md:text-right", children: "Licensed miner & dealer · Licence reminder: every lot must carry a valid JOA licence reference." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(DataModeToggle, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TextSizeControl, {}),
-          canRegister ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              type: "button",
-              onClick: () => setRegisterOpen(true),
-              "data-ocid": "header.register_lot_button",
-              className: "inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
-                "Register lot"
-              ]
-            }
-          ) : null,
-          isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 text-right", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground", children: capabilities.awaitingRole ? "Awaiting role" : capabilities.label }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "p",
-                {
-                  className: "hash truncate",
-                  title: principal ?? void 0,
-                  "data-ocid": "header.principal",
-                  children: principal ? shortenPrincipal(principal) : "—"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 basis-full flex-wrap items-center gap-x-3 gap-y-2 md:justify-end", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DataModeToggle, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TextSizeControl, {}),
+        canRegister ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => setRegisterOpen(true),
+            "data-ocid": "header.register_lot_button",
+            className: "inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "size-3.5", "aria-hidden": "true" }),
+              "Register lot"
+            ]
+          }
+        ) : null,
+        isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 text-right", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground", children: capabilities.awaitingRole ? "Awaiting role" : capabilities.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
               {
-                type: "button",
-                onClick: clear,
-                "data-ocid": "header.sign_out_button",
-                className: "inline-flex h-10 items-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9",
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { className: "size-3.5", "aria-hidden": "true" }),
-                  "Sign out"
-                ]
+                className: "hash truncate",
+                title: principal ?? void 0,
+                "data-ocid": "header.principal",
+                children: principal ? shortenPrincipal(principal) : "—"
               }
             )
-          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
               type: "button",
-              onClick: () => login(),
-              disabled: isLoggingIn || isInitializing,
-              "data-ocid": "header.sign_in_button",
-              className: "inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-9",
+              onClick: clear,
+              "data-ocid": "header.sign_out_button",
+              className: "inline-flex h-10 items-center gap-1.5 rounded-sm border border-border bg-background px-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground transition-quick hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-9",
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "size-3.5", "aria-hidden": "true" }),
-                isLoggingIn ? "Signing in…" : "Sign in"
+                /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { className: "size-3.5", "aria-hidden": "true" }),
+                "Sign out"
               ]
             }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {})
-        ] })
-      ] })
+          )
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => login(),
+            disabled: isLoggingIn || isInitializing,
+            "data-ocid": "header.sign_in_button",
+            className: "inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-3 text-xs font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-quick hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 sm:h-9",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "size-3.5", "aria-hidden": "true" }),
+              isLoggingIn ? "Signing in…" : "Sign in"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {})
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-snug text-muted-foreground sm:text-[11px] md:basis-full md:text-right", children: "Licensed miner & dealer · Licence reminder: every lot must carry a valid JOA licence reference." })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rule-gold" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
